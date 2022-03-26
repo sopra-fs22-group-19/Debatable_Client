@@ -12,7 +12,7 @@ const App = () => {
       <Header height="100"/>
         {/*# <AppRouter/>*/}
         <div className="header container">
-            <h2>Rupal, Chenfei, Orestis, Juan, Pablo</h2>
+            <h2>- Rupal, Chenfei, Orestis, Juan, Pablo -</h2>
         </div>
     </div>
   );
