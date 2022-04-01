@@ -10,10 +10,7 @@ const App = () => {
   return (
     <div>
       <Header height="100"/>
-        {/*# <AppRouter/>*/}
-        <div className="header container">
-            <h2>Rupal, Chenfei, Orestis, Juan, Pablo</h2>
-        </div>
+      <AppRouter/>
     </div>
   );
 };
