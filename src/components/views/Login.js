@@ -46,6 +46,7 @@ const Login = props => {
       const requestBody = JSON.stringify({username, password});
       let to_get = "/users?username=" + String({username}) + "&password=" + String({password});
       const response = await api.get(to_get, requestBody);
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
