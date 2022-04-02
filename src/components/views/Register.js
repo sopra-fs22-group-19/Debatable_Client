@@ -8,12 +8,6 @@ import 'styles/ui/BaseContainer.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 
-/*
-It is possible to add multiple components inside a single file,
-however be sure not to clutter your files with an endless amount!
-As a rule of thumb, use one file per component and only add small,
-specific components that belong to the main one in the same file.
- */
 const FormField = props => {
   return (
     <div className="login field">
@@ -36,14 +30,15 @@ FormField.propTypes = {
   onChange: PropTypes.func
 };
 
-const Login = props => {
+const Register = props => {
   const history = useHistory();
   const [password, setPassword] = useState(null);
   const [username, setUsername] = useState(null);
+  const [name, setName] = useState(null);
 
-  const doLogin = async () => {
+  const doRegister = async () => {
     try {
-      const requestBody = JSON.stringify({username, password});
+      const requestBody = JSON.stringify({name, username, password});
       const response = await api.post('/users', requestBody);
 
       // Get the returned user and update a new object.
@@ -58,14 +53,20 @@ const Login = props => {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
   };
-  function toRegister () {
-    history.push("/register");
+
+  function toLogin () {
+    history.push("/login");
   }
 
   return (
     <BaseContainer className="base-container">
-      <div className="login container">
-        <div className="login form">
+      <div className="login register-container">
+        <div className="login register-form">
+          <FormField
+            label="Name"
+            value={name}
+            onChange={un => setName(un)}
+          />
           <FormField
             label="Username"
             value={username}
@@ -78,26 +79,21 @@ const Login = props => {
           />
           <div className="login button-container">
             <Button
-              disabled={!username || !password}
+              disabled={!username || !password || !name}
               width="100%"
-              onClick={() => doLogin()}
+              onClick={() => doRegister()}
             >
-              Log In
+              Sign Up
             </Button>
           </div>
         </div>
       </div>
       <div 
       className='login create-account'
-      onClick={() => toRegister() }>
-        create account
+      onClick={() => toLogin() }>
+        Log In
       </div>
     </BaseContainer>
   );
 };
-
-/**
- * You can get access to the history object's properties via the withRouter.
- * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
- */
-export default Login;
+export default Register;
