@@ -44,7 +44,8 @@ const Login = props => {
   const doLogin = async () => {
     try {
       const requestBody = JSON.stringify({username, password});
-      const response = await api.post('/users', requestBody);
+      let to_get = "/users?username=" + String({username}) + "&password=" + String({password});
+      const response = await api.get(to_get, requestBody);
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
@@ -52,8 +53,8 @@ const Login = props => {
       // Store the token into the local storage.
       localStorage.setItem('token', user.token);
 
-      // Login successfully worked --> navigate to the route /game in the GameRouter
-      history.push(`/game`);
+      // Login successfully worked --> navigate to the route /home in the GameRouter
+      history.push("/home");
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
