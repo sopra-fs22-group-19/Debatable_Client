@@ -103,6 +103,7 @@ const Homepage = () => {
                 Choose debate topic:
             </p>
             {content}
+            <Button id="logout" onClick={() => logout()}>LOGOUT</Button>
         </BaseContainer>
     );
 }
