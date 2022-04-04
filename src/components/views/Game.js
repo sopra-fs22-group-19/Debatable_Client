@@ -1,3 +1,6 @@
+/**
+
+
 import {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {Spinner} from 'components/ui/Spinner';
@@ -104,3 +107,5 @@ const Game = () => {
 }
 
 export default Game;
+
+ **/
