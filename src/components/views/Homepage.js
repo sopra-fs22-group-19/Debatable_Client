@@ -36,7 +36,7 @@ const Homepage = () => {
     }
     const debateRoom = () => {
         localStorage.removeItem('token');
-        history.push('/login');
+        history.push('/homepage');
     }
 
     // the effect hook can be used to react to change in your component.
