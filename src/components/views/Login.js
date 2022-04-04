@@ -44,7 +44,7 @@ const Login = props => {
   const doLogin = async () => {
     try {
       //const requestBody = JSON.stringify({username, password});
-      let to_get = "/users?username=" + String({username}) + "&password=" + String({password});
+      let to_get = "/users?username=" + String(username) + "&password=" + String(password);
       const response = await api.get(to_get);
       await new Promise(resolve => setTimeout(resolve, 1000));
 
