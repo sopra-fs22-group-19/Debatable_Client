@@ -4,6 +4,7 @@ import {LoginGuard} from "components/routing/routeProtectors/LoginGuard";
 import Login from "components/views/Login";
 import Register from "components/views/Register";
 import Homepage from "components/views/Homepage";
+import DebateRoom from "../../views/DebateRoom";
 
 /**
  * Main router of your application.
@@ -33,6 +34,9 @@ const AppRouter = () => {
         </Route>
         <Route exact path="/">
           <Redirect to="/home"/>
+        </Route>
+        <Route exact path="/debateroom">
+          <DebateRoom/>
         </Route>
       </Switch>
     </BrowserRouter>

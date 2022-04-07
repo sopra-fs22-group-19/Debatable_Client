@@ -8,6 +8,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Homepage.scss";
 
+/*
 const Debate = ({debate}) => (
     <div className="debate container">
         <div className="debate topic">{debate.topic}</div>
@@ -17,7 +18,7 @@ const Debate = ({debate}) => (
 Debate.propTypes = {
     debate: PropTypes.object
 };
-
+*/
 const Homepage = () => {
     // use react-router-dom's hook to access the history
     const history = useHistory();
@@ -37,8 +38,7 @@ const Homepage = () => {
         history.push('/login');
     }
     const debateRoom = () => {
-        localStorage.removeItem('token');
-        history.push('/homepage');
+        history.push('/debateroom');
     }
 
     // the effect hook can be used to react to change in your component.
