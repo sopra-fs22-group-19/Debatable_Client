@@ -27,8 +27,10 @@ const Homepage = () => {
     // keep its value throughout render cycles.
     // a component can have as many state variables as you like.
     // more information can be found under https://reactjs.org/docs/hooks-state.html
+
     const [debates, setDebates] = useState(null);
     const [userId, setId] = useState(localStorage.getItem("userId"));
+
 
     const logout = () => {
         localStorage.removeItem('token');
@@ -47,22 +49,25 @@ const Homepage = () => {
         // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
         async function fetchData() {
             try {
-                const response = await api.get('/debates/'+userId);
-
+                //const response = await api.get('/debates/'+userId);
                 // delays continuous execution of an async operation for 1 second.
                 // This is just a fake async call, so that the spinner can be displayed
                 // feel free to remove it :)
-                await new Promise(resolve => setTimeout(resolve, 1000));
-
+               // await new Promise(resolve => setTimeout(resolve, 1000));
+                let text = '{"debates":[' +
+                    '{"debateId":"1","topic":"Cats and Dogs","description":"Family","tags":"animals","userId":"1" },' +
+                    '{"debateId":"2","topic":"Family","description":"Family","tags":"Social","userId":"2" },' +
+                    '{"debateId":"3","topic":"Environment","description":"Family","tags":"World","userId":"3" }]}';
+                const response = JSON.parse(text)
                 // Get the returned users and update the state.
                 setDebates(response.data);
 
                 // This is just some data for you to see what is available.
                 // Feel free to remove it.
-                console.log('request to:', response.request.responseURL);
-                console.log('status code:', response.status);
-                console.log('status text:', response.statusText);
-                console.log('requested data:', response.data);
+              //  console.log('request to:', response.request.responseURL);
+              //  console.log('status code:', response.status);
+               // console.log('status text:', response.statusText);
+               // console.log('requested data:', response.data);
 
                 // See here to get more data.
                 console.log(response);
@@ -78,23 +83,26 @@ const Homepage = () => {
 
     let content = <Spinner/>;
 
-    if (debates) {
+
+
+    //if (debates) {
         content = (
             <div className="Debates">
                 <ul className="debates debate-topic-list">
-                    {debates.map(debate => (
-                        <div key={debate.debateId}>
+                    {//debates.map(debate => (
+                        <div key={"1"}>
                             <span>
                                 <Button id="btn1" onClick={() => debateRoom()}>FOR</Button>
-                                {debate.topic}
+                                 Family
                                 <Button id="btn2" onClick={() => debateRoom()}>AGAINST</Button>
                             </span>
                         </div>
-                    ))}
+                    //))
+                        }
                 </ul>
             </div>
         );
-    }
+   // }
 
     return (
         <BaseContainer className="game container">
