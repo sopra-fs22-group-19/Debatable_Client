@@ -6,7 +6,7 @@
   for more information visit https://sass-lang.com/guide
  */
 
-.game {
+.debate {
   &.container {
     background: $background;
     padding: 1.5em;
@@ -16,18 +16,33 @@
     align-items: center;
     box-shadow: $dropShadow;
   }
-  &.user-list {
-    list-style: none;
+  &.debate-list {
+    list-style: outside;
+    display: flex;
+    margin: auto;
     padding-left: 0;
   }
   &.user-item {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
   & p,h2 {
-    margin: 0.5em 0;
+    margin: 0.2em 0;
+  }
+  .debates {
+    margin: auto;
+    width: 1000%;
+  }
+  .dcontainer{
+  margin: 0.5em 0;
+  width: 30em;
+  padding: 7px;
+  border-radius: $borderRadius;
+  display: inline-block;
+  align-items: center;
+  background: lighten($background, 5);
   }
 }
 

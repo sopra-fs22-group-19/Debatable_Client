@@ -46,6 +46,8 @@ const Register = props => {
 
       // Store the token into the local storage.
       localStorage.setItem('token', user.token);
+      localStorage.setItem('userId', user.id);
+
 
       // Login successfully worked --> navigate to the route /home in the GameRouter
       history.push("/home");

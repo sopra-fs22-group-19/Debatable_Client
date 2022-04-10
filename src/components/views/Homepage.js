@@ -20,14 +20,15 @@ Debate.propTypes = {
 const Homepage = () => {
     const history = useHistory();
     const [debates, setDebates] = useState(null);
-    const [userId, setId] = useState(localStorage.getItem("userId"));
+    const [userId, setId] = useState(null);
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('userId');
         history.push('/login');
     }
     const debateRoom = (side, topic) => {
-        let push_to = '/debateroom/' + String(topic) + '/' + String(side)
+        let push_to = '/debateroom/' + topic + '/' + String(side)
         history.push(push_to);
     }
 
@@ -35,22 +36,19 @@ const Homepage = () => {
         // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
         async function fetchData() {
             try {
-                //const response = await api.get('/debates/'+userId);
+                setId(localStorage.getItem('userId'))
+                const response = await api.get('/debates/'+1);
                 // delays continuous execution of an async operation for 1 second.
-               // await new Promise(resolve => setTimeout(resolve, 1000));
-                /*let text = '{"debates":[' +
-                    '{"debateId":"1","topic":"Cats and Dogs","description":"Family","tags":"animals","userId":"1" },' +
-                    '{"debateId":"2","topic":"Family","description":"Family","tags":"Social","userId":"2" },' +
-                    '{"debateId":"3","topic":"Environment","description":"Family","tags":"World","userId":"3" }]}';
-                const response = JSON.parse(text)
-                setDebates(response.data);*/
+                await new Promise(resolve => setTimeout(resolve, 1000));
 
-              //  console.log('request to:', response.request.responseURL);
-              //  console.log('status code:', response.status);
-               // console.log('status text:', response.statusText);
-               // console.log('requested data:', response.data);
+                setDebates(response.data)
 
-                //console.log(response);
+                console.log('request to:', response.request.responseURL);
+                console.log('status code:', response.status);
+                console.log('status text:', response.statusText);
+                console.log('requested data:', response.data);
+
+                console.log(response);
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate topics: \n${handleError(error)}`);
                 console.error("Details:", error);
@@ -61,44 +59,35 @@ const Homepage = () => {
     }, []);
 
     let content;
-    const Topic_1 = "Do Aliens Exist?"
-    const Topic_2 = "Humans should not eat animals"
+    //const Topic_1 = "Do Aliens Exist?"
+    //const Topic_2 = "Humans should not eat animals"
 
+
+    if (debates) {
     content = (
-        <div>
-            <div>
-                <Button id="btn1" onClick={() => debateRoom("for", {Topic_1})}>FOR</Button>
-                {Topic_1}
-                <Button id="btn2" onClick={() => debateRoom("against", {Topic_1})}>AGAINST</Button>
-            </div>
-            <div>
-                <Button id="btn1" onClick={() => debateRoom("for", {Topic_2})}>FOR</Button>
-                {Topic_2}
-                <Button id="btn2" onClick={() => debateRoom("against", {Topic_2})}>AGAINST</Button>
-            </div>
-        </div>
-        
-        /*<div className="Debates">
-            <ul className="debates debate-topic-list">
-                {//debates.map(debate => (
-                    <div key={"1"}>
-                        <span>
-                            <Button id="btn1" onClick={() => debateRoom()}>FOR</Button>
-                            Do Aliens Exist?
-                            <Button id="btn2" onClick={() => debateRoom()}>AGAINST</Button>
-                        </span>
+        <div class="debate">
+
+            <ul class="debate list" >
+                {debates.map(debate => (
+                    //<Player debate={debate} key={debate.debateId}/>
+                    <div class="debates">
+                    <span><Button id="btn1" onClick={() => debateRoom("for", debate.topic)}>FOR</Button>
+                        <div class="dcontainer">
+                         {debate.topic}
+                        </div>
+                    <Button id="btn2" onClick={() => debateRoom("against", debate.topic)}>AGAINST</Button></span>
                     </div>
-                //))
-                    }
+                    ))}
             </ul>
-        </div>*/
+
+        </div>
     );
-   // }
+   }
 
     return (
-        <BaseContainer className="game container">
+        <BaseContainer className="debate container">
             <h2>Let's Debate!</h2>
-            <p className="game paragraph">
+            <p className="debate paragraph">
                 Choose debate topic:
             </p>
             {content}
