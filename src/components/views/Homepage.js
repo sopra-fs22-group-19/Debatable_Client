@@ -36,11 +36,8 @@ const Homepage = () => {
         // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
         async function fetchData() {
             try {
-                setId(localStorage.getItem('userId'))
-                const response = await api.get('/debates/'+1);
-                // delays continuous execution of an async operation for 1 second.
-                await new Promise(resolve => setTimeout(resolve, 1000));
-
+                const userId = localStorage.getItem('userId')
+                const response = await api.get("/debates/" + userId);
                 setDebates(response.data)
 
                 console.log('request to:', response.request.responseURL);
@@ -59,17 +56,12 @@ const Homepage = () => {
     }, []);
 
     let content;
-    //const Topic_1 = "Do Aliens Exist?"
-    //const Topic_2 = "Humans should not eat animals"
-
 
     if (debates) {
     content = (
         <div class="debate">
-
             <ul class="debate list" >
                 {debates.map(debate => (
-                    //<Player debate={debate} key={debate.debateId}/>
                     <div class="debates">
                     <span><Button id="btn1" onClick={() => debateRoom("for", debate.topic)}>FOR</Button>
                         <div class="dcontainer">
@@ -85,15 +77,13 @@ const Homepage = () => {
    }
 
     return (
-        <BaseContainer className="debate container">
+        <BaseContainer className="base-container">
             <h2>Let's Debate!</h2>
-            <p className="debate paragraph">
-                Choose debate topic:
-            </p>
+            <p className="debate paragraph"> Choose debate topic:</p>
             {content}
-            <Button id="logout" onClick={() => logout()}>LOGOUT</Button>
+            <Button className="debate button-container" onClick={() => logout()}>LOGOUT</Button>
         </BaseContainer>
-    );
+    );  
 }
 
 export default Homepage;

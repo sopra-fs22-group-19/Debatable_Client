@@ -46,9 +46,7 @@ const Login = props => {
 
       // Store the token into the local storage.
       localStorage.setItem('token', user.token);
-      localStorage.setItem('userId', user.id); //we have id in rest
-
-
+      localStorage.setItem('userId', user.userId); //we have id in rest
       // Login successfully worked --> navigate to the route /home in the GameRouter
       history.push("/home");
     } catch (error) {
