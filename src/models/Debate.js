@@ -1,7 +1,7 @@
 /**
  * Debate model
  */
-class User {
+class Debate {
     constructor(data = {}) {
         this.debateId = null;
         this.topic = null;
@@ -11,4 +11,4 @@ class User {
         Object.assign(this, data);
     }
 }
-export default User;
+export default Debate;
