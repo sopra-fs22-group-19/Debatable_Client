@@ -16,23 +16,25 @@ const Homepage = () => {
         localStorage.removeItem('userId');
         history.push('/login');
     }
-    const debateRoom = (side, debateId) => {
-        let push_to = '/debateroom/' + String(debateId) + "/" + String(side) 
-        history.push(push_to);
+
+    const todebateRoom = async (side, debateId) => {
+        try {
+            const requestBody = JSON.stringify({userId, debateId, side});
+            const response = await api.post("/debates/rooms", requestBody);
+            const debateRoom = response.data
+
+            let push_to = '/debateroom/' + String(debateRoom.roomId)
+            history.push(push_to);
+        }catch(error) {
+            alert(`Something went wrong while creating debate room: \n${handleError(error)}`);
+        } 
     }
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await api.get("/debates/" + userId);
+                const response = await api.get("/debates/" + String(userId));
                 setDebates(response.data)
-
-                console.log('request to:', response.request.responseURL);
-                console.log('status code:', response.status);
-                console.log('status text:', response.statusText);
-                console.log('requested data:', response.data);
-
-                console.log(response);
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate topics: \n${handleError(error)}`);
                 console.error("Details:", error);
@@ -51,11 +53,11 @@ const Homepage = () => {
                 {debates.map(debate => (
                     <div className="debate debates">
                         <span>
-                            <Button className="debate button-container"  onClick={() => debateRoom("for", debate.debateId)}>FOR</Button>
+                            <Button className="debate button-container"  onClick={() => todebateRoom("FOR", debate.debateId)}>FOR</Button>
                                 <div className="debate dcontainer">
                                     {debate.topic}
                                 </div>
-                            <Button className="debate button-container" onClick={() => debateRoom("against", debate.debateId)}>AGAINST</Button>
+                            <Button className="debate button-container" onClick={() => todebateRoom("AGAINST", debate.debateId)}>AGAINST</Button>
                         </span>
                     </div>
                     ))}

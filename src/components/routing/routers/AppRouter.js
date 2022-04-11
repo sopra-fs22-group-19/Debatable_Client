@@ -26,7 +26,7 @@ const AppRouter = () => {
         <Route exact path="/">
           <Redirect to="/home"/>
         </Route>
-        <Route exact path="/debateroom/:debateId/:side">
+        <Route exact path="/debateroom/:roomId">
           <GameGuard>
             <DebateRoom/>
           </GameGuard>
