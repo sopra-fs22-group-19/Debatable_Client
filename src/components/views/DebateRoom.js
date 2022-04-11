@@ -5,11 +5,22 @@ import {useHistory} from 'react-router-dom';
 import {useParams} from 'react-router-dom/cjs/react-router-dom.min';
 import "styles/views/DebateRoom.scss";
 
+const Link = () => (
+    <div className='debateRoom parent-link'> 
+        Share this link for other participant to Join!
+        <div className='debateRoom child-link'>
+            link will come here
+        </div>
+    </div>
+)
+
 const DebateRoom = () => {
     const history = useHistory();
     const {side} = useParams();
     const {debateId} = useParams();
     const [userId, setId] = useState(localStorage.getItem("userId"));
+    const [link, setlink] = useState(false)
+    const [inviteDisable, setinviteDisable] = useState(false)
 
     useEffect(() => {
         async function fetchData() {
@@ -36,9 +47,17 @@ const DebateRoom = () => {
                 </div>
                 <div className="debateRoom chat-box-right">
                     <div className='debateRoom text'>Invite user to join!</div>
-                    <Button className="debateRoom button-container">
-                        INVITE
-                    </Button>
+                    <Button 
+                        className="debateRoom button-container" 
+                        value="INVITE" 
+                        disabled={inviteDisable}
+                        onClick={() => {
+                                setlink(true)
+                                setinviteDisable(true)
+                            }
+                        }
+                    />
+                    {link ? <Link/> : null }
                 </div>
             </div>
         </div>
