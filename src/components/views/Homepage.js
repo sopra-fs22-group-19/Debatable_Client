@@ -44,7 +44,6 @@ const Homepage = () => {
 
     let content;
 
-    // TODO: when backend from debate room implemented, remove debate.topic from here in buttons
     if (debates) {
     content = (
         <div>
@@ -64,12 +63,6 @@ const Homepage = () => {
         </div>
     );
    }
-   
-   /*
-   TODO: discussion with Orestis if we should keep it
-   <h2>Let's Debate!</h2>
-    <p className="debate paragraph"> Choose debate topic:</p>
-   */
 
     return (
         <BaseContainer className="base-container">
