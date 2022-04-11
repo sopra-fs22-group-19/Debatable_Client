@@ -6,37 +6,24 @@ import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/Homepage.scss";
 
-/*
-const Debate = ({debate}) => (
-    <div className="debate container">
-        <div className="debate topic">{debate.topic}</div>
-    </div>
-);
-
-Debate.propTypes = {
-    debate: PropTypes.object
-};
-*/
 const Homepage = () => {
     const history = useHistory();
     const [debates, setDebates] = useState(null);
-    const [userId, setId] = useState(null);
+    const userId = localStorage.getItem('userId')
 
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         history.push('/login');
     }
-    const debateRoom = (side, topic) => {
-        let push_to = '/debateroom/' + topic + '/' + String(side)
+    const debateRoom = (side, debateId) => {
+        let push_to = '/debateroom/' + String(debateId) + "/" + String(side) 
         history.push(push_to);
     }
 
     useEffect(() => {
-        // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
         async function fetchData() {
             try {
-                const userId = localStorage.getItem('userId')
                 const response = await api.get("/debates/" + userId);
                 setDebates(response.data)
 
@@ -53,35 +40,41 @@ const Homepage = () => {
             }
         }
         fetchData();
-    }, []);
+    }, [userId]);
 
     let content;
 
+    // TODO: when backend from debate room implemented, remove debate.topic from here in buttons
     if (debates) {
     content = (
-        <div class="debate">
-            <ul class="debate list" >
+        <div>
+            <ul>
                 {debates.map(debate => (
-                    <div class="debates">
-                    <span><Button id="btn1" onClick={() => debateRoom("for", debate.topic)}>FOR</Button>
-                        <div class="dcontainer">
-                         {debate.topic}
-                        </div>
-                    <Button id="btn2" onClick={() => debateRoom("against", debate.topic)}>AGAINST</Button></span>
+                    <div className="debate debates">
+                        <span>
+                            <Button className="debate button-container"  onClick={() => debateRoom("for", debate.debateId)}>FOR</Button>
+                                <div className="debate dcontainer">
+                                    {debate.topic}
+                                </div>
+                            <Button className="debate button-container" onClick={() => debateRoom("against", debate.debateId)}>AGAINST</Button>
+                        </span>
                     </div>
                     ))}
             </ul>
-
         </div>
     );
    }
+   
+   /*
+   TODO: discussion with Orestis if we should keep it
+   <h2>Let's Debate!</h2>
+    <p className="debate paragraph"> Choose debate topic:</p>
+   */
 
     return (
         <BaseContainer className="base-container">
-            <h2>Let's Debate!</h2>
-            <p className="debate paragraph"> Choose debate topic:</p>
             {content}
-            <Button className="debate button-container" onClick={() => logout()}>LOGOUT</Button>
+            <Button className="debate button-container" onClick={() => logout()}>LOGOUT</Button> 
         </BaseContainer>
     );  
 }

@@ -1,0 +1,98 @@
+@import 'styles/theme';
+
+.debateRoom {
+
+    &.topic-container {
+        width: auto;
+        padding: 9px;
+        border-radius: $borderRadius;
+        text-align: center;
+        color: rgb(97, 26, 26);
+        //background: lightblue;
+        background: lighten($background, 65);
+        margin-left: 20.5em;
+        margin-right: 20.5em;
+        font-family: sans-serif;
+        font-weight: bold;
+    }
+
+    &.description-container {
+        margin-top: 0.25em;
+        width: auto;
+        padding: 9px;
+        border-radius: $borderRadius;
+        text-align: center;
+        color: rgb(97, 26, 26);
+        background: lightblue;
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: row;
+        margin-left: 0.5em;
+        margin-right: 0.5em;
+    }
+
+    &.chat-box-left {
+        margin-top: 1.25em;
+        margin-left: 2.25em;
+        margin-right: 2.25em;
+        width: 45%;
+        height:15.5cm;
+        float: left;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        border-radius: $borderRadius;
+        border: 2px solid black;
+        text-align: center;
+        font-weight: bold;
+    }
+    &.chat-box-right {
+        margin-top: 1.25em;
+        margin-left: 2.25em;
+        margin-right: 2.25em;
+        width: 45%;
+        height:15.5cm;
+        float: left;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        border-radius: $borderRadius;
+        border: 2px solid black;
+        text-align: center;
+        font-weight: bold;
+        align-items: center;
+
+    }
+
+    &.chat-child {
+        margin-top: 0.25em;
+        margin-left: 0.25em;
+        margin-right: 0.25em;
+        height:14cm;
+        float: left;
+        display: flex;
+        flex-direction: column;
+        border-radius: $borderRadius;
+        border: 2px solid black;
+    }
+
+    &.writer-child {
+        margin-top: 1.25em;
+        margin-left: 0.25em;
+        margin-right: 0.25em;
+        height:1.25cm;
+        float: left;
+        display: flex;
+        flex-direction: column;
+        border-radius: $borderRadius;
+        background: lighten($background, 65);
+    }
+
+    &.text {
+        margin-top: 12em;
+    }
+    &.button-container {
+        margin-top: 1em;
+        background: lighten($background, 60);
+      }
+}
