@@ -6,6 +6,9 @@ import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/Homepage.scss";
 
+// BUG: when going back to homepage and then joing the same debate topic with same side, 
+// user should not create a new one but should go to the same one.
+
 const Homepage = () => {
     const history = useHistory();
     const [debates, setDebates] = useState(null);

@@ -13,6 +13,7 @@ const getLink = () => {
 
 // current url convention: baseURL/roomId/participant-no
 // This can be changed in future
+
 const Link = props => (
     <div className='debateRoom parent-link'> 
         Share this link for other participant to Join!
