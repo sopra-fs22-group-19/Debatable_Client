@@ -6,46 +6,38 @@ import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/Homepage.scss";
 
-/*
-const Debate = ({debate}) => (
-    <div className="debate container">
-        <div className="debate topic">{debate.topic}</div>
-    </div>
-);
+// BUG: when going back to homepage and then joing the same debate topic with same side, 
+// user should not create a new one but should go to the same one.
 
-Debate.propTypes = {
-    debate: PropTypes.object
-};
-*/
 const Homepage = () => {
     const history = useHistory();
     const [debates, setDebates] = useState(null);
-    const [userId, setId] = useState(null);
+    const userId = localStorage.getItem('userId')
 
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         history.push('/login');
     }
-    const debateRoom = (side, topic) => {
-        let push_to = '/debateroom/' + topic + '/' + String(side)
-        history.push(push_to);
+
+    const todebateRoom = async (side, debateId) => {
+        try {
+            const requestBody = JSON.stringify({userId, debateId, side});
+            const response = await api.post("/debates/rooms", requestBody);
+            const debateRoom = response.data
+
+            let push_to = '/debateroom/' + String(debateRoom.roomId)
+            history.push(push_to);
+        }catch(error) {
+            alert(`Something went wrong while creating debate room: \n${handleError(error)}`);
+        } 
     }
 
     useEffect(() => {
-        // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
         async function fetchData() {
             try {
-                const userId = localStorage.getItem('userId')
-                const response = await api.get("/debates/" + userId);
+                const response = await api.get("/debates/" + String(userId));
                 setDebates(response.data)
-
-                console.log('request to:', response.request.responseURL);
-                console.log('status code:', response.status);
-                console.log('status text:', response.statusText);
-                console.log('requested data:', response.data);
-
-                console.log(response);
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate topics: \n${handleError(error)}`);
                 console.error("Details:", error);
@@ -53,35 +45,34 @@ const Homepage = () => {
             }
         }
         fetchData();
-    }, []);
+    }, [userId]);
 
     let content;
 
     if (debates) {
     content = (
-        <div class="debate">
-            <ul class="debate list" >
+        <div>
+            <ul>
                 {debates.map(debate => (
-                    <div class="debates">
-                    <span><Button id="btn1" onClick={() => debateRoom("for", debate.topic)}>FOR</Button>
-                        <div class="dcontainer">
-                         {debate.topic}
-                        </div>
-                    <Button id="btn2" onClick={() => debateRoom("against", debate.topic)}>AGAINST</Button></span>
+                    <div className="debate debates">
+                        <span>
+                            <Button className="debate button-container"  onClick={() => todebateRoom("FOR", debate.debateId)}>FOR</Button>
+                                <div className="debate dcontainer">
+                                    {debate.topic}
+                                </div>
+                            <Button className="debate button-container" onClick={() => todebateRoom("AGAINST", debate.debateId)}>AGAINST</Button>
+                        </span>
                     </div>
                     ))}
             </ul>
-
         </div>
     );
    }
 
     return (
         <BaseContainer className="base-container">
-            <h2>Let's Debate!</h2>
-            <p className="debate paragraph"> Choose debate topic:</p>
             {content}
-            <Button className="debate button-container" onClick={() => logout()}>LOGOUT</Button>
+            <Button className="debate button-container" onClick={() => logout()}>LOGOUT</Button> 
         </BaseContainer>
     );  
 }

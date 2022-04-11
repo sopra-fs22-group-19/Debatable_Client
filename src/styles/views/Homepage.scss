@@ -32,11 +32,12 @@
     margin: 0.2em 0;
     text-align: center;
   }
-  .debates {
+  &.debates {
     margin: auto;
     width: 1000%;
+
   }
-  .dcontainer{
+  &.dcontainer{
   margin: 0.5em;
   width: 50em;
   padding: 9px;
@@ -51,7 +52,8 @@
 
   &.button-container {
     justify-content: center;
-    margin-top: 2em;
+    margin-top: 1em;
+    background: lighten($background, 60);;
   }
 }
 

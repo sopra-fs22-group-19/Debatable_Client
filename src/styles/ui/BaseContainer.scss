@@ -7,9 +7,10 @@
   padding-right: 15px;
   max-width: $DESKTOP_WIDTH;
   color: $textColor;
+  align-items: center;
   & p,h2 {
     margin: 0.2em 0;
     text-align: center;
-    color: red;
+    color: blue;
   }
 }
