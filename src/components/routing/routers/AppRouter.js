@@ -10,7 +10,7 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/home">
+        <Route exact path="/home">
           <GameGuard>
             <Homepage/>
           </GameGuard>
@@ -24,7 +24,7 @@ const AppRouter = () => {
           <Register/>
         </Route>
         <Route exact path="/">
-          <Redirect to="/home"/>
+            <Redirect to="/home"/>
         </Route>
         <Route exact path="/debateroom/:roomId">
           <GameGuard>
