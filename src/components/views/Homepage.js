@@ -49,6 +49,7 @@ const Homepage = () => {
 
     let content;
 
+    // TODO: when backend from debate room implemented, remove debate.topic from here in buttons
     if (debates) {
     content = (
         <div>
@@ -57,7 +58,7 @@ const Homepage = () => {
                     <div className="debate debates">
                         <span>
                             <Button className="debate button-container"  onClick={() => todebateRoom("FOR", debate.debateId)}>FOR</Button>
-                                <div className="debate dcontainer">
+                                <div key={debate.debateId} className="debate dcontainer">
                                     {debate.topic}
                                 </div>
                             <Button className="debate button-container" onClick={() => todebateRoom("AGAINST", debate.debateId)}>AGAINST</Button>

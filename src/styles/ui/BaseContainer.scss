@@ -5,7 +5,9 @@
   padding-left: 15px;
   margin-right: auto;
   padding-right: 15px;
-  max-width: $DESKTOP_WIDTH;
+
+  width: 750px;
+  height: 800px;
   color: $textColor;
   align-items: center;
   & p,h2 {

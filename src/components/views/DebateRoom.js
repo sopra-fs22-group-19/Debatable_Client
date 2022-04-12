@@ -15,7 +15,7 @@ const getLink = () => {
 // This can be changed in future
 
 const Link = props => (
-    <div className='debateRoom parent-link'> 
+    <div className='debateRoom parent-link'>
         Share this link for other participant to Join!
         <div className='debateRoom child-link'>
             {getLink()}{props.roomId}/2
@@ -30,7 +30,7 @@ const DebateRoom = () => {
     const [userId, setId] = useState(localStorage.getItem("userId"));
     const [link, setlink] = useState(false)
     const [inviteDisable, setinviteDisable] = useState(false)
-    
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -66,14 +66,14 @@ const DebateRoom = () => {
                 </div>
                 <div className="debateRoom chat-box-right">
                     <div className='debateRoom text'>Invite user to join!</div>
-                    <Button 
-                        className="debateRoom button-container" 
-                        value="INVITE" 
-                        disabled={inviteDisable}
+                    <Button
+                        className="debateRoom button-container"
+                        value="INVITE"
+                        hidden={inviteDisable}
                         onClick={() => {
-                                setlink(true)
-                                setinviteDisable(true)
-                            }
+                            setlink(true)
+                            setinviteDisable(true)
+                        }
                         }
                     />
                     {link ? <Link roomId={roomId}/> : null }
