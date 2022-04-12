@@ -7,6 +7,5 @@ export const Button = props => (
     className={`primary-button ${props.className}`}>
     {props.value}
     {props.children}
-
   </button>
 );

@@ -69,12 +69,6 @@ const Homepage = () => {
         </div>
     );
    }
-   
-   /*
-   TODO: discussion with Orestis if we should keep it
-   <h2>Let's Debate!</h2>
-    <p className="debate paragraph"> Choose debate topic:</p>
-   */
 
     return (
         <BaseContainer className="base-container">
