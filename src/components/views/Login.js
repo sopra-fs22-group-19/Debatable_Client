@@ -35,6 +35,26 @@ const Login = props => {
   const [password, setPassword] = useState(null);
   const [username, setUsername] = useState(null);
 
+  let to_push;
+  let guest = false;
+
+  // check if Login page routed for second participant. If so, guest=true to give option to login as a guest user as well.
+  if (props.participant === "2") {
+    guest=true;
+    to_push = "/debateroom/" + String(props.roomId)
+  }
+  else {
+    to_push = "/home"
+  }
+
+  const Guest = () => (
+    <div 
+    className='login create-account'
+    onClick={() => history.push(to_push)}>
+      Join as a guest User
+    </div>
+  )
+
   const doLogin = async () => {
     try {
       let to_get = "/login?username=" + String(username) + "&password=" + String(password);
@@ -46,13 +66,15 @@ const Login = props => {
 
       // Store the token into the local storage.
       localStorage.setItem('token', user.token);
-      localStorage.setItem('userId', user.userId); //we have id in rest
-      // Login successfully worked --> navigate to the route /home in the GameRouter
-      history.push("/home");
+      localStorage.setItem('userId', user.userId);
+
+      // Login successfully worked --> navigate to the route
+      history.push(to_push);
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
   };
+
   function toRegister () {
     history.push("/register");
   }
@@ -87,6 +109,7 @@ const Login = props => {
       onClick={() => toRegister() }>
         create account
       </div>
+      {guest ? <Guest /> : null }
     </BaseContainer>
   );
 };
