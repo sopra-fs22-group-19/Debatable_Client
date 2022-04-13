@@ -6,8 +6,8 @@ import "styles/views/DebateRoom.scss";
 import { isProduction } from 'helpers/isProduction';
 
 const getLink = () => {
-    const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/'
-    const devURL = 'http://localhost:3000/'
+    const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/debateroom/'
+    const devURL = 'http://localhost:3000/debateroom/'
     return isProduction() ? prodURL : devURL;
 }
 
