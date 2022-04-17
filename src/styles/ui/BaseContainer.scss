@@ -5,12 +5,29 @@
   padding-left: 15px;
   margin-right: auto;
   padding-right: 15px;
-
   width: 750px;
   height: 800px;
   color: $textColor;
   align-items: center;
   & p,h2 {
+    margin: 0.2em 0;
+    text-align: center;
+    color: blue;
+  }
+
+
+}
+.base-container-hp {
+  margin-left: 260px;
+  padding-left: 15px;
+  margin-right: auto;
+  padding-right: 15px;
+  width: 750px;
+  height: 800px;
+  color: $textColor;
+  align-items: center;
+
+  & p, h2 {
     margin: 0.2em 0;
     text-align: center;
     color: blue;
