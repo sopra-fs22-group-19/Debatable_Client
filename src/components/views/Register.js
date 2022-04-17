@@ -30,6 +30,10 @@ FormField.propTypes = {
   onChange: PropTypes.func
 };
 
+
+// in the Register you need to give props.roomId and props.participant to know if someone is first participant or second
+// if a user is  first participant things will be as it is.
+// if a user is second participant, once succesfully registrating, they will be redirected to debate room page.
 const Register = props => {
   const history = useHistory();
   const [password, setPassword] = useState(null);

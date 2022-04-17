@@ -44,4 +44,7 @@ const AppRouter = () => {
   );
 };
 
+
+
+// /debateroom/register/:roomId/:participant ---> <Register>
 export default AppRouter;

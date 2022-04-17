@@ -76,6 +76,7 @@ const Login = props => {
   };
 
   function toRegister () {
+    // if else statement here to know if the link is for first participant or second
     history.push("/register");
   }
 
@@ -113,5 +114,7 @@ const Login = props => {
     </BaseContainer>
   );
 };
+
+// in toRegister you can have two varibles as input which can be roomid and participants.
 
 export default Login;
