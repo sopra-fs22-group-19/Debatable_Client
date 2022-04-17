@@ -71,7 +71,7 @@ const Homepage = () => {
    }
 
     return (
-        <BaseContainer className="base-container">
+        <BaseContainer className="base-container-hp">
             {content}
             <Button className="debate button-container" onClick={() => logout()}>LOGOUT</Button> 
         </BaseContainer>

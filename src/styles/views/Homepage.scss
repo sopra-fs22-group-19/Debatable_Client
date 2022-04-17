@@ -9,9 +9,11 @@
 .debate {
   &.container {
     background: $background;
-    padding: 1.5em;
+    padding: 10.5em;
     border-radius: $borderRadius;
     display: flex;
+    margin-left:900px;
+    margin-right: 900px;
     flex-direction: column;
     align-items: center;
     box-shadow: $dropShadow;
@@ -19,7 +21,9 @@
   &.debate-list {
     list-style: none;
     display: flex;
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
     padding-left: 0;
   }
   &.user-item {
@@ -27,6 +31,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
   }
   & p,h2 {
     margin: 0.2em 0;
@@ -34,7 +39,7 @@
   }
   &.debates {
     margin: auto;
-    width: 1000%;
+    width: 150%;
 
   }
   &.dcontainer{
@@ -47,7 +52,7 @@
   text-align: center;
   background: lighten($background, 5);
   margin-left: 00.5em;
-  margin-right: 000.5em;
+  margin-right: 00.5em;
   }
 
   &.button-container {
