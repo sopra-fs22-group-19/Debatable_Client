@@ -50,7 +50,14 @@ const Login = props => {
   const Guest = () => (
     <div 
     className='login create-account'
-    onClick={() => history.push(to_push)}>
+    onClick={() => history.push(
+    {
+      pathname: to_push,
+      state: {
+        participant: props.participant,
+        roomId: props.roomId}
+    }
+    )}>
       Join as a guest User
     </div>
   )
@@ -69,7 +76,13 @@ const Login = props => {
       localStorage.setItem('userId', user.userId);
 
       // Login successfully worked --> navigate to the route
-      history.push(to_push);
+      history.push(
+      {
+        pathname: to_push,
+            state: {
+              participant: props.participant,
+              roomId: props.roomId}
+      });
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
@@ -77,7 +90,11 @@ const Login = props => {
 
   function toRegister () {
     // if else statement here to know if the link is for first participant or second
-    history.push("/register");
+
+    history.push({
+        pathname: "/register",
+        state: {participant: props.participant,
+          roomId: props.roomId} });
   }
 
   return (

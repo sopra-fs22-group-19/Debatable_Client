@@ -7,6 +7,7 @@ import 'styles/views/Login.scss';
 import 'styles/ui/BaseContainer.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import { useLocation } from "react-router-dom";
 
 const FormField = props => {
   return (
@@ -36,9 +37,11 @@ FormField.propTypes = {
 // if a user is second participant, once succesfully registrating, they will be redirected to debate room page.
 const Register = props => {
   const history = useHistory();
+  const location = useLocation();
   const [password, setPassword] = useState(null);
   const [username, setUsername] = useState(null);
   const [name, setName] = useState(null);
+  let to_push;
 
   const doRegister = async () => {
     try {
@@ -52,7 +55,28 @@ const Register = props => {
       localStorage.setItem('token', user.token);
       localStorage.setItem('userId', user.userId);
       // Login successfully worked --> navigate to the route /home in the GameRouter
-      history.push("/home");
+      if (location.state.participant === "1")
+      {
+        history.push(
+        {
+          pathname: "/home",
+          state: {
+            participant: location.state.participant,
+            roomId: location.state.roomId}
+        });
+      }
+      else if (location.state.participant === "2")
+      {
+        to_push = "/debateroom/" + String(location.state.roomId)
+        history.push(
+        {
+          pathname: to_push,
+              state: {
+            participant: location.state.participant,
+            roomId: location.state.roomId}
+        });
+      }
+
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }

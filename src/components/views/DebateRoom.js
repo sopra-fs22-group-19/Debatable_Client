@@ -4,6 +4,7 @@ import {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom/cjs/react-router-dom.min';
 import "styles/views/DebateRoom.scss";
 import { isProduction } from 'helpers/isProduction';
+import { useLocation } from "react-router-dom";
 
 const getLink = () => {
     const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/debateroom/'
@@ -40,8 +41,10 @@ const DebateRoom = () => {
                 if (userId === String(debateRoom.user1.userId)) {
                     setSide(debateRoom.side1)
                 }
-                else {
-                    setSide(debateRoom.side2)
+                if(location.state.participant==="2") {
+                    if (debateRoom.side1=="FOR")
+                    {setSide("AGAINST")}
+                    else {setSide("FOR")}
                 }
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
@@ -52,8 +55,14 @@ const DebateRoom = () => {
         fetchData();
     }, [userId, roomId]);
 
-    let content;
-    content = (
+    let content1;
+    let content2
+    const location = useLocation();
+
+
+
+
+    content1 = (
         <div>
             <div className="debateRoom topic-container">
                 {topic}
@@ -65,6 +74,7 @@ const DebateRoom = () => {
                     <div className="debateRoom writer-child"></div>
                 </div>
                 <div className="debateRoom chat-box-right">
+
                     <div className='debateRoom text'>Invite user to join!</div>
                     <Button
                         className="debateRoom button-container"
@@ -76,14 +86,40 @@ const DebateRoom = () => {
                         }
                         }
                     />
-                    {link ? <Link roomId={roomId}/> : null }
+                    {link ? <Link roomId={roomId}/> : null}
+
+
                 </div>
             </div>
         </div>
     );
+    content2 = (
+        <div>
+            <div className="debateRoom topic-container">
+                {topic}
+            </div>
+            <div>
+                <div className="debateRoom chat-box-left">
+                    <div>{side}</div>
+                    <div className="debateRoom chat-child"></div>
+                    <div className="debateRoom writer-child"></div>
+                </div>
+                <div className="debateRoom chat-box-right">
+
+                    <div className='debateRoom text'>Wait for 1st participant to start the debate!</div>
+
+
+                </div>
+            </div>
+        </div>
+    );
+
+
+
     return (
         <div>
-            {content}
+
+            {location.state.participant==="2"?content2:content1}
         </div>
     );
 }

@@ -5,12 +5,14 @@ import {Button} from 'components/ui/Button';
 import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/Homepage.scss";
+import { useLocation } from "react-router-dom";
 
 // BUG: when going back to homepage and then joing the same debate topic with same side, 
 // user should not create a new one but should go to the same one.
 
 const Homepage = () => {
     const history = useHistory();
+    const location = useLocation();
     const [debates, setDebates] = useState(null);
     const userId = localStorage.getItem('userId')
 
@@ -27,7 +29,13 @@ const Homepage = () => {
             const debateRoom = response.data
 
             let push_to = '/debateroom/' + String(debateRoom.roomId)
-            history.push(push_to);
+
+            history.push({
+                pathname: push_to,
+                state: {
+                    participant: location.state.participant,
+                    roomId: location.state.roomId}
+            });
         }catch(error) {
             alert(`Something went wrong while creating debate room: \n${handleError(error)}`);
         } 
