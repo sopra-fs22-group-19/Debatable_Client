@@ -55,17 +55,8 @@ const Register = props => {
       localStorage.setItem('token', user.token);
       localStorage.setItem('userId', user.userId);
       // Login successfully worked --> navigate to the route /home in the GameRouter
-      if (location.state.participant === "1")
-      {
-        history.push(
-        {
-          pathname: "/home",
-          state: {
-            participant: location.state.participant,
-            roomId: location.state.roomId}
-        });
-      }
-      else if (location.state.participant === "2")
+
+      if (location.state.participant === "2")
       {
         to_push = "/debateroom/" + String(location.state.roomId)
         history.push(
@@ -75,6 +66,16 @@ const Register = props => {
             participant: location.state.participant,
             roomId: location.state.roomId}
         });
+      }
+      else
+      {
+        history.push(
+            {
+              pathname: "/home",
+              state: {
+                participant: location.state.participant,
+                roomId: location.state.roomId}
+            });
       }
 
     } catch (error) {

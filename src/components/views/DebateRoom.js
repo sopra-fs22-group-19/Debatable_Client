@@ -45,6 +45,7 @@ const DebateRoom = () => {
                     if (debateRoom.side1=="FOR")
                     {setSide("AGAINST")}
                     else {setSide("FOR")}
+                    console.log(debateRoom)
                 }
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
