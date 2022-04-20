@@ -47,8 +47,8 @@ const DebateRoom = () => {
                         if (debateRoom.side1=="FOR")
                         {setSide("AGAINST")}
                         else {setSide("FOR")}
-                        const requestBody = JSON.stringify({userId, side});
-                        const response = await api.put("/debates/rooms/" + String(roomId),requestBody);
+                        //const requestBody = JSON.stringify({userId, side});
+                        const response = await api.put("/debates/rooms?roomId=" + String(roomId) + "&userId=" + String(userId));
                         console.log(debateRoom)
 
                     }
