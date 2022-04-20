@@ -41,11 +41,25 @@ const DebateRoom = () => {
                 if (userId === String(debateRoom.user1.userId)) {
                     setSide(debateRoom.side1)
                 }
+                //attempt for put
                 if(location.state.participant==="2") {
-                    if (debateRoom.side1=="FOR")
-                    {setSide("AGAINST")}
-                    else {setSide("FOR")}
-                    console.log(debateRoom)
+                    try {
+                        if (debateRoom.side1=="FOR")
+                        {setSide("AGAINST")}
+                        else {setSide("FOR")}
+                        const requestBody = JSON.stringify({userId, side});
+                        const response = await api.put("/debates/rooms/" + String(roomId),requestBody);
+                        console.log(debateRoom)
+
+                    }
+                    catch (error){
+                        console.error(`userId not found: \n${handleError(error)}`);
+                        console.error("Details:", error);
+                        alert("uesrId not found! See the console for details.");
+
+
+                    }
+
                 }
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
