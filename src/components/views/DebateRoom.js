@@ -31,10 +31,26 @@ const DebateRoom = () => {
     const [userId, setId] = useState(localStorage.getItem("userId"));
     const [link, setlink] = useState(false)
     const [inviteDisable, setinviteDisable] = useState(false)
+    const [start, setstart] = useState(false)
     const location = useLocation();
 
     let participant1;
     let participant2;
+
+    const loading = async (roomId) => {
+        while(true) {
+            const response = await api.get("/debates/rooms/" + String(roomId));
+            const debateRoom = response.data
+            const user2 = debateRoom.user2;
+            console.log("we are in while loop")
+            if (user2 === null) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+            else break;
+        }
+        setlink(false);
+        setstart(true);
+    }
 
     useEffect(() => {
         async function fetchData() {
@@ -52,10 +68,7 @@ const DebateRoom = () => {
                         {setSide("AGAINST")}
                         else {setSide("FOR")}
                         const requestBody = JSON.stringify({userId});
-                        await api.put("/debates/rooms/" + String(roomId), requestBody);
-                        //const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
-                        //console.log(debateRoom)
-
+                        const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
                     }
                     catch (error){
                         console.error(`userId not found: \n${handleError(error)}`);
@@ -63,6 +76,7 @@ const DebateRoom = () => {
                         alert("uesrId not found! See the console for details.");
                     }
                 }
+               
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
                 console.error("Details:", error);
@@ -93,10 +107,12 @@ const DebateRoom = () => {
                         onClick={() => {
                             setlink(true)
                             setinviteDisable(true)
+                            loading(roomId)
                         }
                         }
                     />
                     {link ? <Link roomId={roomId}/> : null}
+                    {start ? <Button className="debateRoom button-container" value="START"/>:null}
                 </div>
             </div>
         </div>
