@@ -31,6 +31,10 @@ const DebateRoom = () => {
     const [userId, setId] = useState(localStorage.getItem("userId"));
     const [link, setlink] = useState(false)
     const [inviteDisable, setinviteDisable] = useState(false)
+    const location = useLocation();
+
+    let participant1;
+    let participant2;
 
     useEffect(() => {
         async function fetchData() {
@@ -48,8 +52,9 @@ const DebateRoom = () => {
                         {setSide("AGAINST")}
                         else {setSide("FOR")}
                         const requestBody = JSON.stringify({userId});
-                        const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
-                        console.log(debateRoom)
+                        await api.put("/debates/rooms/" + String(roomId), requestBody);
+                        //const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
+                        //console.log(debateRoom)
 
                     }
                     catch (error){
@@ -65,11 +70,7 @@ const DebateRoom = () => {
             }
         }
         fetchData();
-    }, [userId, roomId]);
-
-    let participant1;
-    let participant2;
-    const location = useLocation();
+    }, [userId, roomId, location.state.participant]);
 
     participant1 = (
         <div>
