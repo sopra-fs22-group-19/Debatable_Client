@@ -41,10 +41,10 @@ const DebateRoom = () => {
                 if (userId === String(debateRoom.user1.userId)) {
                     setSide(debateRoom.side1)
                 }
-                //attempt for put
+
                 if(location.state.participant==="2") {
                     try {
-                        if (debateRoom.side1=="FOR")
+                        if (debateRoom.side1==="FOR")
                         {setSide("AGAINST")}
                         else {setSide("FOR")}
                         const requestBody = JSON.stringify({userId});
@@ -56,10 +56,7 @@ const DebateRoom = () => {
                         console.error(`userId not found: \n${handleError(error)}`);
                         console.error("Details:", error);
                         alert("uesrId not found! See the console for details.");
-
-
                     }
-
                 }
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
@@ -70,14 +67,11 @@ const DebateRoom = () => {
         fetchData();
     }, [userId, roomId]);
 
-    let content1;
-    let content2
+    let participant1;
+    let participant2;
     const location = useLocation();
 
-
-
-
-    content1 = (
+    participant1 = (
         <div>
             <div className="debateRoom topic-container">
                 {topic}
@@ -102,13 +96,12 @@ const DebateRoom = () => {
                         }
                     />
                     {link ? <Link roomId={roomId}/> : null}
-
-
                 </div>
             </div>
         </div>
     );
-    content2 = (
+
+    participant2 = (
         <div>
             <div className="debateRoom topic-container">
                 {topic}
@@ -120,21 +113,17 @@ const DebateRoom = () => {
                     <div className="debateRoom writer-child"></div>
                 </div>
                 <div className="debateRoom chat-box-right">
-
-                    <div className='debateRoom text'>Wait for 1st participant to start the debate!</div>
-
-
+                    <div className='debateRoom text'>
+                        Waiting for 1st participant to start the debate!
+                    </div>
                 </div>
             </div>
         </div>
     );
 
-
-
     return (
         <div>
-
-            {location.state.participant==="2"?content2:content1}
+            {location.state.participant==="2"?participant2:participant1}
         </div>
     );
 }
