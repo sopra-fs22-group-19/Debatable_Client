@@ -24,12 +24,14 @@ const Link = props => (
 
 const DebateRoom = () => {
     const {roomId} = useParams();
-    const [side, setSide] = useState(null)
-    const [topic, setTopic] = useState(null)
-    //const [userId, setId] = useState(window.localStorage.getItem("userId"));
-    const [link, setlink] = useState(false)
-    const [inviteDisable, setinviteDisable] = useState(false)
-    const [start, setstart] = useState(false)
+    const [side, setSide] = useState(null);
+    const [opponentSide, setOpponentSide] = useState(null);
+    const [topic, setTopic] = useState(null);
+    const [link, setlink] = useState(false);
+    const [inviteDisable, setinviteDisable] = useState(false);
+    const [opponent, showOpponent] = useState(false);
+    const [start, setstart] = useState(false);
+    const [startDisable, setstartDisable] = useState(false);
     const location = useLocation();
     const userId = location.state.userId;
 
@@ -50,6 +52,24 @@ const DebateRoom = () => {
         setlink(false);
         setstart(true);
     }
+
+    const startDebate = async () => {
+        if (side === "FOR") {
+            setOpponentSide("AGAINST")
+        }
+        else {
+            setOpponentSide("FOR")
+        }
+        // TODO: add here put to update the debateroom status to ONGOING
+        // bug: start debate button not disapperaing even after hidden is there @Orestis can u please check why is that happening.
+    }
+
+    const Opponent = () => (
+            <div>
+                <div>{opponentSide}</div>
+                <div className="debateRoom opponent-child"></div>
+            </div>
+    )
 
     useEffect(() => {
         async function fetchData() {
@@ -90,6 +110,16 @@ const DebateRoom = () => {
             <div className="debateRoom topic-container">
                 {topic}
             </div>
+            {start ? <Button 
+                className="debateRoom button-start" 
+                value="Start Debate"
+                hidden={startDisable}
+                onClick={() => {
+                    setstartDisable(true)
+                    showOpponent(true)
+                    startDebate()
+                }}
+                /> :null}
             <div>
                 <div className="debateRoom chat-box-left">
                     <div>{side}</div>
@@ -97,8 +127,7 @@ const DebateRoom = () => {
                     <div className="debateRoom writer-child"></div>
                 </div>
                 <div className="debateRoom chat-box-right">
-
-                    <div className='debateRoom text'>Invite user to join!</div>
+                    {start ? null: <div className='debateRoom text'>Invite user to join!</div>}
                     <Button
                         className="debateRoom button-container"
                         value="INVITE"
@@ -111,7 +140,7 @@ const DebateRoom = () => {
                         }
                     />
                     {link ? <Link roomId={roomId}/> : null}
-                    {start ? <Button className="debateRoom button-container" value="START"/>:null}
+                    {opponent ? <Opponent opponentSide={opponentSide}/>: null}
                 </div>
             </div>
         </div>
@@ -120,7 +149,7 @@ const DebateRoom = () => {
     participant2 = (
         <div>
             <div className="debateRoom topic-container">
-                {topic} : {userId}
+                {topic}
             </div>
             <div>
                 <div className="debateRoom chat-box-left">

@@ -8,6 +8,10 @@ import 'styles/ui/BaseContainer.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 
+// BUG: since we removed localstorage token and userid because of multiple userids on same browser,
+// when we are directly trying to go to home page, it is not appearing even after login.
+// Same thing is happening for all the pages. TODO: discuss it with @Orestis.
+
 const FormField = props => {
   return (
     <div className="login field">
@@ -76,7 +80,7 @@ const Login = props => {
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
-  
+
       // Login successfully worked --> navigate to the route
       history.push(
       {
