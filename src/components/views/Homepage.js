@@ -32,8 +32,7 @@ const Homepage = () => {
                 pathname: push_to,
                 state: {
                     userId: userId,
-                    participant: location.state.participant,
-                    roomId: location.state.roomId}
+                    roomId: debateRoom.roomId}
             });
         }catch(error) {
             alert(`Something went wrong while creating debate room: \n${handleError(error)}`);

@@ -1,6 +1,7 @@
 import { Button } from 'components/ui/Button';
 import {api, handleError} from 'helpers/api';
 import {useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
 import {useParams} from 'react-router-dom/cjs/react-router-dom.min';
 import "styles/views/DebateRoom.scss";
 import { isProduction } from 'helpers/isProduction';
@@ -11,7 +12,6 @@ const getLink = () => {
     const devURL = 'http://localhost:3000/debateroom/'
     return isProduction() ? prodURL : devURL;
 }
-// current url convention: baseURL/roomId/participant-n
 
 const Link = props => (
     <div className='debateRoom parent-link'>
@@ -23,7 +23,9 @@ const Link = props => (
 )
 
 const DebateRoom = () => {
+    const history = useHistory();
     const {roomId} = useParams();
+
     const [side, setSide] = useState(null);
     const [opponentSide, setOpponentSide] = useState(null);
     const [topic, setTopic] = useState(null);
@@ -32,6 +34,8 @@ const DebateRoom = () => {
     const [opponent, showOpponent] = useState(false);
     const [start, setstart] = useState(false);
     const [startDisable, setstartDisable] = useState("flex");
+    const [showEndDebate, setShowEndDebate] = useState(false);
+
     const location = useLocation();
     const userId = location.state.userId;
 
@@ -39,7 +43,6 @@ const DebateRoom = () => {
     let participant2;
 
     const waiting = async (roomId) => {
-        // waiting for second participant to join the debate room
         while(true) {
             const response = await api.get("/debates/rooms/" + String(roomId));
             const debateRoom = response.data
@@ -54,15 +57,23 @@ const DebateRoom = () => {
     }
 
     const startDebate = async () => {
-        console.log({startDisable})
         if (side === "FOR") {
             setOpponentSide("AGAINST")
         }
         else {
             setOpponentSide("FOR")
         }
-        // TODO: add here put to update the debateroom status to ONGOING
-        // bug: start debate button not disapperaing even after hidden is there @Orestis can u please check why is that happening.
+
+        try {
+            const debateStatus = 4;
+            const requestBody = JSON.stringify({debateStatus});
+            const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
+        }
+        catch (error) {
+            console.error(`Something went wrong while updating debate Status in debateroom: \n${handleError(error)}`);
+            console.error("Details:", error);
+            alert("Something went wrong while updating debate Status in debateroom! See the console for details.");
+        }
     }
 
     const Opponent = () => (
@@ -71,6 +82,27 @@ const DebateRoom = () => {
                 <div className="debateRoom opponent-child"></div>
             </div>
     )
+
+    const endDebate = async () => {
+        try {
+            const debateStatus = 5;
+            const requestBody = JSON.stringify({debateStatus});
+            const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
+            console.log(response.data);
+        }
+        catch (error) {
+            console.error(`Something went wrong while ending the debate in debateroom: \n${handleError(error)}`);
+            console.error("Details:", error);
+            alert("Something went wrong while uending the debate in debateroom! See the console for details.");
+        }
+        
+        history.push(
+            {
+              pathname: "/home",
+              state: {userId: userId}
+            }
+        );
+    }
 
     useEffect(() => {
         async function fetchData() {
@@ -91,9 +123,9 @@ const DebateRoom = () => {
                         const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
                     }
                     catch (error){
-                        console.error(`userId not found: \n${handleError(error)}`);
+                        console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);
                         console.error("Details:", error);
-                        alert("uesrId not found! See the console for details.");
+                        alert("Something went wrong while updating userId in debateroom! See the console for details.");
                     }
                 }
                
@@ -111,6 +143,7 @@ const DebateRoom = () => {
             <div className="debateRoom topic-container">
                 {topic}
             </div>
+
             {start ?
                 <Button
                     className="debateRoom button-start"
@@ -119,9 +152,19 @@ const DebateRoom = () => {
                     onClick={() => {
                         setstartDisable("none")
                         showOpponent(true)
+                        setShowEndDebate(true)
                     startDebate()
                 }
                 }
+                /> : null}
+
+            {showEndDebate ? 
+                <Button
+                    className="debateRoom button-end"
+                    value="End Debate"
+                    onClick={() => {
+                        endDebate()
+                    }}
                 /> : null}
 
             <div>
