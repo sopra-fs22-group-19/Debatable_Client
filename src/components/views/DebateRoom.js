@@ -29,9 +29,9 @@ const DebateRoom = () => {
     const [topic, setTopic] = useState(null);
     const [link, setlink] = useState(false);
     const [inviteDisable, setinviteDisable] = useState(false);
+    const [startDisable, setstartDisable] = useState("flex");
     const [opponent, showOpponent] = useState(false);
     const [start, setstart] = useState(false);
-    const [startDisable, setstartDisable] = useState(false);
     const location = useLocation();
     const userId = location.state.userId;
 
@@ -54,6 +54,7 @@ const DebateRoom = () => {
     }
 
     const startDebate = async () => {
+        console.log({startDisable})
         if (side === "FOR") {
             setOpponentSide("AGAINST")
         }
@@ -110,16 +111,19 @@ const DebateRoom = () => {
             <div className="debateRoom topic-container">
                 {topic}
             </div>
-            {start ? <Button 
-                className="debateRoom button-start" 
-                value="Start Debate"
-                hidden={startDisable}
-                onClick={() => {
-                    setstartDisable(true)
-                    showOpponent(true)
+            {start ?
+                <Button
+                    className="debateRoom button-start"
+                    value="Start Debate"
+                    style={{display:startDisable}}
+                    onClick={() => {
+                        setstartDisable("none")
+                        showOpponent(true)
                     startDebate()
-                }}
-                /> :null}
+                }
+                }
+                /> : null}
+
             <div>
                 <div className="debateRoom chat-box-left">
                     <div>{side}</div>
