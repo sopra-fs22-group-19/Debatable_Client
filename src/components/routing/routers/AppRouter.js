@@ -5,8 +5,10 @@ import Login from "components/views/Login";
 import Register from "components/views/Register";
 import Homepage from "components/views/Homepage";
 import DebateRoom from "../../views/DebateRoom";
+import InviteeLanding from "../../views/InviteeLanding";
 
 const AppRouter = () => {
+  const participant = 1;
   return (
     <BrowserRouter>
       <Switch>
@@ -16,24 +18,32 @@ const AppRouter = () => {
           </GameGuard>
         </Route>
         <Route exact path="/login">
-          <LoginGuard>
-            <Login/>
-          </LoginGuard>
+            <Login
+            roomId = {null}
+            participant = {participant}
+            />
         </Route>
         <Route exact path="/register">
-          <Register/>
+          <Register
+          />
         </Route>
         <Route exact path="/">
-            <Redirect to="/home"/>
+            <Redirect to="/login"/>
         </Route>
         <Route exact path="/debateroom/:roomId">
           <GameGuard>
             <DebateRoom/>
           </GameGuard>
         </Route>
+        <Route exact path="/debateroom/:roomId/:participant">
+            <InviteeLanding/>
+        </Route>
       </Switch>
     </BrowserRouter>
   );
 };
 
+
+
+// /debateroom/register/:roomId/:participant ---> <Register>
 export default AppRouter;

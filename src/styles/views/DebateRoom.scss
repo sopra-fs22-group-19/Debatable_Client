@@ -8,10 +8,10 @@
         border-radius: $borderRadius;
         text-align: center;
         color: rgb(97, 26, 26);
-        //background: lightblue;
-        background: lighten($background, 65);
+        background: lighten($background, 70);
         margin-left: 20.5em;
         margin-right: 20.5em;
+        margin-bottom: 1em;
         font-family: sans-serif;
         font-weight: bold;
     }
@@ -76,6 +76,18 @@
         border: 2px solid black;
     }
 
+    &.opponent-child {
+        margin-top: 0.25em;
+        margin-left: 0.25em;
+        margin-right: 0.25em;
+        height:13cm;
+        width: 15.7cm;
+        display: flex;
+        flex-direction: column;
+        border-radius: $borderRadius;
+        border: 2px solid black;
+    }
+
     &.writer-child {
         margin-top: 1.25em;
         margin-left: 0.25em;
@@ -95,6 +107,31 @@
     &.button-container {
         margin-top: 1em;
         background: lighten($background, 60);
+      }
+    
+    &.button-start {
+        margin-top: 10em;
+        background: lighten($background, 60);
+        width: auto;
+        padding: 9px;
+        border-radius: $borderRadius;
+        color: rgb(97, 26, 26);
+        margin: auto;
+        align-items: center;
+        font-family: sans-serif;
+      }
+    
+    &.button-end {
+        margin-top: 10em;
+        background: lighten($background, 60);
+        width: auto;
+        padding: 9px;
+        border-radius: $borderRadius;
+        color: rgb(97, 26, 26);
+        margin: auto;
+        align-items: center;
+        font-family: sans-serif;
+        display: flex;
       }
     
     &.parent-link {
