@@ -29,9 +29,9 @@ const DebateRoom = () => {
     const [topic, setTopic] = useState(null);
     const [link, setlink] = useState(false);
     const [inviteDisable, setinviteDisable] = useState(false);
-    const [startDisable, setstartDisable] = useState("flex");
     const [opponent, showOpponent] = useState(false);
     const [start, setstart] = useState(false);
+    const [startDisable, setstartDisable] = useState("flex");
     const location = useLocation();
     const userId = location.state.userId;
 
