@@ -11,9 +11,7 @@ const getLink = () => {
     const devURL = 'http://localhost:3000/debateroom/'
     return isProduction() ? prodURL : devURL;
 }
-
-// current url convention: baseURL/roomId/participant-no
-// This can be changed in future
+// current url convention: baseURL/roomId/participant-n
 
 const Link = props => (
     <div className='debateRoom parent-link'>
@@ -28,23 +26,24 @@ const DebateRoom = () => {
     const {roomId} = useParams();
     const [side, setSide] = useState(null)
     const [topic, setTopic] = useState(null)
-    const [userId, setId] = useState(localStorage.getItem("userId"));
+    //const [userId, setId] = useState(window.localStorage.getItem("userId"));
     const [link, setlink] = useState(false)
     const [inviteDisable, setinviteDisable] = useState(false)
     const [start, setstart] = useState(false)
     const location = useLocation();
+    const userId = location.state.userId;
 
     let participant1;
     let participant2;
 
-    const loading = async (roomId) => {
+    const waiting = async (roomId) => {
+        // waiting for second participant to join the debate room
         while(true) {
             const response = await api.get("/debates/rooms/" + String(roomId));
             const debateRoom = response.data
             const user2 = debateRoom.user2;
-            console.log("we are in while loop")
             if (user2 === null) {
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 10000));
             }
             else break;
         }
@@ -58,7 +57,7 @@ const DebateRoom = () => {
                 const response = await api.get("/debates/rooms/" + String(roomId));
                 const debateRoom = response.data
                 setTopic(debateRoom.debate.topic)
-                if (userId === String(debateRoom.user1.userId)) {
+                if (userId === debateRoom.user1.userId) {
                     setSide(debateRoom.side1)
                 }
 
@@ -107,7 +106,7 @@ const DebateRoom = () => {
                         onClick={() => {
                             setlink(true)
                             setinviteDisable(true)
-                            loading(roomId)
+                            waiting(roomId)
                         }
                         }
                     />
@@ -121,7 +120,7 @@ const DebateRoom = () => {
     participant2 = (
         <div>
             <div className="debateRoom topic-container">
-                {topic}
+                {topic} : {userId}
             </div>
             <div>
                 <div className="debateRoom chat-box-left">

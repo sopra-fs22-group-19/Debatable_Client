@@ -31,10 +31,6 @@ FormField.propTypes = {
   onChange: PropTypes.func
 };
 
-
-// in the Register you need to give props.roomId and props.participant to know if someone is first participant or second
-// if a user is  first participant things will be as it is.
-// if a user is second participant, once succesfully registrating, they will be redirected to debate room page.
 const Register = props => {
   const history = useHistory();
   const location = useLocation();
@@ -51,11 +47,6 @@ const Register = props => {
       // Get the returned user and update a new object.
       const user = new User(response.data);
 
-      // Store the token into the local storage.
-      localStorage.setItem('token', user.token);
-      localStorage.setItem('userId', user.userId);
-      // Login successfully worked --> navigate to the route /home in the GameRouter
-
       if (location.state.participant === "2")
       {
         to_push = "/debateroom/" + String(location.state.roomId)
@@ -63,6 +54,8 @@ const Register = props => {
         {
           pathname: to_push,
               state: {
+            userId: user.userId,
+            token: user.token,
             participant: location.state.participant,
             roomId: location.state.roomId}
         });
@@ -73,6 +66,8 @@ const Register = props => {
             {
               pathname: "/home",
               state: {
+                userId: user.userId,
+                token: user.token,
                 participant: location.state.participant,
                 roomId: location.state.roomId}
             });
@@ -84,7 +79,13 @@ const Register = props => {
   };
 
   function toLogin () {
-    history.push("/login");
+    if (location.state.participant === "2") {
+      let push_to = "/debateroom/" + location.state.roomId + "/" + location.state.participant;
+      history.push(push_to);
+    }
+    else {
+      history.push("/login");
+    }
   }
 
   return (

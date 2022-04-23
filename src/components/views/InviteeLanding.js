@@ -9,6 +9,7 @@ const InviteeLanding = () => {
         roomId= {roomId}
         participant= {participant}
         />)
+
     return (
         <div>
             {content}

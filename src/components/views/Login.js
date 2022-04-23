@@ -47,17 +47,23 @@ const Login = props => {
     to_push = "/home"
   }
 
+  const joinAsGuest = () => {
+    history.push(
+      {
+        pathname: to_push,
+        state: {
+          userId: null,
+          token: null,
+          participant: props.participant,
+          roomId: props.roomId}
+      }
+      );
+  }
+
   const Guest = () => (
     <div 
     className='login create-account'
-    onClick={() => history.push(
-    {
-      pathname: to_push,
-      state: {
-        participant: props.participant,
-        roomId: props.roomId}
-    }
-    )}>
+    onClick={() => joinAsGuest()}>
       Join as a guest User
     </div>
   )
@@ -70,16 +76,14 @@ const Login = props => {
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
-
-      // Store the token into the local storage.
-      localStorage.setItem('token', user.token);
-      localStorage.setItem('userId', user.userId);
-
+  
       // Login successfully worked --> navigate to the route
       history.push(
       {
         pathname: to_push,
             state: {
+              userId: user.userId,
+              token: user.token,
               participant: props.participant,
               roomId: props.roomId}
       });
@@ -89,8 +93,6 @@ const Login = props => {
   };
 
   function toRegister () {
-    // if else statement here to know if the link is for first participant or second
-
     history.push({
         pathname: "/register",
         state: {participant: props.participant,
@@ -131,7 +133,5 @@ const Login = props => {
     </BaseContainer>
   );
 };
-
-// in toRegister you can have two varibles as input which can be roomid and participants.
 
 export default Login;

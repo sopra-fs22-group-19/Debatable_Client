@@ -14,11 +14,9 @@ const Homepage = () => {
     const history = useHistory();
     const location = useLocation();
     const [debates, setDebates] = useState(null);
-    const userId = localStorage.getItem('userId')
+    const userId = location.state.userId;
 
     const logout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
         history.push('/login');
     }
 
@@ -33,6 +31,7 @@ const Homepage = () => {
             history.push({
                 pathname: push_to,
                 state: {
+                    userId: userId,
                     participant: location.state.participant,
                     roomId: location.state.roomId}
             });
@@ -57,7 +56,6 @@ const Homepage = () => {
 
     let content;
 
-    // TODO: when backend from debate room implemented, remove debate.topic from here in buttons
     if (debates) {
     content = (
         <div>
@@ -80,6 +78,7 @@ const Homepage = () => {
 
     return (
         <BaseContainer className="base-container-hp">
+            {userId}
             {content}
             <Button className="debate button-container" onClick={() => logout()}>LOGOUT</Button> 
         </BaseContainer>
