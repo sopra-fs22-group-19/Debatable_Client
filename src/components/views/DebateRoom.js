@@ -50,6 +50,7 @@ const DebateRoom = () => {
 
                 if (status === "ONGOING") {
                     showOpponent(true);
+                    setShowEndDebate(true);
                     setstart(true);
 
                     if (side === "FOR") {setOpponentSide("AGAINST")}
@@ -58,7 +59,7 @@ const DebateRoom = () => {
                     break;
                 }
                 else {
-                    await new Promise(resolve => setTimeout(resolve, 10000));
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                 }
             }
         }
@@ -68,7 +69,7 @@ const DebateRoom = () => {
                 const user2 =  response.data.user2;
 
                 if (user2 === null) {
-                    await new Promise(resolve => setTimeout(resolve, 10000));
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                 }
                 else break;
             }
@@ -77,6 +78,13 @@ const DebateRoom = () => {
             setstart(true);
         }
     }
+
+    const Opponent = () => (
+        <div>
+            <div>{opponentSide}</div>
+            <div className="debateRoom opponent-child"></div>
+        </div>
+    )
 
     const startDebate = async () => {
         if (side === "FOR") {setOpponentSide("AGAINST")}
@@ -91,13 +99,6 @@ const DebateRoom = () => {
             alert("Something went wrong while updating debate Status in debateroom! See the console for details.");
         }
     }
-
-    const Opponent = () => (
-        <div>
-            <div>{opponentSide}</div>
-            <div className="debateRoom opponent-child"></div>
-        </div>
-    )
 
     const endDebate = async () => {
         try {
@@ -115,6 +116,32 @@ const DebateRoom = () => {
               state: {userId: userId}
             }
         );
+    }
+
+    const isDebateEnded = async () => {
+        while(true) {
+            const response = await api.get("/debates/rooms/" + String(roomId));
+            const data =  response.data
+            const status = data.debateStatus;
+
+            if (status === "ENDED") {
+                if (userId === null) {
+                    history.push("/login");
+                }
+                else {
+                    history.push(
+                        {
+                          pathname: "/home",
+                          state: {userId: userId}
+                        }
+                    );
+                }    
+                break;
+            }
+            else {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        }
     }
 
     useEffect(() => {
@@ -152,7 +179,9 @@ const DebateRoom = () => {
     }, [userId, roomId, location.state.participant]);
 
     participant1 = (
-        <div>
+        <div onLoad={
+            isDebateEnded()
+        }>
             <div className="debateRoom topic-container">
                 {topic}
             </div>
@@ -207,10 +236,21 @@ const DebateRoom = () => {
     );
 
     participant2 = (
-        <div onLoad={waiting(roomId)}>
+        <div onLoad={
+            waiting(roomId),
+            isDebateEnded()
+        }>
             <div className="debateRoom topic-container">
                 {topic}
             </div>
+            {showEndDebate ? 
+                <Button
+                    className="debateRoom button-end"
+                    value="End Debate"
+                    onClick={() => {
+                        endDebate()
+                    }}
+                /> : null}
             <div>
                 <div className="debateRoom chat-box-left">
                     <div>{side}</div>
