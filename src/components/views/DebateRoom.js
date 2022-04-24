@@ -43,31 +43,47 @@ const DebateRoom = () => {
     let participant2;
 
     const waiting = async (roomId) => {
-        while(true) {
-            const response = await api.get("/debates/rooms/" + String(roomId));
-            const debateRoom = response.data
-            const user2 = debateRoom.user2;
-            if (user2 === null) {
-                await new Promise(resolve => setTimeout(resolve, 10000));
+        if(location.state.participant==="2") {
+            while(true) {
+                const response = await api.get("/debates/rooms/" + String(roomId));
+                const status = response.data.debateStatus;
+
+                if (status === "ONGOING") {
+                    showOpponent(true);
+                    setstart(true);
+
+                    if (side === "FOR") {setOpponentSide("AGAINST")}
+                    else {setOpponentSide("FOR")}
+
+                    break;
+                }
+                else {
+                    await new Promise(resolve => setTimeout(resolve, 10000));
+                }
             }
-            else break;
         }
-        setlink(false);
-        setstart(true);
+        else {
+            while(true) {
+                const response = await api.get("/debates/rooms/" + String(roomId));
+                const user2 =  response.data.user2;
+
+                if (user2 === null) {
+                    await new Promise(resolve => setTimeout(resolve, 10000));
+                }
+                else break;
+            }
+
+            setlink(false);
+            setstart(true);
+        }
     }
 
     const startDebate = async () => {
-        if (side === "FOR") {
-            setOpponentSide("AGAINST")
-        }
-        else {
-            setOpponentSide("FOR")
-        }
+        if (side === "FOR") {setOpponentSide("AGAINST")}
+        else {setOpponentSide("FOR")}
 
         try {
-            const debateStatus = 4;
-            const requestBody = JSON.stringify({debateStatus});
-            const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
+            const response = await api.put("/debates/status/" + String(roomId), 4);
         }
         catch (error) {
             console.error(`Something went wrong while updating debate Status in debateroom: \n${handleError(error)}`);
@@ -77,18 +93,15 @@ const DebateRoom = () => {
     }
 
     const Opponent = () => (
-            <div>
-                <div>{opponentSide}</div>
-                <div className="debateRoom opponent-child"></div>
-            </div>
+        <div>
+            <div>{opponentSide}</div>
+            <div className="debateRoom opponent-child"></div>
+        </div>
     )
 
     const endDebate = async () => {
         try {
-            const debateStatus = 5;
-            const requestBody = JSON.stringify({debateStatus});
-            const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
-            console.log(response.data);
+            const response = await api.put("/debates/status/" + String(roomId), 5);
         }
         catch (error) {
             console.error(`Something went wrong while ending the debate in debateroom: \n${handleError(error)}`);
@@ -194,7 +207,7 @@ const DebateRoom = () => {
     );
 
     participant2 = (
-        <div>
+        <div onLoad={waiting(roomId)}>
             <div className="debateRoom topic-container">
                 {topic}
             </div>
@@ -205,9 +218,8 @@ const DebateRoom = () => {
                     <div className="debateRoom writer-child"></div>
                 </div>
                 <div className="debateRoom chat-box-right">
-                    <div className='debateRoom text'>
-                        Waiting for 1st participant to start the debate!
-                    </div>
+                    {start ? null: <div className='debateRoom text'>Waiting for 1st participant to start the debate!</div>}
+                    {opponent ? <Opponent opponentSide={opponentSide}/>: null}
                 </div>
             </div>
         </div>
