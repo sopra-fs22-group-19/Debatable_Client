@@ -109,13 +109,18 @@ const DebateRoom = () => {
             console.error("Details:", error);
             alert("Something went wrong while uending the debate in debateroom! See the console for details.");
         }
-        
-        history.push(
-            {
-              pathname: "/home",
-              state: {userId: userId}
-            }
-        );
+
+        if (userId === null) {
+            history.push("/login");
+        }
+        else {
+            history.push(
+                {
+                  pathname: "/home",
+                  state: {userId: userId}
+                }
+            );
+        }
     }
 
     const isDebateEnded = async () => {
