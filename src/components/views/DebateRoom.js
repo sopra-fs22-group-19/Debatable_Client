@@ -35,8 +35,7 @@ const DebateRoom = () => {
     const [start, setstart] = useState(false);
     const [startDisable, setstartDisable] = useState("flex");
     const [showEndDebate, setShowEndDebate] = useState(false);
-    //const [state, setState] = useState(null);
-    const [rupal, setRupal] = useState(null);
+    let debateState = "null";
 
     const location = useLocation();
     const userId = location.state.userId;
@@ -57,17 +56,17 @@ const DebateRoom = () => {
 
                     if (side === "FOR") {
                         setOpponentSide("AGAINST");
-                        setRupal("ONGOING_FOR");
+                        //debateStatus = "ONGOING_FOR";
                     }
                     else {
                         setOpponentSide("FOR");
-                        setRupal("ONGOING_AGAINST");
+                        //debateStatus = "ONGOING_AGAINST";
                     }
 
                     break;
                 }
                 else {
-                    await new Promise(resolve => setTimeout(resolve, 100000));
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                 }
             }
         }
@@ -77,7 +76,7 @@ const DebateRoom = () => {
                 const user2 =  response.data.user2;
 
                 if (user2 === null) {
-                    await new Promise(resolve => setTimeout(resolve, 100000));
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                 }
                 else break;
             }
@@ -96,18 +95,16 @@ const DebateRoom = () => {
     const startDebate = async () => {
         if (side === "FOR") {
             setOpponentSide("AGAINST");
-            setRupal("ONGOING_FOR");
-            console.log("inside for");
+            debateState = "ONGOING_FOR";
         }
         else {
             setOpponentSide("FOR");
-            setRupal("ONGOING_AGAINST");
-            console.log("inside else");
+            debateState = "ONGOING_AGAINST";
         }
-        console.log(rupal);
 
         try {
-            const response = await api.put("/debates/status/" + String(roomId), rupal);
+            const requestBody = JSON.stringify({debateState});
+            const response = await api.put("/debates/rooms/" + String(roomId) + "/status", requestBody);
             console.log(response);
         }
         catch (error) {
@@ -119,7 +116,9 @@ const DebateRoom = () => {
 
     const endDebate = async () => {
         try {
-            const response = await api.put("/debates/status/" + String(roomId), "ENDED");
+            debateState = "ENDED";
+            const requestBody = JSON.stringify({debateState});
+            const response = await api.put("/debates/rooms/" + String(roomId) + "/status", requestBody);
         }
         catch (error) {
             console.error(`Something went wrong while ending the debate in debateroom: \n${handleError(error)}`);
@@ -161,7 +160,7 @@ const DebateRoom = () => {
                 break;
             }
             else {
-                await new Promise(resolve => setTimeout(resolve, 100000));
+                await new Promise(resolve => setTimeout(resolve, 10000));
             }
         }
     }
