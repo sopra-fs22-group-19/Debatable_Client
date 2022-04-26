@@ -24,8 +24,10 @@ const Link = props => (
 
 const DebateRoom = () => {
     const history = useHistory();
-    const {roomId} = useParams();
-
+    //const [roomId,setRoomId] = useState(null);
+    //setRoomId(useParams());
+    let {roomId} = useParams();
+    roomId = parseInt(roomId);
     const [side, setSide] = useState(null);
     const [opponentSide, setOpponentSide] = useState(null);
     const [topic, setTopic] = useState(null);
@@ -37,11 +39,12 @@ const DebateRoom = () => {
     const [showEndDebate, setShowEndDebate] = useState(false);
     const [form_1, setForm_1] = useState(false);
     const [form_2, setForm_2] = useState(false);
+
     let debateState = "null";
 
     const location = useLocation();
     const userId = location.state.userId;
-    const [messageContent, setMessage] = useState("");
+    //const [messageContent, setMessage] = useState("");
 
     let participant1;
     let participant2;
@@ -223,11 +226,14 @@ const DebateRoom = () => {
             type="text"
         />
     </form>:null} */
-    const enter_participant_1 = async (target) => {
+    async function enter_participant_1 (messageContent)  {
         try {
 
-            setMessage(target)
+
             console.log(messageContent)
+            console.log(typeof roomId)
+            console.log(roomId)
+
             const requestBody = JSON.stringify({roomId, userId, messageContent});
             const response = await api.post("/debates/rooms/" + String(roomId) + "/msg", requestBody);
             setForm_1(false)
