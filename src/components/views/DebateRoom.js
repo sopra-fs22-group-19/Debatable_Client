@@ -35,17 +35,23 @@ const DebateRoom = () => {
     const [start, setstart] = useState(false);
     const [startDisable, setstartDisable] = useState("flex");
     const [showEndDebate, setShowEndDebate] = useState(false);
+    const [form_1, setForm_1] = useState(false);
+    const [form_2, setForm_2] = useState(false);
     let debateState = "null";
 
     const location = useLocation();
     const userId = location.state.userId;
+    const [messageContent, setMessage] = useState("");
 
     let participant1;
     let participant2;
 
+
+
     const waiting = async (roomId) => {
         if(location.state.participant==="2") {
             while(true) {
+                console.log("inside 2nd participant")
                 const response = await api.get("/debates/rooms/" + String(roomId));
                 const status = response.data.debateStatus;
 
@@ -72,6 +78,7 @@ const DebateRoom = () => {
         }
         else {
             while(true) {
+                console.log("inside 1st participant")
                 const response = await api.get("/debates/rooms/" + String(roomId));
                 const user2 =  response.data.user2;
 
@@ -96,22 +103,26 @@ const DebateRoom = () => {
         if (side === "FOR") {
             setOpponentSide("AGAINST");
             debateState = "ONGOING_FOR";
+
         }
         else {
             setOpponentSide("FOR");
             debateState = "ONGOING_AGAINST";
-        }
 
+        }
+        setForm_1(true);
         try {
             const requestBody = JSON.stringify({debateState});
             const response = await api.put("/debates/rooms/" + String(roomId) + "/status", requestBody);
             console.log(response);
+
         }
         catch (error) {
             console.error(`Something went wrong while updating debate Status in debateroom: \n${handleError(error)}`);
             console.error("Details:", error);
             alert("Something went wrong while updating debate Status in debateroom! See the console for details.");
         }
+
     }
 
     const endDebate = async () => {
@@ -199,6 +210,37 @@ const DebateRoom = () => {
         fetchData();
     }, [userId, roomId, location.state.participant]);
 
+    /*{form?<form>
+        <input
+            onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                    setMessage({ message: e.target.value },
+                        () => {
+                            //alert(msg.message);
+                        });
+                }
+            }}
+            type="text"
+        />
+    </form>:null} */
+    const enter_participant_1 = async (target) => {
+        try {
+
+            setMessage(target)
+            console.log(messageContent)
+            const requestBody = JSON.stringify({roomId, userId, messageContent});
+            const response = await api.post("/debates/rooms/" + String(roomId) + "/msg", requestBody);
+            setForm_1(false)
+            setForm_2(true)
+        } catch (error) {
+            alert(`Something went wrong during the messagin: \n${handleError(error)}`);
+        }
+    }
+    function enter_participant_2()
+    {
+        setForm_2(false)
+        setForm_1(true)
+    }
     participant1 = (
         <div onLoad={
             isDebateEnded()
@@ -234,7 +276,23 @@ const DebateRoom = () => {
                 <div className="debateRoom chat-box-left">
                     <div>{side}</div>
                     <div className="debateRoom chat-child"></div>
-                    <div className="debateRoom writer-child"></div>
+                    <div className="debateRoom writer-child">
+                        {form_1 ?
+                           <div>
+                               <input type="text"
+                                   placeholder="enter here your argument and press ENTER.."
+                                      onKeyPress={(ev) => {
+                                          if (ev.key === "Enter") {
+                                              ev.preventDefault();
+                                              alert(ev.target.value);
+                                         enter_participant_1(ev.target.value);}
+                                      }}
+                            />
+                           </div>
+                            : null}
+
+
+                    </div>
                 </div>
                 <div className="debateRoom chat-box-right">
                     {start ? null: <div className='debateRoom text'>Invite user to join!</div>}
@@ -254,6 +312,7 @@ const DebateRoom = () => {
                 </div>
             </div>
         </div>
+
     );
 
     participant2 = (
@@ -276,7 +335,21 @@ const DebateRoom = () => {
                 <div className="debateRoom chat-box-left">
                     <div>{side}</div>
                     <div className="debateRoom chat-child"></div>
-                    <div className="debateRoom writer-child"></div>
+                    <div className="debateRoom writer-child">
+                        {form_2 ?
+                            <div>
+                                <input type="text"
+                                       placeholder="enter here your argument and press ENTER.."
+                                       onKeyPress={(ev) => {
+                                           if (ev.key === "Enter") {
+                                               ev.preventDefault();
+                                               alert(ev.target.value);
+                                               enter_participant_2();}
+                                       }}
+                                />
+                            </div>
+                            : null}
+                    </div>
                 </div>
                 <div className="debateRoom chat-box-right">
                     {start ? null: <div className='debateRoom text'>Waiting for 1st participant to start the debate!</div>}
