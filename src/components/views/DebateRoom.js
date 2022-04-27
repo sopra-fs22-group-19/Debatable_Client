@@ -34,7 +34,6 @@ const DebateRoom = () => {
     const [startDisable, setstartDisable] = useState("flex");
     const [showEndDebate, setShowEndDebate] = useState(false);
     const [form_1, setForm_1] = useState(false);
-    const [form_2, setForm_2] = useState(false);
 
     let {roomId} = useParams();
     roomId = parseInt(roomId);
@@ -50,7 +49,7 @@ const DebateRoom = () => {
     const waiting = async (roomId) => {
         if(location.state.participant==="2") {
             // Once second participant come to debate room they will wait for first participant
-            // to start the debate.
+            // to start the debate by clicking on start button.
             while(true) {
                 const response = await api.get("/debates/rooms/" + String(roomId));
                 const status = response.data.debateStatus;
@@ -236,15 +235,9 @@ const DebateRoom = () => {
             const requestBody = JSON.stringify({roomId, userId, messageContent});
             const response = await api.post("/debates/rooms/" + String(roomId) + "/msg", requestBody);
             setForm_1(false)
-            setForm_2(true)
         } catch (error) {
             alert(`Something went wrong during the messagin: \n${handleError(error)}`);
         }
-    }
-    function enter_participant_2()
-    {
-        setForm_2(false)
-        setForm_1(true)
     }
 
     // defining content of participant 1 to return
@@ -342,21 +335,7 @@ const DebateRoom = () => {
                 <div className="debateRoom chat-box-left">
                     <div>{side}</div>
                     <div className="debateRoom chat-child"></div>
-                    <div className="debateRoom writer-child">
-                        {form_2 ?
-                            <div>
-                                <input type="text"
-                                       placeholder="enter here your argument and press ENTER.."
-                                       onKeyPress={(ev) => {
-                                           if (ev.key === "Enter") {
-                                               ev.preventDefault();
-                                               alert(ev.target.value);
-                                               enter_participant_2();}
-                                       }}
-                                />
-                            </div>
-                            : null}
-                    </div>
+                    <div className="debateRoom writer-child"></div>
                 </div>
                 <div className="debateRoom chat-box-right">
                     {start ? null: <div className='debateRoom text'>Waiting for 1st participant to start the debate!</div>}
