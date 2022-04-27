@@ -24,10 +24,6 @@ const Link = props => (
 
 const DebateRoom = () => {
     const history = useHistory();
-    //const [roomId,setRoomId] = useState(null);
-    //setRoomId(useParams());
-    let {roomId} = useParams();
-    roomId = parseInt(roomId);
     const [side, setSide] = useState(null);
     const [opponentSide, setOpponentSide] = useState(null);
     const [topic, setTopic] = useState(null);
@@ -40,16 +36,16 @@ const DebateRoom = () => {
     const [form_1, setForm_1] = useState(false);
     const [form_2, setForm_2] = useState(false);
 
+    let {roomId} = useParams();
+    roomId = parseInt(roomId);
+
     let debateState = "null";
 
     const location = useLocation();
     const userId = location.state.userId;
-    //const [messageContent, setMessage] = useState("");
 
     let participant1;
     let participant2;
-
-
 
     const waiting = async (roomId) => {
         if(location.state.participant==="2") {
@@ -65,13 +61,10 @@ const DebateRoom = () => {
 
                     if (side === "FOR") {
                         setOpponentSide("AGAINST");
-                        //debateStatus = "ONGOING_FOR";
                     }
                     else {
                         setOpponentSide("FOR");
-                        //debateStatus = "ONGOING_AGAINST";
                     }
-
                     break;
                 }
                 else {
@@ -213,23 +206,8 @@ const DebateRoom = () => {
         fetchData();
     }, [userId, roomId, location.state.participant]);
 
-    /*{form?<form>
-        <input
-            onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                    setMessage({ message: e.target.value },
-                        () => {
-                            //alert(msg.message);
-                        });
-                }
-            }}
-            type="text"
-        />
-    </form>:null} */
     async function enter_participant_1 (messageContent)  {
         try {
-
-
             console.log(messageContent)
             console.log(typeof roomId)
             console.log(roomId)
