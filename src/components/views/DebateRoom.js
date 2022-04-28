@@ -10,10 +10,11 @@ import { useLocation } from "react-router-dom";
 var opponent = false;
 var showEndDebate = false;
 var start = false;
-var side = null;
 var opponentSide = null;
 var link = false;
 var inviteDisable = false;
+var waitStart = false;
+var checkEnd = false;
 
 const getLink = () => {
     const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/debateroom/'
@@ -30,9 +31,8 @@ const Link = props => (
     </div>
 )
 
-async function  wait_to_start (roomId) {
-    while(true) {
-        console.log("I am in wait_to_start");
+async function  wait_to_start (roomId, side) {
+    while(waitStart) {
         const response = await api.get("/debates/rooms/" + String(roomId));
         const status = response.data.debateStatus;
 
@@ -51,6 +51,7 @@ async function  wait_to_start (roomId) {
             }
             // since debate is started we don't have to send requests anymore.
             // therefore break the while loop.
+            checkEnd = true;
             break;
         }
         else {
@@ -61,17 +62,15 @@ async function  wait_to_start (roomId) {
 }
 
 async function wait_to_join (roomId)  {
-    console.log(inviteDisable);
     while(inviteDisable) {
         // we wait for second participant to join the debate room
-        console.log("we are in wait_to_join");
         const response = await api.get("/debates/rooms/" + String(roomId));
         const user2 =  response.data.user2;
 
         if (user2 === null) {
             // if user2 is null, that means that second participant has not joined,
             // therefore we wait for a while and then send a request again.
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 5000));
         }
         // if user !== null which means that participant joined the debate,
         // in that case we will break the loop.
@@ -88,9 +87,9 @@ async function wait_to_join (roomId)  {
 const DebateRoom = () => {
     const history = useHistory();
     const [topic, setTopic] = useState(null);
-    //const [inviteDisable, setinviteDisable] = useState(false);
     const [startDisable, setstartDisable] = useState("flex");
     const [form_1, setForm_1] = useState(false);
+    const [side, setSide] = useState(null);
 
     let {roomId} = useParams();
     roomId = parseInt(roomId);
@@ -221,8 +220,7 @@ const DebateRoom = () => {
     // If that's the case, then we will push the other user to login page and home page depending 
     // on if they are guest user or logged in user.
     const isDebateEnded = async () => {
-        while(true) {
-            console.log("I am in isDebateEnded")
+        while(checkEnd) {
             const response = await api.get("/debates/rooms/" + String(roomId));
             const data =  response.data
             const status = data.debateStatus;
@@ -251,7 +249,6 @@ const DebateRoom = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                console.log("I am in fetchData");
                 const response = await api.get("/debates/rooms/" + String(roomId));
                 const debateRoom = response.data
 
@@ -260,18 +257,18 @@ const DebateRoom = () => {
 
                 // setting the side of user
                 if (userId === debateRoom.user1.userId) {
-                    //setSide(debateRoom.side1)
-                    side = debateRoom.side1;
-                    console.log("side is", side);
+                    setSide(debateRoom.side1);
+                    console.log("inside detch data in debate room", side);
                 }
 
                 if(location.state.participant==="2") {
+                    waitStart = true;
                     try {
                         if (debateRoom.side1==="FOR") {
-                            side = "AGAINST";
+                            setSide("AGAINST");
                         }
                         else {
-                            side = "FOR";
+                            setSide("FOR");
                         }
 
                         // update the debate room with user 2 information
@@ -291,7 +288,7 @@ const DebateRoom = () => {
             }
         }
         fetchData();
-    }, [userId, roomId, location.state.participant]);
+    }, [userId, roomId, location.state.participant, side]);
 
     // post the message entered by participant
     async function enter_participant_1 (messageContent)  {
@@ -303,6 +300,7 @@ const DebateRoom = () => {
             alert(`Something went wrong during the messagin: \n${handleError(error)}`);
         }
     }
+    console.log("in debate room after setting it to value", side);
 
     // defining content of participant 1 to return
     participant1 = (
@@ -381,7 +379,7 @@ const DebateRoom = () => {
     // defining content of participant 2 to return
     participant2 = (
         <div onLoad={
-            wait_to_start(roomId),
+            wait_to_start(roomId, side),
             isDebateEnded()
         }>
             <div className="debateRoom topic-container">
