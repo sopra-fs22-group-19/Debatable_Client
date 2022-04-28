@@ -7,12 +7,13 @@
     /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
     @include center;
     flex-direction: column;
+
   }
   &.form {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 60%;
+    width: 80%;
     max-width: 30em;
     height: 20em;
     font-size: 16px;
