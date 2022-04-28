@@ -62,8 +62,7 @@ const Register = props => {
       }
       else
       {
-        history.push("/home")
-        /*history.push(
+        history.push(
             {
               pathname: "/home",
               state: {
@@ -71,7 +70,7 @@ const Register = props => {
                 token: user.token,
                 participant: location.state.participant,
                 roomId: location.state.roomId}
-            });*/
+            });
       }
 
     } catch (error) {
