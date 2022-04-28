@@ -233,8 +233,8 @@ const DebateRoom = () => {
             <div>
                 <div className="debateRoom chat-box-left">
                     <div>{side}</div>
-                    <div className="debateRoom chat-child"></div>
-                    <div className="debateRoom writer-child"></div>
+                    <div className="debateRoom chat-child"/>
+                    <div className="debateRoom writer-child"/>
                 </div>
                 <div className="debateRoom chat-box-right">
                     {start ? null: <div className='debateRoom text'>Invite user to join!</div>}
@@ -275,8 +275,8 @@ const DebateRoom = () => {
             <div>
                 <div className="debateRoom chat-box-left">
                     <div>{side}</div>
-                    <div className="debateRoom chat-child"></div>
-                    <div className="debateRoom writer-child"></div>
+                    <div className="debateRoom chat-child"/>
+                    <div className="debateRoom writer-child"/>
                 </div>
                 <div className="debateRoom chat-box-right">
                     {start ? null: <div className='debateRoom text'>Waiting for 1st participant to start the debate!</div>}
