@@ -7,10 +7,6 @@ import "styles/views/DebateRoom.scss";
 import { isProduction } from 'helpers/isProduction';
 import { useLocation } from "react-router-dom";
 
-var waitStart = false;
-var waitJoin = false;
-var checkEnd = false;
-
 const getLink = () => {
     const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/debateroom/'
     const devURL = 'http://localhost:3000/debateroom/'
@@ -28,16 +24,16 @@ const Link = props => (
 
 const DebateRoom = () => {
     const history = useHistory();
-    const [inviteDisable, setinviteDisable] = useState(false);
-    const [topic, setTopic] = useState(null);
-    const [startDisable, setstartDisable] = useState("flex");
-    const [form_1, setForm_1] = useState(false);
     const [side, setSide] = useState(null);
-    const [link, setLink] = useState(false);
-    const [start, setStart] = useState(false)
-    const [opponent, setOpponent] = useState(false);
-    const [showEndDebate, setShowEndDebate] = useState(false);
     const [opponentSide, setOpponentSide] = useState(null);
+    const [topic, setTopic] = useState(null);
+    const [link, setlink] = useState(false);
+    const [inviteDisable, setinviteDisable] = useState(false);
+    const [opponent, showOpponent] = useState(false);
+    const [start, setstart] = useState(false);
+    const [startDisable, setstartDisable] = useState("flex");
+    const [showEndDebate, setShowEndDebate] = useState(false);
+    const [form_1, setForm_1] = useState(false);
 
     let {roomId} = useParams();
     roomId = parseInt(roomId);
@@ -50,57 +46,58 @@ const DebateRoom = () => {
     let participant1;
     let participant2;
 
-    async function wait_to_join (roomId)  {
-        while(waitJoin) {
-            console.log("inside wait_to_join");
-            // we wait for second participant to join the debate room
-            const response = await api.get("/debates/rooms/" + String(roomId));
-            const user2 =  response.data.user2;
-    
-            if (user2 === null) {
-                // if user2 is null, that means that second participant has not joined,
-                // therefore we wait for a while and then send a request again.
-                await new Promise(resolve => setTimeout(resolve, 5000));
-            }
-            // if user !== null which means that participant joined the debate,
-            // in that case we will break the loop.
-            else break;
-        }
-    
-        // once second participant joined, we remove the link we were showing for first participant.
-        // and we will show the start button.
-        setLink(false);
-        setStart(true);
-    }
+    const waiting = async (roomId) => {
+        if(location.state.participant==="2") {
+            // Once second participant come to debate room they will wait for first participant
+            // to start the debate by clicking on start button.
+            while(true) {
+                const response = await api.get("/debates/rooms/" + String(roomId));
+                const status = response.data.debateStatus;
 
-    async function  wait_to_start (roomId) {
-        while(waitStart) {
-            console.log("inside wait_to_start");
-            const response = await api.get("/debates/rooms/" + String(roomId));
-            const status = response.data.debateStatus;
-    
-            if (status === "ONGOING_FOR" || status === "ONGOING_AGAINST") {
-                // debate started
-                setOpponent(true);
-                setShowEndDebate(true);
-                setStart(true);
-    
-                // setting the opponent side
-                if (side === "FOR") {
-                    setOpponentSide("AGAINST");
+                if (status === "ONGOING_FOR" || status === "ONGOING_AGAINST") {
+                    // debate started
+                    showOpponent(true);
+                    setShowEndDebate(true);
+                    setstart(true);
+
+                    // setting the opponent side
+                    if (side === "FOR") {
+                        setOpponentSide("AGAINST");
+                    }
+                    else {
+                        setOpponentSide("FOR");
+                    }
+                    // since debate is started we don't have to send requests anymore.
+                    // therefore break the while loop.
+                    break;
                 }
                 else {
-                    setOpponentSide("FOR");
+                    // if the debate has not started, we wait and send the request again after a small timeout.
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                 }
-                checkEnd = true;
-                // since debate is started we don't have to send requests anymore.
-                // therefore break the while loop.
-                break;
             }
-            else {
-                // if the debate has not started, we wait and send the request again after a small timeout.
-                await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+        else {
+            // if the participant is not second participant
+            while(true) {
+                // we wait for second participant to join the debate room
+                const response = await api.get("/debates/rooms/" + String(roomId));
+                const user2 =  response.data.user2;
+
+                if (user2 === null) {
+                    // if user2 is null, that means that second participant has not joined,
+                    // therefore we wait for a while and then send a request again.
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+                // if user !== null which means that participant joined the debate,
+                // in that case we will break the loop.
+                else break;
             }
+
+            // once second participant joined, we remove the link we were showing for first participant.
+            // and we will show the start button.
+            setlink(false);
+            setstart(true);
         }
     }
 
@@ -115,11 +112,12 @@ const DebateRoom = () => {
     // start debate on clicking start debate button for first participant.
     const startDebate = async () => {
         if (side === "FOR") {
-            setOpponentSide("AGAINST")
+            setOpponentSide("AGAINST");
             debateState = "ONGOING_FOR";
+
         }
         else {
-            setOpponentSide("FOR")
+            setOpponentSide("FOR");
             debateState = "ONGOING_AGAINST";
 
         }
@@ -133,6 +131,7 @@ const DebateRoom = () => {
             console.error("Details:", error);
             alert("Something went wrong while updating debate Status in debateroom! See the console for details.");
         }
+
     }
 
     // end the debate on clicking end debate button, push the users to homepage and guest to login page
@@ -147,10 +146,6 @@ const DebateRoom = () => {
             console.error("Details:", error);
             alert("Something went wrong while uending the debate in debateroom! See the console for details.");
         }
-
-        waitStart = false;
-        waitJoin = false;
-        checkEnd = false;
 
         if (userId === null) {
             history.push("/login");
@@ -169,8 +164,7 @@ const DebateRoom = () => {
     // If that's the case, then we will push the other user to login page and home page depending 
     // on if they are guest user or logged in user.
     const isDebateEnded = async () => {
-        while(checkEnd) {
-            console.log("inside isDebateEnded");
+        while(true) {
             const response = await api.get("/debates/rooms/" + String(roomId));
             const data =  response.data
             const status = data.debateStatus;
@@ -190,7 +184,7 @@ const DebateRoom = () => {
                 break;
             }
             else {
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 10000));
             }
         }
     }
@@ -207,19 +201,14 @@ const DebateRoom = () => {
 
                 // setting the side of user
                 if (userId === debateRoom.user1.userId) {
-                    setSide(debateRoom.side1);
+                    setSide(debateRoom.side1)
                 }
 
                 if(location.state.participant==="2") {
-                    waitStart = true;
-                    //setWaitStart(true);
                     try {
-                        if (debateRoom.side1==="FOR") {
-                            setSide("AGAINST");
-                        }
-                        else {
-                            setSide("FOR");
-                        }
+                        if (debateRoom.side1==="FOR")
+                        {setSide("AGAINST")}
+                        else {setSide("FOR")}
 
                         // update the debate room with user 2 information
                         const requestBody = JSON.stringify({userId});
@@ -238,7 +227,7 @@ const DebateRoom = () => {
             }
         }
         fetchData();
-    }, [userId, roomId, location.state.participant, side]);
+    }, [userId, roomId, location.state.participant]);
 
     // post the message entered by participant
     async function enter_participant_1 (messageContent)  {
@@ -267,11 +256,9 @@ const DebateRoom = () => {
                     style={{display:startDisable}}
                     onClick={() => {
                         setstartDisable("none")
-                        setOpponent(true)
-                        setShowEndDebate(true);
+                        showOpponent(true)
+                        setShowEndDebate(true)
                         startDebate()
-                        //setCheckEnd(true)
-                        checkEnd=true
                     }
                 }
                 /> : null}
@@ -313,11 +300,9 @@ const DebateRoom = () => {
                         value="INVITE"
                         hidden={inviteDisable}
                         onClick={() => {
-                            setLink(true);
-                            setinviteDisable(true);
-                            waitJoin = true;
-                            //setWaitJoin(true);
-                            wait_to_join(roomId)
+                            setlink(true)
+                            setinviteDisable(true)
+                            waiting(roomId)
                         }
                         }
                     />
@@ -332,7 +317,7 @@ const DebateRoom = () => {
     // defining content of participant 2 to return
     participant2 = (
         <div onLoad={
-            wait_to_start(roomId),
+            waiting(roomId),
             isDebateEnded()
         }>
             <div className="debateRoom topic-container">
