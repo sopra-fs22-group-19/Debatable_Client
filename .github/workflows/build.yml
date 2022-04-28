@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - main
+      - fix/routing_heroku
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
