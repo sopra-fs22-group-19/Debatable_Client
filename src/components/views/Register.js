@@ -46,7 +46,9 @@ const Register = props => {
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
+
       localStorage.setItem("token", user.token);
+  
       console.log("I am on line 49")
       if (location.state.participant === "2")
       {
@@ -65,7 +67,7 @@ const Register = props => {
       {
         console.log("I am on line 65")
         history.push("/home");
-        /*history.push(
+        history.push(
             {
               pathname: "/home",
               state: {
@@ -73,7 +75,7 @@ const Register = props => {
                 token: user.token,
                 participant: location.state.participant,
                 roomId: location.state.roomId}
-            });*/
+            });
       }
 
     } catch (error) {

@@ -82,6 +82,9 @@ const Login = props => {
       // Get the returned user and update a new object.
       const user = new User(response.data);
 
+      // saving tokem in local storage
+      localStorage.setItem("token", user.token);
+
       // Login successfully worked --> navigate to the route
       history.push(
       {

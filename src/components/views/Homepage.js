@@ -18,6 +18,7 @@ const Homepage = () => {
 
     const logout = () => {
         history.push('/login');
+        localStorage.removeItem("token");
     }
 
     const todebateRoom = async (side, debateId) => {
