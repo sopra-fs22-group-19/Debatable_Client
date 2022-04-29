@@ -177,7 +177,9 @@ const DebateRoom = () => {
 
             if (status === "ENDED") {
                 if (userId === null) {
+                    localStorage.removeItem("token");
                     history.push("/login");
+                    
                 }
                 else {
                     history.push(

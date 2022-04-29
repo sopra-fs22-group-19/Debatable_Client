@@ -17,8 +17,8 @@ const Homepage = () => {
     const userId = location.state.userId;
 
     const logout = () => {
-        history.push('/login');
         localStorage.removeItem("token");
+        history.push('/login');
     }
 
     const todebateRoom = async (side, debateId) => {
