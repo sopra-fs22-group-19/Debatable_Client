@@ -38,6 +38,8 @@ const DebateRoom = () => {
     const [opponent, setOpponent] = useState(false);
     const [showEndDebate, setShowEndDebate] = useState(false);
     const [opponentSide, setOpponentSide] = useState(null);
+    const [msgs, setMsgs] = useState(null);
+    const [showMsg, setShowMsg] = useState(false);
 
     let {roomId} = useParams();
     roomId = parseInt(roomId);
@@ -52,7 +54,6 @@ const DebateRoom = () => {
 
     async function wait_to_join (roomId)  {
         while(waitJoin) {
-            console.log("inside wait_to_join");
             // we wait for second participant to join the debate room
             const response = await api.get("/debates/rooms/" + String(roomId));
             const user2 =  response.data.user2;
@@ -75,7 +76,6 @@ const DebateRoom = () => {
 
     async function  wait_to_start (roomId) {
         while(waitStart) {
-            console.log("inside wait_to_start");
             const response = await api.get("/debates/rooms/" + String(roomId));
             const status = response.data.debateStatus;
     
@@ -170,7 +170,6 @@ const DebateRoom = () => {
     // on if they are guest user or logged in user.
     const isDebateEnded = async () => {
         while(checkEnd) {
-            console.log("inside isDebateEnded");
             const response = await api.get("/debates/rooms/" + String(roomId));
             const data =  response.data
             const status = data.debateStatus;
@@ -212,7 +211,6 @@ const DebateRoom = () => {
 
                 if(location.state.participant==="2") {
                     waitStart = true;
-                    //setWaitStart(true);
                     try {
                         if (debateRoom.side1==="FOR") {
                             setSide("AGAINST");
@@ -241,13 +239,22 @@ const DebateRoom = () => {
     }, [userId, roomId, location.state.participant, side]);
 
     // post the message entered by participant
-    async function enter_participant_1 (messageContent)  {
+    async function left_chat_box (messageContent)  {
         try {
             const requestBody = JSON.stringify({roomId, userId, messageContent});
-            const response = await api.post("/debates/rooms/" + String(roomId) + "/msg", requestBody);
+            const post_response = await api.post("/debates/rooms/" + String(roomId) + "/msg", requestBody);
             setForm_1(false)
         } catch (error) {
             alert(`Something went wrong during the messagin: \n${handleError(error)}`);
+        }
+        try {
+            const get_response = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(userId)+"/msgs?top_i=1&to_top_j=5");
+            setMsgs(get_response.data);
+            setShowMsg(true);
+        } catch (error) {
+            console.error(`Something went wrong while getting the messages debate room data: \n${handleError(error)}`);
+            console.error("Details:", error);
+            alert("Something went wrong while getting the messages debate room data! See the console for details.");
         }
     }
 
@@ -270,7 +277,6 @@ const DebateRoom = () => {
                         setOpponent(true)
                         setShowEndDebate(true);
                         startDebate()
-                        //setCheckEnd(true)
                         checkEnd=true
                     }
                 }
@@ -288,22 +294,33 @@ const DebateRoom = () => {
             <div>
                 <div className="debateRoom chat-box-left">
                     <div>{side}</div>
-                    <div className="debateRoom chat-child"></div>
+                    <div className="debateRoom chat-child">
+                        <div>
+                            {showMsg ? <ul>
+                                {msgs.map(msg => (
+                                    <div>
+                                        <div
+                                        key = {msgs.indexOf(msg)}
+                                        className="debateRoom msg-box">
+                                            {msg}
+                                        </div>
+                                    </div>
+                                    ))}
+                            </ul>: null}
+                        </div>
+                    </div>
                     <div className="debateRoom writer-child">
                         {form_1 ?
-                           <div>
-                               <input type="text"
-                                   placeholder="enter here your argument and press ENTER.."
-                                      onKeyPress={(ev) => {
-                                          if (ev.key === "Enter") {
-                                              ev.preventDefault();
-                                         enter_participant_1(ev.target.value);}
-                                      }}
-                            />
-                           </div>
+                            <input
+                                className="debateRoom input-text"
+                                placeholder="Enter here your argument and press ENTER"
+                                    onKeyPress={(ev) => {
+                                        if (ev.key === "Enter") {
+                                            ev.preventDefault();
+                                            left_chat_box(ev.target.value);}
+                                    }}
+                        />
                             : null}
-
-
                     </div>
                 </div>
                 <div className="debateRoom chat-box-right">
@@ -316,7 +333,6 @@ const DebateRoom = () => {
                             setLink(true);
                             setinviteDisable(true);
                             waitJoin = true;
-                            //setWaitJoin(true);
                             wait_to_join(roomId)
                         }
                         }
@@ -326,7 +342,6 @@ const DebateRoom = () => {
                 </div>
             </div>
         </div>
-
     );
 
     // defining content of participant 2 to return
