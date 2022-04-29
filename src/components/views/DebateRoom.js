@@ -223,6 +223,7 @@ const DebateRoom = () => {
                         }
     
                         if (userId !== null) {
+                            console.log(userId)
                             const requestBody = JSON.stringify({userId});
                             const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
                         }
