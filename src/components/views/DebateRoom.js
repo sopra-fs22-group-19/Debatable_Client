@@ -219,10 +219,13 @@ const DebateRoom = () => {
                         else {
                             setSide("FOR");
                         }
-
+    
+                        if (userId !== null) {
+                            const requestBody = JSON.stringify({userId});
+                            const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
+                        }
                         // update the debate room with user 2 information
-                        const requestBody = JSON.stringify({userId});
-                        const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
+                        
                     }
                     catch (error){
                         console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);

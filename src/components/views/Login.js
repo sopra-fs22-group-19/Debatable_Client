@@ -53,12 +53,24 @@ const Login = props => {
   }
 
   const joinAsGuest = () => {
+    try {
+      // update the debate room with user 2 information
+      const requestBody = JSON.stringify(null);
+      const response = await api.put("/debates/rooms/" + String(props.roomId), requestBody);
+      const token = response.data.user2.token;
+      localStorage.setItem("token", token);
+  }
+  catch (error){
+      console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);
+      console.error("Details:", error);
+      alert("Something went wrong while updating userId in debateroom! See the console for details.");
+  }
     history.push(
       {
         pathname: to_push,
         state: {
           userId: null,
-          token: null,
+          token: token,
           participant: props.participant,
           roomId: props.roomId}
       }
