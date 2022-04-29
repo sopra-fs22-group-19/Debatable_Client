@@ -48,8 +48,6 @@ const Register = props => {
       const user = new User(response.data);
 
       localStorage.setItem("token", user.token);
-  
-      console.log("I am on line 49")
       if (location.state.participant === "2")
       {
         to_push = "/debateroom/" + String(location.state.roomId)
@@ -65,8 +63,6 @@ const Register = props => {
       }
       else
       {
-        console.log("I am on line 65")
-        history.push("/home");
         history.push(
             {
               pathname: "/home",
@@ -84,13 +80,11 @@ const Register = props => {
   };
 
   function toLogin () {
-    console.log("I am on line 84")
     if (location.state.participant === "2") {
       let push_to = "/debateroom/" + location.state.roomId + "/" + location.state.participant;
       history.push(push_to);
     }
     else {
-      console.log("I am on line 90")
       history.push("/login");
     }
   }
