@@ -53,6 +53,8 @@ const DebateRoom = () => {
     let participant1;
     let participant2;
 
+    let content;
+
     async function wait_to_join (roomId)  {
         while(waitJoin) {
             // we wait for second participant to join the debate room
@@ -76,6 +78,7 @@ const DebateRoom = () => {
     }
 
     async function  wait_to_start (roomId) {
+        console.log("wait_to_start has been called");
         while(waitStart) {
             const response = await api.get("/debates/rooms/" + String(roomId));
             const status = response.data.debateStatus;
@@ -271,126 +274,133 @@ const DebateRoom = () => {
         }
     }
 
-    // defining content of participant 1 to return
-    participant1 = (
-        <div onLoad={
-            isDebateEnded()
-        }>
-            <div className="debateRoom topic-container">
-                {topic}
+    // defining content of participant 2 to return
+    if (location.state.participant==="2") {
+        content = (
+            <div onLoad={
+                isDebateEnded()
+            }>
+                <div className="debateRoom topic-container">
+                    {topic}
+                </div>
+                {showEndDebate ? 
+                    <Button
+                        className="debateRoom button-end"
+                        value="End Debate"
+                        onClick={() => {
+                            endDebate()
+                        }}
+                    /> : null}
+                <div>
+                    <div className="debateRoom chat-box-left">
+                        <div>{side}</div>
+                        <div className="debateRoom chat-child"></div>
+                        <div className="debateRoom writer-child"></div>
+                    </div>
+                    <div className="debateRoom chat-box-right">
+                        {start ? null: <div 
+                            className='debateRoom text'
+                            onLoad={wait_to_start(roomId)}
+                            >
+                            Waiting for 1st participant to start the debate!
+                    </div>}
+                        {opponent ? <Opponent opponentSide={opponentSide}/>: null}
+                    </div>
+                </div>
             </div>
+        );
+    }
+    else {
+        // defining content of participant 1 to return
+        content = (
+            <div onLoad={
+                isDebateEnded()
+            }>
+                <div className="debateRoom topic-container">
+                    {topic}
+                </div>
 
-            {start ?
-                <Button
-                    className="debateRoom button-start"
-                    value="Start Debate"
-                    style={{display:startDisable}}
-                    onClick={() => {
-                        setstartDisable("none")
-                        setOpponent(true)
-                        setShowEndDebate(true);
-                        startDebate()
-                        checkEnd=true
+                {start ?
+                    <Button
+                        className="debateRoom button-start"
+                        value="Start Debate"
+                        style={{display:startDisable}}
+                        onClick={() => {
+                            setstartDisable("none")
+                            setOpponent(true)
+                            setShowEndDebate(true);
+                            startDebate()
+                            checkEnd=true
+                        }
                     }
-                }
-                /> : null}
+                    /> : null}
 
-            {showEndDebate ? 
-                <Button
-                    className="debateRoom button-end"
-                    value="End Debate"
-                    onClick={() => {
-                        endDebate()
-                    }}
-                /> : null}
+                {showEndDebate ? 
+                    <Button
+                        className="debateRoom button-end"
+                        value="End Debate"
+                        onClick={() => {
+                            endDebate()
+                        }}
+                    /> : null}
 
-            <div>
-                <div className="debateRoom chat-box-left">
-                    <div>{side}</div>
-                    <div className="debateRoom chat-child">
-                        <div>
-                            {showMsg ? <ul>
-                                {msgs.map(msg => (
-                                    <div>
-                                        <div
-                                            key = {msgs.indexOf(msg)}
-                                            className="debateRoom msg-box">
-                                            {msg}
+                <div>
+                    <div className="debateRoom chat-box-left">
+                        <div>{side}</div>
+                        <div className="debateRoom chat-child">
+                            <div>
+                                {showMsg ? <ul>
+                                    {msgs.map(msg => (
+                                        <div>
+                                            <div
+                                                key = {msgs.indexOf(msg)}
+                                                className="debateRoom msg-box">
+                                                {msg}
+                                            </div>
                                         </div>
-                                    </div>
-                                    ))}
-                            </ul>: null}
+                                        ))}
+                                </ul>: null}
+                            </div>
+                        </div>
+                        <div className="debateRoom writer-child">
+                            {form_1 ?
+                                <input
+                                    className="debateRoom input-text"
+                                    placeholder="Enter here your argument and press ENTER"
+                                        onKeyPress={(ev) => {
+                                            if (ev.key === "Enter") {
+                                                ev.preventDefault();
+                                                left_chat_box(ev.target.value);}
+                                        }}
+                            />
+                                : null}
                         </div>
                     </div>
-                    <div className="debateRoom writer-child">
-                        {form_1 ?
-                            <input
-                                className="debateRoom input-text"
-                                placeholder="Enter here your argument and press ENTER"
-                                    onKeyPress={(ev) => {
-                                        if (ev.key === "Enter") {
-                                            ev.preventDefault();
-                                            left_chat_box(ev.target.value);}
-                                    }}
+                    <div className="debateRoom chat-box-right">
+                        {start ? null: <div className='debateRoom text'>Invite user to join!</div>}
+                        <Button
+                            className="debateRoom button-container"
+                            value="INVITE"
+                            hidden={inviteDisable}
+                            onClick={() => {
+                                setLink(true);
+                                setinviteDisable(true);
+                                waitJoin = true;
+                                wait_to_join(roomId)
+                            }
+                            }
                         />
-                            : null}
+                        {link ? <Link roomId={roomId}/> : null}
+                        {opponent ? <Opponent opponentSide={opponentSide}/>: null}
                     </div>
                 </div>
-                <div className="debateRoom chat-box-right">
-                    {start ? null: <div className='debateRoom text'>Invite user to join!</div>}
-                    <Button
-                        className="debateRoom button-container"
-                        value="INVITE"
-                        hidden={inviteDisable}
-                        onClick={() => {
-                            setLink(true);
-                            setinviteDisable(true);
-                            waitJoin = true;
-                            wait_to_join(roomId)
-                        }
-                        }
-                    />
-                    {link ? <Link roomId={roomId}/> : null}
-                    {opponent ? <Opponent opponentSide={opponentSide}/>: null}
-                </div>
             </div>
-        </div>
-    );
-
-    // defining content of participant 2 to return
-    participant2 = (
-        <div onLoad={
-            wait_to_start(roomId),
-            isDebateEnded()
-        }>
-            <div className="debateRoom topic-container">
-                {topic}
-            </div>
-            {showEndDebate ? 
-                <Button
-                    className="debateRoom button-end"
-                    value="End Debate"
-                    onClick={() => {
-                        endDebate()
-                    }}
-                /> : null}
-            <div>
-                <div className="debateRoom chat-box-left">
-                    <div>{side}</div>
-                    <div className="debateRoom chat-child"></div>
-                    <div className="debateRoom writer-child"></div>
-                </div>
-                <div className="debateRoom chat-box-right">
-                    {start ? null: <div className='debateRoom text'>Waiting for 1st participant to start the debate!</div>}
-                    {opponent ? <Opponent opponentSide={opponentSide}/>: null}
-                </div>
-            </div>
-        </div>
-    );
+        );
+    }
 
     return (
         <div>
-            {location.state.participant==="2"?participant2:participant1}
+            {content}
         </div>
     );
 }
