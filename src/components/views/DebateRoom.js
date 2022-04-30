@@ -12,7 +12,8 @@ var waitJoin = false;
 var checkEnd = false;
 
 const getLink = () => {
-    const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/debateroom/'
+    //const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/debateroom/'
+    const prodURL = "https://sopra-debatable-client-app.herokuapp.com/debateroom/"
     const devURL = 'http://localhost:3000/debateroom/'
     return isProduction() ? prodURL : devURL;
 }
@@ -176,7 +177,9 @@ const DebateRoom = () => {
 
             if (status === "ENDED") {
                 if (userId === null) {
+                    localStorage.removeItem("token");
                     history.push("/login");
+                    
                 }
                 else {
                     history.push(
@@ -218,10 +221,13 @@ const DebateRoom = () => {
                         else {
                             setSide("FOR");
                         }
-
+    
+                        if (userId !== null) {
+                            const requestBody = JSON.stringify({userId});
+                            const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
+                        }
                         // update the debate room with user 2 information
-                        const requestBody = JSON.stringify({userId});
-                        const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
+                        
                     }
                     catch (error){
                         console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);

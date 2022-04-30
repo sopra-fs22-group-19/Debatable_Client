@@ -47,6 +47,7 @@ const Register = props => {
       // Get the returned user and update a new object.
       const user = new User(response.data);
 
+      localStorage.setItem("token", user.token);
       if (location.state.participant === "2")
       {
         to_push = "/debateroom/" + String(location.state.roomId)
@@ -62,8 +63,7 @@ const Register = props => {
       }
       else
       {
-        history.push("/home")
-        /*history.push(
+        history.push(
             {
               pathname: "/home",
               state: {
@@ -71,7 +71,7 @@ const Register = props => {
                 token: user.token,
                 participant: location.state.participant,
                 roomId: location.state.roomId}
-            });*/
+            });
       }
 
     } catch (error) {

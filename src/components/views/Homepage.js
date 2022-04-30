@@ -17,6 +17,7 @@ const Homepage = () => {
     const userId = location.state.userId;
 
     const logout = () => {
+        localStorage.removeItem("token");
         history.push('/login');
     }
 

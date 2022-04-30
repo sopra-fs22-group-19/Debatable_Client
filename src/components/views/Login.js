@@ -28,6 +28,7 @@ const FormField = props => {
   );
 };
 
+
 FormField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
@@ -51,7 +52,22 @@ const Login = props => {
     to_push = "/home"
   }
 
-  const joinAsGuest = () => {
+  const joinAsGuest = async () => {
+    try {
+      console.log("duhh")
+      // update the debate room with user 2 information
+      //let userId = null;
+      //const requestBody = JSON.stringify({userId});
+      //const response = await api.put("/debates/rooms/" + String(props.roomId), requestBody);
+      //console.log(response.data);
+      //const token = response.data.user2.token;
+      //localStorage.setItem("token", token);
+  }
+  catch (error){
+      console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);
+      console.error("Details:", error);
+      alert("Something went wrong while updating userId in debateroom! See the console for details.");
+  }
     history.push(
       {
         pathname: to_push,
@@ -80,6 +96,9 @@ const Login = props => {
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
+
+      // saving tokem in local storage
+      localStorage.setItem("token", user.token);
 
       // Login successfully worked --> navigate to the route
       history.push(
