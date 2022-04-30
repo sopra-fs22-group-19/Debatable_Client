@@ -78,7 +78,6 @@ const Homepage = () => {
 
     return (
         <BaseContainer className="base-container-hp">
-            {userId}
             {content}
             <Button className="debate button-container" onClick={() => logout()}>LOGOUT</Button> 
         </BaseContainer>
