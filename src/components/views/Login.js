@@ -54,12 +54,10 @@ const Login = props => {
 
   const joinAsGuest = async () => {
     try {
-      console.log("duhh")
       // update the debate room with user 2 information
       let userId = null;
       const requestBody = JSON.stringify({userId});
       const response = await api.put("/debates/rooms/" + String(props.roomId), requestBody);
-      //console.log(response.data);
       const token = response.data.user2.token;
       localStorage.setItem("token", token);
   }

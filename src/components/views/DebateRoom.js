@@ -39,8 +39,12 @@ const DebateRoom = () => {
     const [opponent, setOpponent] = useState(false);
     const [showEndDebate, setShowEndDebate] = useState(false);
     const [opponentSide, setOpponentSide] = useState(null);
+    const [opponentId, setOpponentId] = useState(null);
     const [msgs, setMsgs] = useState(null);
+    const [opponentMsgs, setOpponentMsgs] = useState(null);
     const [showMsg, setShowMsg] = useState(false);
+    const [ifEnded, setIfEnded] = useState(false);
+    const [showOpponentMsg, setShowOpponentMsg] = useState(false);
 
     let {roomId} = useParams();
     roomId = parseInt(roomId);
@@ -83,6 +87,7 @@ const DebateRoom = () => {
             if (status === "ONGOING_FOR" || status === "ONGOING_AGAINST") {
                 // debate started
                 setOpponent(true);
+                waiting_for_msg();
                 setShowEndDebate(true);
                 setStart(true);
     
@@ -105,11 +110,53 @@ const DebateRoom = () => {
         }
     }
 
+    async function waiting_for_msg () {
+        console.log("wait_for_msg am called");
+        if (opponentId !== null) {
+            while(opponent) {
+                console.log("inside while loop", userId);
+                try {
+                    const get_response = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(opponentId)+"/msgs?top_i=1&to_top_j=3");
+                    if (get_response.data.length > 0) {
+                        setOpponentMsgs(get_response.data);
+                        setShowOpponentMsg(true);
+                        console.log(get_response.data);
+                    }
+                } catch (error) {
+                    console.error(`Something went wrong while getting the messages debate room data: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while getting the messages debate room data! See the console for details.");
+                }
+
+                if (ifEnded) {
+                    break;
+                }
+                else {
+                    await new Promise(resolve => setTimeout(resolve, 10000));
+                }
+            }
+        }
+    } 
+
     // Opponent chat should come here ...
     const Opponent = () => (
         <div>
             <div>{opponentSide}</div>
-            <div className="debateRoom opponent-child"></div>
+            <div className="debateRoom opponent-child">
+            <div>
+                {showOpponentMsg ? <ul>
+                    {opponentMsgs.map(msg => (
+                        <div>
+                            <div
+                                key = {opponentMsgs.indexOf(msg)}
+                                className="debateRoom msg-box">
+                                {msg}
+                            </div>
+                        </div>
+                        ))}
+                </ul>: null}
+            </div>
+            </div>
         </div>
     )
 
@@ -153,6 +200,11 @@ const DebateRoom = () => {
         waitJoin = false;
         checkEnd = false;
 
+
+        // TODO: testing it might remove later
+        setIfEnded(true);
+        setOpponent(false);
+
         if (userId === null) {
             history.push("/login");
         }
@@ -176,6 +228,7 @@ const DebateRoom = () => {
             const status = data.debateStatus;
 
             if (status === "ENDED") {
+                setIfEnded(true);
                 if (userId === null) {
                     localStorage.removeItem("token");
                     history.push("/login");
@@ -213,6 +266,7 @@ const DebateRoom = () => {
                 }
 
                 if(location.state.participant==="2") {
+                    setOpponentId(debateRoom.user1.userId);
                     waitStart = true;
                     try {
                         if (debateRoom.side1==="FOR") {
@@ -222,18 +276,23 @@ const DebateRoom = () => {
                             setSide("FOR");
                         }
     
+                        // check if userId is null--> checking if user is not guest
                         if (userId !== null) {
-                            console.log(userId)
+                            // update the debate room with user 2 information
                             const requestBody = JSON.stringify({userId});
                             const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
                         }
-                        // update the debate room with user 2 information
-                        
                     }
                     catch (error){
                         console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);
                         console.error("Details:", error);
                         alert("Something went wrong while updating userId in debateroom! See the console for details.");
+                    }
+                }
+                else {
+                    if (debateRoom.user2 !== null) {
+                        console.log(debateRoom.user2)
+                        setOpponentId(debateRoom.user2.userId);
                     }
                 }
             } catch (error) {
@@ -248,13 +307,15 @@ const DebateRoom = () => {
     // post the message entered by participant
     async function left_chat_box (messageContent)  {
         try {
+            // TODO: there is a bug, userId is null if it's a guest user because of location.state.userId
             const requestBody = JSON.stringify({roomId, userId, messageContent});
             const post_response = await api.post("/debates/rooms/" + String(roomId) + "/msg", requestBody);
-            setForm_1(false)
+            setForm_1(false);
         } catch (error) {
             alert(`Something went wrong during the messagin: \n${handleError(error)}`);
         }
         try {
+            // TODO: The bug mentioned above will hurt here as well in the future.
             const get_response = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(userId)+"/msgs?top_i=1&to_top_j=5");
             setMsgs(get_response.data);
             setShowMsg(true);
@@ -307,8 +368,8 @@ const DebateRoom = () => {
                                 {msgs.map(msg => (
                                     <div>
                                         <div
-                                        key = {msgs.indexOf(msg)}
-                                        className="debateRoom msg-box">
+                                            key = {msgs.indexOf(msg)}
+                                            className="debateRoom msg-box">
                                             {msg}
                                         </div>
                                     </div>
