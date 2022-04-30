@@ -100,7 +100,7 @@ const DebateRoom = () => {
             }
             else {
                 // if the debate has not started, we wait and send the request again after a small timeout.
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 3000));
             }
         }
     }
@@ -154,6 +154,9 @@ const DebateRoom = () => {
         checkEnd = false;
 
         if (userId === null) {
+            if (process.env.NODE_ENV === "production") {
+                localStorage.removeItem("token");
+            }
             history.push("/login");
         }
         else {
@@ -176,8 +179,14 @@ const DebateRoom = () => {
             const status = data.debateStatus;
 
             if (status === "ENDED") {
+                waitStart = false;
+                waitJoin = false;
+                checkEnd = false;
+
                 if (userId === null) {
-                    localStorage.removeItem("token");
+                    if (process.env.NODE_ENV === "production") {
+                        localStorage.removeItem("token");
+                    }
                     history.push("/login");
                     
                 }
@@ -223,12 +232,10 @@ const DebateRoom = () => {
                         }
     
                         if (userId !== null) {
-                            console.log(userId)
+                            // update the debate room with user 2 information
                             const requestBody = JSON.stringify({userId});
                             const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
                         }
-                        // update the debate room with user 2 information
-                        
                     }
                     catch (error){
                         console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);
@@ -307,8 +314,8 @@ const DebateRoom = () => {
                                 {msgs.map(msg => (
                                     <div>
                                         <div
-                                        key = {msgs.indexOf(msg)}
-                                        className="debateRoom msg-box">
+                                            key = {msgs.indexOf(msg)}
+                                            className="debateRoom msg-box">
                                             {msg}
                                         </div>
                                     </div>
