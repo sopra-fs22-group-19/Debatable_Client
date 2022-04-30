@@ -188,7 +188,6 @@ const DebateRoom = () => {
                         localStorage.removeItem("token");
                     }
                     history.push("/login");
-                    
                 }
                 else {
                     history.push(
