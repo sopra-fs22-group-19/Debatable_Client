@@ -37,22 +37,21 @@ const DebateRoom = () => {
     const [link, setLink] = useState(false);
     const [start, setStart] = useState(false)
     const [opponent, setOpponent] = useState(false);
+    const [opponentId, setOpponentId] = useState(null);
     const [showEndDebate, setShowEndDebate] = useState(false);
     const [opponentSide, setOpponentSide] = useState(null);
     const [msgs, setMsgs] = useState(null);
     const [showMsg, setShowMsg] = useState(false);
 
+    const location = useLocation();
+
+    // userId is null for guest user
+    const userId = location.state.userId;
+
     let {roomId} = useParams();
     roomId = parseInt(roomId);
 
     let debateState = "null";
-
-    const location = useLocation();
-    const userId = location.state.userId;
-
-    let participant1;
-    let participant2;
-
     let content;
 
     async function wait_to_join (roomId)  {
@@ -78,7 +77,6 @@ const DebateRoom = () => {
     }
 
     async function  wait_to_start (roomId) {
-        console.log("wait_to_start has been called");
         while(waitStart) {
             const response = await api.get("/debates/rooms/" + String(roomId));
             const status = response.data.debateStatus;
@@ -234,7 +232,7 @@ const DebateRoom = () => {
                         }
     
                         if (userId !== null) {
-                            // update the debate room with user 2 information
+                            // update the debate room with user 2 information when user is not guest user
                             const requestBody = JSON.stringify({userId});
                             const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
                         }
@@ -277,9 +275,7 @@ const DebateRoom = () => {
     // defining content of participant 2 to return
     if (location.state.participant==="2") {
         content = (
-            <div onLoad={
-                isDebateEnded()
-            }>
+            <div>
                 <div className="debateRoom topic-container">
                     {topic}
                 </div>
@@ -298,13 +294,18 @@ const DebateRoom = () => {
                         <div className="debateRoom writer-child"></div>
                     </div>
                     <div className="debateRoom chat-box-right">
-                        {start ? null: <div 
-                            className='debateRoom text'
-                            onLoad={wait_to_start(roomId)}
-                            >
-                            Waiting for 1st participant to start the debate!
-                    </div>}
-                        {opponent ? <Opponent opponentSide={opponentSide}/>: null}
+                        {start ? null: 
+                            <div 
+                                className='debateRoom text'
+                                onLoad={wait_to_start(roomId)}
+                                >
+                                Waiting for 1st participant to start the debate!
+                            </div>}
+                        {opponent ? 
+                        <Opponent 
+                            opponentSide={opponentSide}
+                            onLoad={isDebateEnded()}
+                        />: null}
                     </div>
                 </div>
             </div>
@@ -313,9 +314,7 @@ const DebateRoom = () => {
     else {
         // defining content of participant 1 to return
         content = (
-            <div onLoad={
-                isDebateEnded()
-            }>
+            <div>
                 <div className="debateRoom topic-container">
                     {topic}
                 </div>
@@ -339,6 +338,7 @@ const DebateRoom = () => {
                     <Button
                         className="debateRoom button-end"
                         value="End Debate"
+                        onLoad={isDebateEnded()}
                         onClick={() => {
                             endDebate()
                         }}
