@@ -13,6 +13,7 @@ import "styles/views/Header.scss";
 const Header = props => (
   <div className="header container" style={{height: props.height}}>
     <h1 className="header title">It's Debatable</h1>
+
   </div>
 );
 
