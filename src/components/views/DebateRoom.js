@@ -263,6 +263,7 @@ const DebateRoom = () => {
                         setOpponentMsgs(get_msgs.data);
                         setShowOpponentMsgs(true);
                         setRecieveMsg(false);
+                        setWriterBox(true);
                         break;
                     }
                 }
@@ -346,7 +347,21 @@ const DebateRoom = () => {
                 <div>
                     <div className="debateRoom chat-box-left">
                         <div>{side}</div>
-                        <div className="debateRoom chat-child"></div>
+                        <div className="debateRoom chat-child">
+                            <div>
+                                {showMsg ? <ul>
+                                    {msgs.map(msg => (
+                                        <div>
+                                            <div
+                                                key = {msgs.indexOf(msg)}
+                                                className="debateRoom msg-box">
+                                                {msg}
+                                            </div>
+                                        </div>
+                                        ))}
+                                </ul>: null}
+                            </div>
+                        </div>
                         <div className="debateRoom writer-child">
                             {writer ?
                                     <input
