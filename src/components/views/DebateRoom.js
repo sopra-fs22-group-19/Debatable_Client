@@ -208,7 +208,6 @@ const DebateRoom = () => {
                 waitStart = false;
                 waitJoin = false;
                 checkEnd = false;
-                //setRecieveMsg(false);
                 receiveMsg = false;
 
                 if (userId === null) {
@@ -228,27 +227,19 @@ const DebateRoom = () => {
                 break;
             }
             else {
-
-
-
-
                 if (status === "ONGOING_FOR" ){
                     setWriterBox(side === "FOR");
-                    //receiveMsg = opponentSide === "FOR";
                 }
                 else if (status === "ONGOING_AGAINST" ){
                     setWriterBox(side === "AGAINST");
-                    //receiveMsg = opponentSide === "AGAINST";
                 }
-                //console.log("value of receive msg", receiveMsg);
-                await new Promise(resolve => setTimeout(resolve, 5000));
+                await new Promise(resolve => setTimeout(resolve, 7000));
             }
         }
     }
 
     // post the message entered by participant
     async function left_chat_box (messageContent)  {
-        console.log("left_chat_box_called");
         try {
             // BUG: potential bug here regarding userId
             const requestBody = JSON.stringify({roomId, userId, messageContent});
@@ -272,11 +263,8 @@ const DebateRoom = () => {
     async function receiving_msgs () {
         if (opponentId !== null) {
             while(receiveMsg) {
-                console.log("inside while loop of receiving messages");
-                console.log(userId);
-                console.log(opponentId);
                 try {
-                    const get_msgs = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(opponentId)+"/msgs?top_i=1&to_top_j=3");
+                    const get_msgs = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(opponentId)+"/msgs?top_i=1&to_top_j=5");
                     if (get_msgs.data.length > 0) {
                         setOpponentMsgs(get_msgs.data);
                         setShowOpponentMsgs(true);
