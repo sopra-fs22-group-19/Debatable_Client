@@ -310,10 +310,15 @@ const DebateRoom = () => {
                         alert("Something went wrong while updating userId in debateroom! See the console for details.");
                     }
                 }
-                // setting the side of user
-                if (userId === debateRoom.user1.userId) {
+                else {
+                    // setting the side of user
                     setSide(debateRoom.side1);
                 }
+
+                /*if (userId === debateRoom.user1.userId) {
+                    setSide(debateRoom.side1);
+                }*/
+
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
                 console.error("Details:", error);
