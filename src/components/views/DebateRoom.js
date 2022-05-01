@@ -262,7 +262,7 @@ const DebateRoom = () => {
                     if (get_msgs.data.length > 0) {
                         setOpponentMsgs(get_msgs.data);
                         setShowOpponentMsgs(true);
-                        setRecieveMsg(false);
+                        //setRecieveMsg(false);
                         break;
                     }
                 }
