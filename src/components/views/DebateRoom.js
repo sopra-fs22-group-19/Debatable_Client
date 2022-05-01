@@ -10,6 +10,7 @@ import { useLocation } from "react-router-dom";
 var waitStart = false;
 var waitJoin = false;
 var checkEnd = false;
+var receiveMsg = false;
 
 const getLink = () => {
     //const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/debateroom/'
@@ -42,7 +43,6 @@ const DebateRoom = () => {
     const [opponentSide, setOpponentSide] = useState(null);
     const [msgs, setMsgs] = useState(null);
     const [showMsg, setShowMsg] = useState(false);
-    const [receiveMsg, setRecieveMsg] = useState(false);
     const [opponentMsgs, setOpponentMsgs] = useState(null);
     const [showOpponentMsgs, setShowOpponentMsgs] = useState(null);
 
@@ -93,7 +93,7 @@ const DebateRoom = () => {
                 setOpponent(true);
                 setShowEndDebate(true);
                 setStart(true);
-                setRecieveMsg(true);
+                receiveMsg = true;
     
                 // setting the opponent side
                 if (side === "FOR") {
@@ -201,13 +201,14 @@ const DebateRoom = () => {
     const isDebateEnded = async () => {
         while(checkEnd) {
             const response = await api.get("/debates/rooms/" + String(roomId));
-            const data =  response.data
+            const data =  response.data;
             const status = data.debateStatus;
 
             if (status === "ENDED") {
                 waitStart = false;
                 waitJoin = false;
                 checkEnd = false;
+                receiveMsg = false;
 
                 if (userId === null) {
                     if (process.env.NODE_ENV === "production") {
@@ -226,7 +227,13 @@ const DebateRoom = () => {
                 break;
             }
             else {
-                await new Promise(resolve => setTimeout(resolve, 5000));
+                if (status === "ONGOING_FOR" ){
+                    setWriterBox(side === "FOR");
+                }
+                else if (status === "ONGOING_AGAINST" ){
+                    setWriterBox(side === "AGAINST");
+                }
+                await new Promise(resolve => setTimeout(resolve, 7000));
             }
         }
     }
@@ -245,6 +252,7 @@ const DebateRoom = () => {
             const get_response = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(userId)+"/msgs?top_i=1&to_top_j=5");
             setMsgs(get_response.data);
             setShowMsg(true);
+            receiveMsg = true;
         } catch (error) {
             console.error(`Something went wrong while getting the messages debate room data: \n${handleError(error)}`);
             console.error("Details:", error);
@@ -253,16 +261,14 @@ const DebateRoom = () => {
     }
 
     async function receiving_msgs () {
-        console.log("receving messages")
         if (opponentId !== null) {
             while(receiveMsg) {
-                console.log("inside while loop of receiving messages");
                 try {
-                    const get_msgs = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(opponentId)+"/msgs?top_i=1&to_top_j=3");
+                    const get_msgs = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(opponentId)+"/msgs?top_i=1&to_top_j=5");
                     if (get_msgs.data.length > 0) {
                         setOpponentMsgs(get_msgs.data);
                         setShowOpponentMsgs(true);
-                        setRecieveMsg(false);
+                        receiveMsg = false;
                         break;
                     }
                 }
@@ -314,11 +320,6 @@ const DebateRoom = () => {
                     // setting the side of user
                     setSide(debateRoom.side1);
                 }
-
-                /*if (userId === debateRoom.user1.userId) {
-                    setSide(debateRoom.side1);
-                }*/
-
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
                 console.error("Details:", error);
@@ -346,7 +347,21 @@ const DebateRoom = () => {
                 <div>
                     <div className="debateRoom chat-box-left">
                         <div>{side}</div>
-                        <div className="debateRoom chat-child"></div>
+                        <div className="debateRoom chat-child">
+                            <div>
+                                {showMsg ? <ul>
+                                    {msgs.map(msg => (
+                                        <div>
+                                            <div
+                                                key = {msgs.indexOf(msg)}
+                                                className="debateRoom msg-box">
+                                                {msg}
+                                            </div>
+                                        </div>
+                                        ))}
+                                </ul>: null}
+                            </div>
+                        </div>
                         <div className="debateRoom writer-child">
                             {writer ?
                                     <input
