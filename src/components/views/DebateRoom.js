@@ -266,9 +266,10 @@ const DebateRoom = () => {
         console.log("receving messages")
         if (opponentId !== null) {
             while(true) {
-                if(setRecieveMsg){
+                if(receiveMsg){
                     console.log("inside while loop of receiving messages");
                     try {
+                        await new Promise(resolve => setTimeout(resolve, 10000));
                         const get_msgs = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(opponentId)+"/msgs?top_i=1&to_top_j=3");
                         if (get_msgs.data.length > 0) {
                             setOpponentMsgs(get_msgs.data);
@@ -283,6 +284,7 @@ const DebateRoom = () => {
                         alert("Something went wrong while getting the messages debate room data! See the console for details.");
                     }
                 }
+
                 await new Promise(resolve => setTimeout(resolve, 10000));
             }
         }
@@ -388,18 +390,14 @@ const DebateRoom = () => {
                         </div>
                     </div>
                     <div className="debateRoom chat-box-right">
-                        {start ? null: 
+                        {start ? getDebateState(): 
                             <div 
                                 className='debateRoom text'
                                 onLoad={wait_to_start(roomId)}
                                 >
                                 Waiting for 1st participant to start the debate!
                             </div>}
-                        {opponent ? 
-                        <Opponent 
-                            opponentSide={opponentSide}
-                            onLoad={getDebateState()}
-                        />: null}
+                        {opponent ? <Opponent opponentSide={opponentSide}/>: null}
                     </div>
                 </div>
             </div>
