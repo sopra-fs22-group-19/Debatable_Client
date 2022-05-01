@@ -37,11 +37,11 @@
         margin-right: 2.25em;
         margin-bottom:30px;
         width: 43%;
-        height:15.5cm;
+        height:11.5cm;
         float: left;
         display: flex;
         flex-direction: column;
-        padding: 20px;
+        padding: 5px 10px 10px 10px;
         border-radius: $borderRadius;
         border: 2px solid black;
         text-align: center;
@@ -53,11 +53,11 @@
         margin-right: auto;
         margin-bottom:30px;
         width: 43%;
-        height:15.5cm;
+        height:11.5cm;
         float: left;
         display: flex;
         flex-direction: column;
-        padding: 20px;
+        padding: 5px 10px 10px 10px;
         border-radius: $borderRadius;
         border: 2px solid black;
         text-align: center;
@@ -68,7 +68,8 @@
         margin-top: 0.25em;
         margin-left: 0.25em;
         margin-right: 0.25em;
-        height:14cm;
+        margin-bottom: 0.4em;
+        min-height:9cm;
         float: left;
         display: flex;
         flex-direction: column;
@@ -80,7 +81,7 @@
         margin-top: 0.25em;
         margin-left: 0.25em;
         margin-right: 0.25em;
-        height:510px;
+        height:10cm;
         display: flex;
         flex-direction: column;
         border-radius: $borderRadius;
@@ -88,10 +89,10 @@
     }
 
     &.writer-child {
-        margin-top: 1.25em;
+        margin-top: 0.5em;
         margin-left: 0.25em;
         margin-right: 0.25em;
-        height:1.25cm;
+        min-height: 0.7cm;
         float: left;
         display: flex;
         flex-direction: column;
@@ -116,7 +117,7 @@
       }
 
     &.text {
-        margin-top: 12em;
+        margin-top: 9em;
         width: fit-content;
         align-self: center;
     }
@@ -140,10 +141,10 @@
       }
     
     &.button-end {
-        margin-top: 10em;
+        margin-top: 5em;
         background: lighten($background, 60);
         width: auto;
-        padding: 9px;
+        padding: 6px;
         border-radius: $borderRadius;
         color: rgb(97, 26, 26);
         margin: auto;
