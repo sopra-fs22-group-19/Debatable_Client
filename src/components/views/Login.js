@@ -54,7 +54,6 @@ const Login = props => {
 
   const joinAsGuest = async () => {
     try {
-      console.log("duhh")
       // update the debate room with user 2 information
       let userId = null;
       const requestBody = JSON.stringify({userId});
