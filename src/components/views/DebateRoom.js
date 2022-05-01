@@ -198,7 +198,7 @@ const DebateRoom = () => {
     // We keep on checking if a debate is ended by either of the user. 
     // If that's the case, then we will push the other user to login page and home page depending 
     // on if they are guest user or logged in user.
-    const isDebateEnded = async () => {
+    const getDebateState = async () => {
         while(checkEnd) {
             const response = await api.get("/debates/rooms/" + String(roomId));
             const data =  response.data
@@ -224,6 +224,12 @@ const DebateRoom = () => {
                     );
                 }    
                 break;
+            }
+            else if (status === "ONGOING_FOR"){
+                setWriterBox(side === "FOR" );
+
+            } else if (status === "ONGOING_AGAINST"){
+                setWriterBox(side === "AGAINST" );
             }
             else {
                 await new Promise(resolve => setTimeout(resolve, 5000));
@@ -372,7 +378,7 @@ const DebateRoom = () => {
                         {opponent ? 
                         <Opponent 
                             opponentSide={opponentSide}
-                            onLoad={isDebateEnded()}
+                            onLoad={getDebateState()}
                         />: null}
                     </div>
                 </div>
@@ -406,7 +412,7 @@ const DebateRoom = () => {
                     <Button
                         className="debateRoom button-end"
                         value="End Debate"
-                        onLoad={isDebateEnded()}
+                        onLoad={getDebateState()}
                         onClick={() => {
                             endDebate()
                         }}
