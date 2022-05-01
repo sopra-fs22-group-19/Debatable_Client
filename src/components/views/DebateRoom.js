@@ -227,10 +227,12 @@ const DebateRoom = () => {
             }
             else if (status === "ONGOING_FOR"){
                 setWriterBox(side === "FOR" );
+                setRecieveMsg(!writer)
                 await new Promise(resolve => setTimeout(resolve, 5000));
 
             } else if (status === "ONGOING_AGAINST"){
                 setWriterBox(side === "AGAINST" );
+                setRecieveMsg(!writer)
                 await new Promise(resolve => setTimeout(resolve, 5000));
             }
             else {
@@ -263,21 +265,23 @@ const DebateRoom = () => {
     async function receiving_msgs () {
         console.log("receving messages")
         if (opponentId !== null) {
-            while(receiveMsg) {
-                console.log("inside while loop of receiving messages");
-                try {
-                    const get_msgs = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(opponentId)+"/msgs?top_i=1&to_top_j=3");
-                    if (get_msgs.data.length > 0) {
-                        setOpponentMsgs(get_msgs.data);
-                        setShowOpponentMsgs(true);
-                        setRecieveMsg(false);
-                        break;
+            while(true) {
+                if(setRecieveMsg){
+                    console.log("inside while loop of receiving messages");
+                    try {
+                        const get_msgs = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(opponentId)+"/msgs?top_i=1&to_top_j=3");
+                        if (get_msgs.data.length > 0) {
+                            setOpponentMsgs(get_msgs.data);
+                            setShowOpponentMsgs(true);
+                            setRecieveMsg(false);
+                            break;
+                        }
                     }
-                }
-                catch (error){
-                    console.error(`Something went wrong while getting the messages debate room data: \n${handleError(error)}`);
-                    console.error("Details:", error);
-                    alert("Something went wrong while getting the messages debate room data! See the console for details.");
+                    catch (error){
+                        console.error(`Something went wrong while getting the messages debate room data: \n${handleError(error)}`);
+                        console.error("Details:", error);
+                        alert("Something went wrong while getting the messages debate room data! See the console for details.");
+                    }
                 }
                 await new Promise(resolve => setTimeout(resolve, 10000));
             }
