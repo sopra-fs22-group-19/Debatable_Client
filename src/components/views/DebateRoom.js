@@ -32,7 +32,7 @@ const DebateRoom = () => {
     const [inviteDisable, setinviteDisable] = useState(false);
     const [topic, setTopic] = useState(null);
     const [startDisable, setstartDisable] = useState("flex");
-    const [form_1, setForm_1] = useState(false);
+    const [writer, setWriterBox] = useState(false);
     const [side, setSide] = useState(null);
     const [link, setLink] = useState(false);
     const [start, setStart] = useState(false)
@@ -42,6 +42,9 @@ const DebateRoom = () => {
     const [opponentSide, setOpponentSide] = useState(null);
     const [msgs, setMsgs] = useState(null);
     const [showMsg, setShowMsg] = useState(false);
+    const [receiveMsg, setRecieveMsg] = useState(false);
+    const [opponentMsgs, setOpponentMsgs] = useState(null);
+    const [showOpponentMsgs, setShowOpponentMsgs] = useState(null);
 
     const location = useLocation();
 
@@ -63,11 +66,15 @@ const DebateRoom = () => {
             if (user2 === null) {
                 // if user2 is null, that means that second participant has not joined,
                 // therefore we wait for a while and then send a request again.
+                
                 await new Promise(resolve => setTimeout(resolve, 5000));
             }
             // if user !== null which means that participant joined the debate,
             // in that case we will break the loop.
-            else break;
+            else {
+                setOpponentId(user2.userId);
+                break;
+            }
         }
     
         // once second participant joined, we remove the link we were showing for first participant.
@@ -86,6 +93,7 @@ const DebateRoom = () => {
                 setOpponent(true);
                 setShowEndDebate(true);
                 setStart(true);
+                setRecieveMsg(true);
     
                 // setting the opponent side
                 if (side === "FOR") {
@@ -110,7 +118,24 @@ const DebateRoom = () => {
     const Opponent = () => (
         <div>
             <div>{opponentSide}</div>
-            <div className="debateRoom opponent-child"></div>
+            <div 
+            className="debateRoom opponent-child"
+            onLoad={receiving_msgs()}
+            >
+            <div>
+                {showOpponentMsgs ? <ul>
+                    {opponentMsgs.map(msg => (
+                        <div>
+                            <div
+                                key = {opponentMsgs.indexOf(msg)}
+                                className="debateRoom msg-box">
+                                {msg}
+                            </div>
+                        </div>
+                        ))}
+                </ul>: null}
+            </div>
+            </div>
         </div>
     )
 
@@ -125,10 +150,10 @@ const DebateRoom = () => {
             debateState = "ONGOING_AGAINST";
 
         }
-        setForm_1(true);
+        setWriterBox(true);
         try {
             const requestBody = JSON.stringify({debateState});
-            const response = await api.put("/debates/rooms/" + String(roomId) + "/status", requestBody);
+            await api.put("/debates/rooms/" + String(roomId) + "/status", requestBody);
         }
         catch (error) {
             console.error(`Something went wrong while updating debate Status in debateroom: \n${handleError(error)}`);
@@ -142,7 +167,7 @@ const DebateRoom = () => {
         try {
             debateState = "ENDED";
             const requestBody = JSON.stringify({debateState});
-            const response = await api.put("/debates/rooms/" + String(roomId) + "/status", requestBody);
+            await api.put("/debates/rooms/" + String(roomId) + "/status", requestBody);
         }
         catch (error) {
             console.error(`Something went wrong while ending the debate in debateroom: \n${handleError(error)}`);
@@ -201,7 +226,52 @@ const DebateRoom = () => {
                 break;
             }
             else {
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 5000));
+            }
+        }
+    }
+
+    // post the message entered by participant
+    async function left_chat_box (messageContent)  {
+        try {
+            // BUG: potential bug here regarding userId
+            const requestBody = JSON.stringify({roomId, userId, messageContent});
+            await api.post("/debates/rooms/" + String(roomId) + "/msg", requestBody);
+            setWriterBox(false);
+        } catch (error) {
+            alert(`Something went wrong during the messagin: \n${handleError(error)}`);
+        }
+        try {
+            const get_response = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(userId)+"/msgs?top_i=1&to_top_j=5");
+            setMsgs(get_response.data);
+            setShowMsg(true);
+        } catch (error) {
+            console.error(`Something went wrong while getting the messages debate room data: \n${handleError(error)}`);
+            console.error("Details:", error);
+            alert("Something went wrong while getting the messages debate room data! See the console for details.");
+        }
+    }
+
+    async function receiving_msgs () {
+        console.log("receving messages")
+        if (opponentId !== null) {
+            while(receiveMsg) {
+                console.log("inside while loop of receiving messages");
+                try {
+                    const get_msgs = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(opponentId)+"/msgs?top_i=1&to_top_j=3");
+                    if (get_msgs.data.length > 0) {
+                        setOpponentMsgs(get_msgs.data);
+                        setShowOpponentMsgs(true);
+                        setRecieveMsg(false);
+                        break;
+                    }
+                }
+                catch (error){
+                    console.error(`Something went wrong while getting the messages debate room data: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while getting the messages debate room data! See the console for details.");
+                }
+                await new Promise(resolve => setTimeout(resolve, 10000));
             }
         }
     }
@@ -216,12 +286,9 @@ const DebateRoom = () => {
                 // setting the debate topic
                 setTopic(debateRoom.debate.topic)
 
-                // setting the side of user
-                if (userId === debateRoom.user1.userId) {
-                    setSide(debateRoom.side1);
-                }
-
                 if(location.state.participant==="2") {
+                    // setting opponent id for second participant
+                    setOpponentId(debateRoom.user1.userId);
                     waitStart = true;
                     try {
                         if (debateRoom.side1==="FOR") {
@@ -234,7 +301,7 @@ const DebateRoom = () => {
                         if (userId !== null) {
                             // update the debate room with user 2 information when user is not guest user
                             const requestBody = JSON.stringify({userId});
-                            const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
+                            await api.put("/debates/rooms/" + String(roomId), requestBody);
                         }
                     }
                     catch (error){
@@ -242,6 +309,10 @@ const DebateRoom = () => {
                         console.error("Details:", error);
                         alert("Something went wrong while updating userId in debateroom! See the console for details.");
                     }
+                }
+                // setting the side of user
+                if (userId === debateRoom.user1.userId) {
+                    setSide(debateRoom.side1);
                 }
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
@@ -251,26 +322,6 @@ const DebateRoom = () => {
         }
         fetchData();
     }, [userId, roomId, location.state.participant, side]);
-
-    // post the message entered by participant
-    async function left_chat_box (messageContent)  {
-        try {
-            const requestBody = JSON.stringify({roomId, userId, messageContent});
-            const post_response = await api.post("/debates/rooms/" + String(roomId) + "/msg", requestBody);
-            setForm_1(false)
-        } catch (error) {
-            alert(`Something went wrong during the messagin: \n${handleError(error)}`);
-        }
-        try {
-            const get_response = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(userId)+"/msgs?top_i=1&to_top_j=5");
-            setMsgs(get_response.data);
-            setShowMsg(true);
-        } catch (error) {
-            console.error(`Something went wrong while getting the messages debate room data: \n${handleError(error)}`);
-            console.error("Details:", error);
-            alert("Something went wrong while getting the messages debate room data! See the console for details.");
-        }
-    }
 
     // defining content of participant 2 to return
     if (location.state.participant==="2") {
@@ -291,7 +342,19 @@ const DebateRoom = () => {
                     <div className="debateRoom chat-box-left">
                         <div>{side}</div>
                         <div className="debateRoom chat-child"></div>
-                        <div className="debateRoom writer-child"></div>
+                        <div className="debateRoom writer-child">
+                            {writer ?
+                                    <input
+                                        className="debateRoom input-text"
+                                        placeholder="Enter here your argument and press ENTER"
+                                            onKeyPress={(ev) => {
+                                                if (ev.key === "Enter") {
+                                                    ev.preventDefault();
+                                                    left_chat_box(ev.target.value);}
+                                            }}
+                                />
+                                    : null}
+                        </div>
                     </div>
                     <div className="debateRoom chat-box-right">
                         {start ? null: 
@@ -363,7 +426,7 @@ const DebateRoom = () => {
                             </div>
                         </div>
                         <div className="debateRoom writer-child">
-                            {form_1 ?
+                            {writer ?
                                 <input
                                     className="debateRoom input-text"
                                     placeholder="Enter here your argument and press ENTER"
