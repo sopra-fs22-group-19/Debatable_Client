@@ -58,8 +58,7 @@ const Homepage = () => {
 
     if (debates) {
     content = (
-        <div>
-            <ul>
+        <div className="debate block">
                 {debates.map(debate => (
                     <div className="debate debates">
                         <span>
@@ -71,16 +70,14 @@ const Homepage = () => {
                         </span>
                     </div>
                     ))}
-            </ul>
         </div>
     );
    }
 
     return (
         <BaseContainer className="base-container-hp">
-            {userId}
             {content}
-            <Button className="debate button-container" onClick={() => logout()}>LOGOUT</Button> 
+            <Button className="debate button-logout" onClick={() => logout()}>LOGOUT</Button>
         </BaseContainer>
     );  
 }

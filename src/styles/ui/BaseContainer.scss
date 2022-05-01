@@ -1,14 +1,16 @@
 @import 'styles/theme';
 
 .base-container {
+  justify-content: center;
   margin-left: auto;
   padding-left: 15px;
   margin-right: auto;
   padding-right: 15px;
-  width: 750px;
-  height: 800px;
+  width: auto;
+  height: auto;
   color: $textColor;
   align-items: center;
+
   & p,h2 {
     margin: 0.2em 0;
     text-align: center;
@@ -18,18 +20,14 @@
 
 }
 .base-container-hp {
-  margin-left: 260px;
-  padding-left: 15px;
-  margin-right: auto;
-  padding-right: 15px;
-  width: 750px;
-  height: 800px;
-  color: $textColor;
+  justify-content: center;
   align-items: center;
+  overflow-x: hidden;
+  margin-bottom: 100px;
+  width: fit-content;
+  height: auto;
+  color: $textColor;
 
-  & p, h2 {
-    margin: 0.2em 0;
-    text-align: center;
-    color: blue;
-  }
+
+
 }

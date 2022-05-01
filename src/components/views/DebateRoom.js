@@ -12,8 +12,8 @@ var waitJoin = false;
 var checkEnd = false;
 
 const getLink = () => {
-    //const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/debateroom/'
-    const prodURL = "https://sopra-debatable-client-app.herokuapp.com/debateroom/"
+    const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/debateroom/'
+    //const prodURL = "https://sopra-debatable-client-app.herokuapp.com/debateroom/"
     const devURL = 'http://localhost:3000/debateroom/'
     return isProduction() ? prodURL : devURL;
 }
@@ -32,26 +32,30 @@ const DebateRoom = () => {
     const [inviteDisable, setinviteDisable] = useState(false);
     const [topic, setTopic] = useState(null);
     const [startDisable, setstartDisable] = useState("flex");
-    const [form_1, setForm_1] = useState(false);
+    const [writer, setWriterBox] = useState(false);
     const [side, setSide] = useState(null);
     const [link, setLink] = useState(false);
     const [start, setStart] = useState(false)
     const [opponent, setOpponent] = useState(false);
+    const [opponentId, setOpponentId] = useState(null);
     const [showEndDebate, setShowEndDebate] = useState(false);
     const [opponentSide, setOpponentSide] = useState(null);
     const [msgs, setMsgs] = useState(null);
     const [showMsg, setShowMsg] = useState(false);
+    const [receiveMsg, setRecieveMsg] = useState(false);
+    const [opponentMsgs, setOpponentMsgs] = useState(null);
+    const [showOpponentMsgs, setShowOpponentMsgs] = useState(null);
+
+    const location = useLocation();
+
+    // userId is null for guest user
+    const userId = location.state.userId;
 
     let {roomId} = useParams();
     roomId = parseInt(roomId);
 
     let debateState = "null";
-
-    const location = useLocation();
-    const userId = location.state.userId;
-
-    let participant1;
-    let participant2;
+    let content;
 
     async function wait_to_join (roomId)  {
         while(waitJoin) {
@@ -62,11 +66,15 @@ const DebateRoom = () => {
             if (user2 === null) {
                 // if user2 is null, that means that second participant has not joined,
                 // therefore we wait for a while and then send a request again.
+                
                 await new Promise(resolve => setTimeout(resolve, 5000));
             }
             // if user !== null which means that participant joined the debate,
             // in that case we will break the loop.
-            else break;
+            else {
+                setOpponentId(user2.userId);
+                break;
+            }
         }
     
         // once second participant joined, we remove the link we were showing for first participant.
@@ -85,6 +93,7 @@ const DebateRoom = () => {
                 setOpponent(true);
                 setShowEndDebate(true);
                 setStart(true);
+                setRecieveMsg(true);
     
                 // setting the opponent side
                 if (side === "FOR") {
@@ -100,7 +109,7 @@ const DebateRoom = () => {
             }
             else {
                 // if the debate has not started, we wait and send the request again after a small timeout.
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 3000));
             }
         }
     }
@@ -109,7 +118,24 @@ const DebateRoom = () => {
     const Opponent = () => (
         <div>
             <div>{opponentSide}</div>
-            <div className="debateRoom opponent-child"></div>
+            <div 
+            className="debateRoom opponent-child"
+            onLoad={receiving_msgs()}
+            >
+            <div>
+                {showOpponentMsgs ? <ul>
+                    {opponentMsgs.map(msg => (
+                        <div>
+                            <div
+                                key = {opponentMsgs.indexOf(msg)}
+                                className="debateRoom msg-box">
+                                {msg}
+                            </div>
+                        </div>
+                        ))}
+                </ul>: null}
+            </div>
+            </div>
         </div>
     )
 
@@ -124,10 +150,10 @@ const DebateRoom = () => {
             debateState = "ONGOING_AGAINST";
 
         }
-        setForm_1(true);
+        setWriterBox(true);
         try {
             const requestBody = JSON.stringify({debateState});
-            const response = await api.put("/debates/rooms/" + String(roomId) + "/status", requestBody);
+            await api.put("/debates/rooms/" + String(roomId) + "/status", requestBody);
         }
         catch (error) {
             console.error(`Something went wrong while updating debate Status in debateroom: \n${handleError(error)}`);
@@ -141,7 +167,7 @@ const DebateRoom = () => {
         try {
             debateState = "ENDED";
             const requestBody = JSON.stringify({debateState});
-            const response = await api.put("/debates/rooms/" + String(roomId) + "/status", requestBody);
+            await api.put("/debates/rooms/" + String(roomId) + "/status", requestBody);
         }
         catch (error) {
             console.error(`Something went wrong while ending the debate in debateroom: \n${handleError(error)}`);
@@ -154,6 +180,9 @@ const DebateRoom = () => {
         checkEnd = false;
 
         if (userId === null) {
+            if (process.env.NODE_ENV === "production") {
+                localStorage.removeItem("token");
+            }
             history.push("/login");
         }
         else {
@@ -176,10 +205,15 @@ const DebateRoom = () => {
             const status = data.debateStatus;
 
             if (status === "ENDED") {
+                waitStart = false;
+                waitJoin = false;
+                checkEnd = false;
+
                 if (userId === null) {
-                    localStorage.removeItem("token");
+                    if (process.env.NODE_ENV === "production") {
+                        localStorage.removeItem("token");
+                    }
                     history.push("/login");
-                    
                 }
                 else {
                     history.push(
@@ -192,64 +226,18 @@ const DebateRoom = () => {
                 break;
             }
             else {
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 5000));
             }
         }
     }
 
-    // fetch the data on entering debate room
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await api.get("/debates/rooms/" + String(roomId));
-                const debateRoom = response.data
-
-                // setting the debate topic
-                setTopic(debateRoom.debate.topic)
-
-                // setting the side of user
-                if (userId === debateRoom.user1.userId) {
-                    setSide(debateRoom.side1);
-                }
-
-                if(location.state.participant==="2") {
-                    waitStart = true;
-                    try {
-                        if (debateRoom.side1==="FOR") {
-                            setSide("AGAINST");
-                        }
-                        else {
-                            setSide("FOR");
-                        }
-    
-                        if (userId !== null) {
-                            const requestBody = JSON.stringify({userId});
-                            const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
-                        }
-                        // update the debate room with user 2 information
-                        
-                    }
-                    catch (error){
-                        console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);
-                        console.error("Details:", error);
-                        alert("Something went wrong while updating userId in debateroom! See the console for details.");
-                    }
-                }
-            } catch (error) {
-                console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the debate room data! See the console for details.");
-            }
-        }
-        fetchData();
-    }, [userId, roomId, location.state.participant, side]);
-
     // post the message entered by participant
     async function left_chat_box (messageContent)  {
         try {
+            // BUG: potential bug here regarding userId
             const requestBody = JSON.stringify({roomId, userId, messageContent});
-            const post_response = await api.post("/debates/rooms/" + String(roomId) + "/msg", requestBody);
-            setForm_1(false)
+            await api.post("/debates/rooms/" + String(roomId) + "/msg", requestBody);
+            setWriterBox(false);
         } catch (error) {
             alert(`Something went wrong during the messagin: \n${handleError(error)}`);
         }
@@ -264,126 +252,223 @@ const DebateRoom = () => {
         }
     }
 
-    // defining content of participant 1 to return
-    participant1 = (
-        <div onLoad={
-            isDebateEnded()
-        }>
-            <div className="debateRoom topic-container">
-                {topic}
-            </div>
-
-            {start ?
-                <Button
-                    className="debateRoom button-start"
-                    value="Start Debate"
-                    style={{display:startDisable}}
-                    onClick={() => {
-                        setstartDisable("none")
-                        setOpponent(true)
-                        setShowEndDebate(true);
-                        startDebate()
-                        checkEnd=true
+    async function receiving_msgs () {
+        console.log("receving messages")
+        if (opponentId !== null) {
+            while(receiveMsg) {
+                console.log("inside while loop of receiving messages");
+                try {
+                    const get_msgs = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(opponentId)+"/msgs?top_i=1&to_top_j=3");
+                    if (get_msgs.data.length > 0) {
+                        setOpponentMsgs(get_msgs.data);
+                        setShowOpponentMsgs(true);
+                        //setRecieveMsg(false);
+                        break;
                     }
                 }
-                /> : null}
+                catch (error){
+                    console.error(`Something went wrong while getting the messages debate room data: \n${handleError(error)}`);
+                    console.error("Details:", error);
+                    alert("Something went wrong while getting the messages debate room data! See the console for details.");
+                }
+                await new Promise(resolve => setTimeout(resolve, 10000));
+            }
+        }
+    }
 
-            {showEndDebate ? 
-                <Button
-                    className="debateRoom button-end"
-                    value="End Debate"
-                    onClick={() => {
-                        endDebate()
-                    }}
-                /> : null}
+    // fetch the data on entering debate room
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await api.get("/debates/rooms/" + String(roomId));
+                const debateRoom = response.data
 
-            <div>
-                <div className="debateRoom chat-box-left">
-                    <div>{side}</div>
-                    <div className="debateRoom chat-child">
-                        <div>
-                            {showMsg ? <ul>
-                                {msgs.map(msg => (
-                                    <div>
-                                        <div
-                                        key = {msgs.indexOf(msg)}
-                                        className="debateRoom msg-box">
-                                            {msg}
-                                        </div>
-                                    </div>
-                                    ))}
-                            </ul>: null}
-                        </div>
-                    </div>
-                    <div className="debateRoom writer-child">
-                        {form_1 ?
-                            <input
-                                className="debateRoom input-text"
-                                placeholder="Enter here your argument and press ENTER"
-                                    onKeyPress={(ev) => {
-                                        if (ev.key === "Enter") {
-                                            ev.preventDefault();
-                                            left_chat_box(ev.target.value);}
-                                    }}
-                        />
-                            : null}
-                    </div>
-                </div>
-                <div className="debateRoom chat-box-right">
-                    {start ? null: <div className='debateRoom text'>Invite user to join!</div>}
-                    <Button
-                        className="debateRoom button-container"
-                        value="INVITE"
-                        hidden={inviteDisable}
-                        onClick={() => {
-                            setLink(true);
-                            setinviteDisable(true);
-                            waitJoin = true;
-                            wait_to_join(roomId)
+                // setting the debate topic
+                setTopic(debateRoom.debate.topic)
+
+                if(location.state.participant==="2") {
+                    // setting opponent id for second participant
+                    setOpponentId(debateRoom.user1.userId);
+                    waitStart = true;
+                    try {
+                        if (debateRoom.side1==="FOR") {
+                            setSide("AGAINST");
                         }
+                        else {
+                            setSide("FOR");
                         }
-                    />
-                    {link ? <Link roomId={roomId}/> : null}
-                    {opponent ? <Opponent opponentSide={opponentSide}/>: null}
-                </div>
-            </div>
-        </div>
-    );
+    
+                        if (userId !== null) {
+                            // update the debate room with user 2 information when user is not guest user
+                            const requestBody = JSON.stringify({userId});
+                            await api.put("/debates/rooms/" + String(roomId), requestBody);
+                        }
+                    }
+                    catch (error){
+                        console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);
+                        console.error("Details:", error);
+                        alert("Something went wrong while updating userId in debateroom! See the console for details.");
+                    }
+                }
+                else {
+                    // setting the side of user
+                    setSide(debateRoom.side1);
+                }
+
+                /*if (userId === debateRoom.user1.userId) {
+                    setSide(debateRoom.side1);
+                }*/
+
+            } catch (error) {
+                console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
+                console.error("Details:", error);
+                alert("Something went wrong while fetching the debate room data! See the console for details.");
+            }
+        }
+        fetchData();
+    }, [userId, roomId, location.state.participant, side]);
 
     // defining content of participant 2 to return
-    participant2 = (
-        <div onLoad={
-            wait_to_start(roomId),
-            isDebateEnded()
-        }>
-            <div className="debateRoom topic-container">
-                {topic}
-            </div>
-            {showEndDebate ? 
-                <Button
-                    className="debateRoom button-end"
-                    value="End Debate"
-                    onClick={() => {
-                        endDebate()
-                    }}
-                /> : null}
+    if (location.state.participant==="2") {
+        content = (
             <div>
-                <div className="debateRoom chat-box-left">
-                    <div>{side}</div>
-                    <div className="debateRoom chat-child"></div>
-                    <div className="debateRoom writer-child"></div>
+                <div className="debateRoom topic-container">
+                    {topic}
                 </div>
-                <div className="debateRoom chat-box-right">
-                    {start ? null: <div className='debateRoom text'>Waiting for 1st participant to start the debate!</div>}
-                    {opponent ? <Opponent opponentSide={opponentSide}/>: null}
+                {showEndDebate ? 
+                    <Button
+                        className="debateRoom button-end"
+                        value="End Debate"
+                        onClick={() => {
+                            endDebate()
+                        }}
+                    /> : null}
+                <div>
+                    <div className="debateRoom chat-box-left">
+                        <div>{side}</div>
+                        <div className="debateRoom chat-child"></div>
+                        <div className="debateRoom writer-child">
+                            {writer ?
+                                    <input
+                                        className="debateRoom input-text"
+                                        placeholder="Enter here your argument and press ENTER"
+                                            onKeyPress={(ev) => {
+                                                if (ev.key === "Enter") {
+                                                    ev.preventDefault();
+                                                    left_chat_box(ev.target.value);}
+                                            }}
+                                />
+                                    : null}
+                        </div>
+                    </div>
+                    <div className="debateRoom chat-box-right">
+                        {start ? null: 
+                            <div 
+                                className='debateRoom text'
+                                onLoad={wait_to_start(roomId)}
+                                >
+                                Waiting for 1st participant to start the debate!
+                            </div>}
+                        {opponent ? 
+                        <Opponent 
+                            opponentSide={opponentSide}
+                            onLoad={isDebateEnded()}
+                        />: null}
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    }
+    else {
+        // defining content of participant 1 to return
+        content = (
+            <div>
+                <div className="debateRoom topic-container">
+                    {topic}
+                </div>
+
+                {start ?
+                    <Button
+                        className="debateRoom button-start"
+                        value="Start Debate"
+                        style={{display:startDisable}}
+                        onClick={() => {
+                            setstartDisable("none")
+                            setOpponent(true)
+                            setShowEndDebate(true);
+                            startDebate()
+                            checkEnd=true
+                        }
+                    }
+                    /> : null}
+
+                {showEndDebate ? 
+                    <Button
+                        className="debateRoom button-end"
+                        value="End Debate"
+                        onLoad={isDebateEnded()}
+                        onClick={() => {
+                            endDebate()
+                        }}
+                    /> : null}
+
+                <div>
+                    <div className="debateRoom chat-box-left">
+                        <div>{side}</div>
+                        <div className="debateRoom chat-child">
+                            <div>
+                                {showMsg ? <ul>
+                                    {msgs.map(msg => (
+                                        <div>
+                                            <div
+                                                key = {msgs.indexOf(msg)}
+                                                className="debateRoom msg-box">
+                                                {msg}
+                                            </div>
+                                        </div>
+                                        ))}
+                                </ul>: null}
+                            </div>
+                        </div>
+                        <div className="debateRoom writer-child">
+                            {writer ?
+                                <input
+                                    className="debateRoom input-text"
+                                    placeholder="Enter here your argument and press ENTER"
+                                        onKeyPress={(ev) => {
+                                            if (ev.key === "Enter") {
+                                                ev.preventDefault();
+                                                left_chat_box(ev.target.value);}
+                                        }}
+                            />
+                                : null}
+                        </div>
+                    </div>
+                    <div className="debateRoom chat-box-right">
+                        {start ? null: <div className='debateRoom text'>Invite user to join!</div>}
+                        <Button
+                            className="debateRoom button-container"
+                            value="INVITE"
+                            hidden={inviteDisable}
+                            onClick={() => {
+                                setLink(true);
+                                setinviteDisable(true);
+                                waitJoin = true;
+                                wait_to_join(roomId)
+                            }
+                            }
+                        />
+                        {link ? <Link roomId={roomId}/> : null}
+                        {opponent ? <Opponent opponentSide={opponentSide}/>: null}
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div>
-            {location.state.participant==="2"?participant2:participant1}
+            {content}
         </div>
     );
 }
