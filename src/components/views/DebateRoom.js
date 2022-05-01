@@ -10,6 +10,7 @@ import { useLocation } from "react-router-dom";
 var waitStart = false;
 var waitJoin = false;
 var checkEnd = false;
+var receiveMsg = false;
 
 const getLink = () => {
     //const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/debateroom/'
@@ -42,7 +43,6 @@ const DebateRoom = () => {
     const [opponentSide, setOpponentSide] = useState(null);
     const [msgs, setMsgs] = useState(null);
     const [showMsg, setShowMsg] = useState(false);
-    const [receiveMsg, setRecieveMsg] = useState(false);
     const [opponentMsgs, setOpponentMsgs] = useState(null);
     const [showOpponentMsgs, setShowOpponentMsgs] = useState(null);
 
@@ -93,7 +93,7 @@ const DebateRoom = () => {
                 setOpponent(true);
                 setShowEndDebate(true);
                 setStart(true);
-                setRecieveMsg(true);
+                receiveMsg = true;
     
                 // setting the opponent side
                 if (side === "FOR") {
@@ -201,13 +201,15 @@ const DebateRoom = () => {
     const isDebateEnded = async () => {
         while(checkEnd) {
             const response = await api.get("/debates/rooms/" + String(roomId));
-            const data =  response.data
+            const data =  response.data;
             const status = data.debateStatus;
 
             if (status === "ENDED") {
                 waitStart = false;
                 waitJoin = false;
                 checkEnd = false;
+                //setRecieveMsg(false);
+                receiveMsg = false;
 
                 if (userId === null) {
                     if (process.env.NODE_ENV === "production") {
@@ -226,6 +228,19 @@ const DebateRoom = () => {
                 break;
             }
             else {
+
+
+
+
+                if (status === "ONGOING_FOR" ){
+                    setWriterBox(side === "FOR");
+                    //receiveMsg = opponentSide === "FOR";
+                }
+                else if (status === "ONGOING_AGAINST" ){
+                    setWriterBox(side === "AGAINST");
+                    //receiveMsg = opponentSide === "AGAINST";
+                }
+                //console.log("value of receive msg", receiveMsg);
                 await new Promise(resolve => setTimeout(resolve, 5000));
             }
         }
@@ -233,6 +248,7 @@ const DebateRoom = () => {
 
     // post the message entered by participant
     async function left_chat_box (messageContent)  {
+        console.log("left_chat_box_called");
         try {
             // BUG: potential bug here regarding userId
             const requestBody = JSON.stringify({roomId, userId, messageContent});
@@ -245,6 +261,7 @@ const DebateRoom = () => {
             const get_response = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(userId)+"/msgs?top_i=1&to_top_j=5");
             setMsgs(get_response.data);
             setShowMsg(true);
+            receiveMsg = true;
         } catch (error) {
             console.error(`Something went wrong while getting the messages debate room data: \n${handleError(error)}`);
             console.error("Details:", error);
@@ -253,17 +270,17 @@ const DebateRoom = () => {
     }
 
     async function receiving_msgs () {
-        console.log("receving messages")
         if (opponentId !== null) {
             while(receiveMsg) {
                 console.log("inside while loop of receiving messages");
+                console.log(userId);
+                console.log(opponentId);
                 try {
                     const get_msgs = await api.get("debates/rooms/"+String(roomId)+"/users/"+String(opponentId)+"/msgs?top_i=1&to_top_j=3");
                     if (get_msgs.data.length > 0) {
                         setOpponentMsgs(get_msgs.data);
                         setShowOpponentMsgs(true);
-                        setRecieveMsg(false);
-                        setWriterBox(true);
+                        receiveMsg = false;
                         break;
                     }
                 }
@@ -315,11 +332,6 @@ const DebateRoom = () => {
                     // setting the side of user
                     setSide(debateRoom.side1);
                 }
-
-                /*if (userId === debateRoom.user1.userId) {
-                    setSide(debateRoom.side1);
-                }*/
-
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
                 console.error("Details:", error);
