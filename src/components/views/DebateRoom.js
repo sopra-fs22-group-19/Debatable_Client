@@ -227,9 +227,11 @@ const DebateRoom = () => {
             }
             else if (status === "ONGOING_FOR"){
                 setWriterBox(side === "FOR" );
+                await new Promise(resolve => setTimeout(resolve, 5000));
 
             } else if (status === "ONGOING_AGAINST"){
                 setWriterBox(side === "AGAINST" );
+                await new Promise(resolve => setTimeout(resolve, 5000));
             }
             else {
                 await new Promise(resolve => setTimeout(resolve, 5000));
@@ -352,7 +354,21 @@ const DebateRoom = () => {
                 <div>
                     <div className="debateRoom chat-box-left">
                         <div>{side}</div>
-                        <div className="debateRoom chat-child"></div>
+                        <div className="debateRoom chat-child">
+                            <div>
+                                {showMsg ? <ul>
+                                    {msgs.map(msg => (
+                                        <div>
+                                            <div
+                                                key = {msgs.indexOf(msg)}
+                                                className="debateRoom msg-box">
+                                                {msg}
+                                            </div>
+                                        </div>
+                                        ))}
+                                </ul>: null}
+                            </div>
+                        </div>
                         <div className="debateRoom writer-child">
                             {writer ?
                                     <input
