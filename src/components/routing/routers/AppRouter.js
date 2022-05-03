@@ -5,8 +5,9 @@ import Login from "components/views/Login";
 import Register from "components/views/Register";
 import Homepage from "components/views/Homepage";
 import DebateRoom from "../../views/DebateRoom";
-import wsDebateRoom from "../../views/wsDebateRoom";
+import wsDebateRoom from "../../views/WsDebateRoom";
 import InviteeLanding from "../../views/InviteeLanding";
+import WsDebateRoom from "../../views/WsDebateRoom";
 
 const AppRouter = () => {
   const participant = 1;
@@ -33,7 +34,7 @@ const AppRouter = () => {
         </Route>
         <Route exact path="/debateroom/:roomId">
           <GameGuard>
-            <wsDebateRoom/>
+            <WsDebateRoom/>
           </GameGuard>
         </Route>
         <Route exact path="/debateroom/:roomId/:participant">

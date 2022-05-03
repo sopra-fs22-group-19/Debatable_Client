@@ -1,14 +1,16 @@
 import { Button } from 'components/ui/Button';
 import {useEffect, useState} from 'react';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useLocation} from 'react-router-dom';
 import {useParams} from 'react-router-dom/cjs/react-router-dom.min';
 import "styles/views/wsDebateRoom.scss";
 import { isProduction } from 'helpers/isProduction';
 import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
+import {api, handleError} from "../../helpers/api";
 
 
 var stompClient =null;
+
 
 
 const getLink = () => {
@@ -21,16 +23,39 @@ const getLink = () => {
 
 
 const DebateRoom = () => {
+    const location = useLocation();
+    let {roomId} = useParams();
+    roomId = parseInt(roomId);
+
+
+    const [roomData, setRoomData] = useState({
+        topic: '',
+        description: '',
+        roomId: '',
+    });
+
     const [debateMsg, setDebateMsg] = useState([]);
     const [userData, setUserData] = useState({
-        username: '',
+        userId: '',
         connected: false,
         message: ''
     });
 
 
     useEffect(() => {
+        async function fetchData() {
+            try {const response = await api.get("/debates/rooms/" + String(roomId));
+                const debateRoom = response.data
+                setRoomData({...roomData, 'topic': debateRoom.debate.topic,
+                'roomId': roomId})
+            } catch (error) {
+                console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
+                console.error("Details:", error);
+                alert("Something went wrong while fetching the debate room data! See the console for details.");
+            }
+        }fetchData();
         console.log(userData);
+        console.log(roomData);
     }, [userData]);
 
     const connect =()=>{
@@ -40,12 +65,22 @@ const DebateRoom = () => {
     }
 
     const onConnected = () => {
-        setUserData({...userData,"connected": true});
+        setUserData({...userData,"connected": true,
+            "userId": location.state.userId});
         stompClient.subscribe('/debateRoom/{roomId}', /TODO/ );
+        userJoin();
     }
 
     const onError = (err) => {
         console.log(err);
+    }
+
+    const userJoin=()=>{
+        var chatMessage = {
+            senderName: userData.username,
+            status:"JOIN"
+        };
+        stompClient.send("/rooms/{roomId}/msg", {}, JSON.stringify(chatMessage));
     }
 
     const connectUser=()=>{
@@ -58,11 +93,12 @@ const DebateRoom = () => {
     }
 
 
+
     const sendValue=()=>{
         if (stompClient) {
             var chatMessage = {
-                //todo userid
-                //todo roomid
+                userId:userData.userId,
+                roomId:roomData.roomId,
                 message: userData.message,
                 status:"MESSAGE"
             };
