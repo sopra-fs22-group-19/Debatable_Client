@@ -67,7 +67,7 @@ const DebateRoom = () => {
     const onConnected = () => {
         setUserData({...userData,"connected": true,
             "userId": location.state.userId});
-        stompClient.subscribe('/debateRoom/{roomId}', /TODO/ );
+        stompClient.subscribe('/debateRoom/roomId', onMessageReceived );
         userJoin();
     }
 
@@ -80,7 +80,7 @@ const DebateRoom = () => {
             senderName: userData.username,
             status:"JOIN"
         };
-        stompClient.send("/rooms/{roomId}/msg", {}, JSON.stringify(chatMessage));
+        stompClient.send("/rooms/toRoomId/msg", {}, JSON.stringify(chatMessage));
     }
 
     const connectUser=()=>{
@@ -107,6 +107,17 @@ const DebateRoom = () => {
             setUserData({...userData,"message": ""});
         }
     }
+
+    const onMessageReceived = (incoming)=>{
+        var incomingData = JSON.parse(incoming.body);
+        debateMsg.push(incomingData);
+        setDebateMsg([...debateMsg]);
+        }
+
+
+
+
+
 
 
     return (
