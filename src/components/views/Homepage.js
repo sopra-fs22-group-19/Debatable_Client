@@ -6,6 +6,7 @@ import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/Homepage.scss";
 import { useLocation } from "react-router-dom";
+import FilterComponent from "../ui/FilterComponent";
 
 // BUG: when going back to homepage and then joing the same debate topic with same side, 
 // user should not create a new one but should go to the same one.
@@ -59,6 +60,7 @@ const Homepage = () => {
     if (debates) {
     content = (
         <div className="debate block">
+
                 {debates.map(debate => (
                     <div className="debate debates">
                         <span>
@@ -76,6 +78,7 @@ const Homepage = () => {
 
     return (
         <BaseContainer className="base-container-hp">
+            <FilterComponent/>
             {content}
             <Button className="debate button-logout" onClick={() => logout()}>LOGOUT</Button>
         </BaseContainer>

@@ -1,0 +1,60 @@
+@import 'styles/theme';
+
+.filter_wrapper {
+  position: relative;
+  display: inline-block;
+}
+.filter_button {
+  border-radius: 5px;
+  padding: 8px 16px;
+  background-color: #408aeb;
+  cursor: pointer;
+  font-weight: 500;
+  color: white;
+  font-size: 18px;
+  line-height: 1.5;
+}
+.filter_button:hover {
+  background-color: #092b58;
+}
+.filter_button:focus {
+  outline: 1px dashed;
+  outline: 1px auto -webkit-focus-ring-color;
+}
+
+.filter__dropdown {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: 0.25rem;
+  display: none;
+  width: 16rem;
+  z-index: 50;
+  left: 0;
+  max-height: calc(100vh - 152px);
+  position: absolute;
+  margin-top: 0.5rem;
+  background-color: white;
+}
+@media (min-width: 768px) {
+  .filter__dropdown {
+    display: block;
+  }
+}
+.filter__dropdown__actions {
+  border-top-width: 1px;
+  border-top-color: #e4e7eb;
+  border-top-style: solid;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem 0.5rem 0.25rem 0.5rem;
+}
+
+.filter__dropdown__button {
+  border-radius: 0.125rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #2b7de9;
+  border-color: transparent;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
