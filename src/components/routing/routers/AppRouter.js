@@ -6,6 +6,7 @@ import Register from "components/views/Register";
 import Homepage from "components/views/Homepage";
 import DebateRoom from "../../views/DebateRoom";
 import InviteeLanding from "../../views/InviteeLanding";
+import CreateDebate from "../../views/CreateDebate";
 
 const AppRouter = () => {
   const participant = 1;
@@ -38,6 +39,9 @@ const AppRouter = () => {
         <Route exact path="/debateroom/:roomId/:participant">
             <InviteeLanding/>
         </Route>
+      <Route exact path="/create_debate">
+          <CreateDebate/>
+      </Route>
       </Switch>
     </BrowserRouter>
   );
