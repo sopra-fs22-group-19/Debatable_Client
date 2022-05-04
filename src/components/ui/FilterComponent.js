@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
+import {Button} from 'components/ui/Button';
 import "styles/ui/FilterComponent.scss";
+import Homepage from "../views/Homepage";
 
 
 export default function FilterComponent() {
@@ -24,19 +26,15 @@ export default function FilterComponent() {
             const isDropdownClicked = dropdownRef.current && dropdownRef.current.contains(event.target);
             const isButtonClicked = buttonRef.current && buttonRef.current.contains(event.target);
 
-
             if (isDropdownClicked || isButtonClicked) {
-                // We would do nothing if the ref is undefined or the user clicks on the menu.
                 return;
             }
-            // Or else close the menu.
             setIsOpen(false);
         };
 
         document.addEventListener("mousedown", handleClick);
         document.addEventListener("touchstart", handleClick);
 
-        // cleanup
         return () => {
             document.removeEventListener("mousedown", handleClick);
             document.removeEventListener("touchstart", handleClick);
@@ -47,11 +45,12 @@ export default function FilterComponent() {
 
         localStorage.setItem('categories', selectedFrameworks);
         setIsOpen(false);
+        window.location.reload(false);
     };
 
     return (
         <div className="filter_wrapper">
-            <button ref={buttonRef} onClick={() => setIsOpen(!isOpen)} className="filter_button">JS Frameworks</button>
+            <button ref={buttonRef} onClick={() => setIsOpen(!isOpen)} className="filter_button">Filter</button>
 
             {isOpen && (
                 <div ref={dropdownRef} className="filter_dropdown">
@@ -65,7 +64,7 @@ export default function FilterComponent() {
                             );
                         })}
                         <div className="filter_dropdown_actions">
-                            <button onClick={() => applyFilters()} className="filter_dropdown_button"> Select </button>
+                            <button onClick={() => applyFilters()} className="filter_dropdown_button">Apply</button>
                         </div>
                     </div>
                 </div>

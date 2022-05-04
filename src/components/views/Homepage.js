@@ -16,6 +16,7 @@ const Homepage = () => {
     const location = useLocation();
     const [debates, setDebates] = useState(null);
     const userId = location.state.userId;
+    const [categories, setCategories] = useState(null);
 
     const logout = () => {
         localStorage.removeItem("token");
@@ -44,6 +45,10 @@ const Homepage = () => {
     useEffect(() => {
         async function fetchData() {
             try {
+
+                console.log(localStorage.getItem('categories'));
+
+
                 const response = await api.get("/debates/" + String(userId));
                 setDebates(response.data)
             } catch (error) {
