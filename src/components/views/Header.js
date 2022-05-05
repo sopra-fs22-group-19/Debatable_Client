@@ -1,7 +1,8 @@
 import React from "react";
-import {ReactLogo} from "components/ui/ReactLogo";
 import PropTypes from "prop-types";
+import {Container, Navbar, Nav } from "react-bootstrap";
 import "styles/views/Header.scss";
+
 
 /**
  * This is an example of a Functional and stateless component (View) in React. Functional components are not classes and thus don't handle internal state changes.
@@ -11,12 +12,28 @@ import "styles/views/Header.scss";
  * https://reactjs.org/docs/components-and-props.html
  * @FunctionalComponent
  */
-const Header = props => (
-  <div className="header container" style={{height: props.height}}>
-    <h1 className="header title">SoPra FS22 rocks with Group19!</h1>
-    <ReactLogo width="60px" height="60px"/>
-  </div>
+const Header = props => {
+return(
+
+    <div className="navbar">
+        <a href="profile">User</a>
+        <a href="create_debate">Create Debate</a>
+        <a href="home">Homepage</a>
+        <div className="dropdown">
+            <button className="dropbtn">More
+                <i className="fa fa-caret-down"></i>
+            </button>
+            <div className="dropdown-content">
+                <a href="#">Link 1</a>
+                <a href="#">Link 2</a>
+                <a href="#">Link 3</a>
+            </div>
+        </div>
+    </div>
+
+
 );
+}
 
 Header.propTypes = {
   height: PropTypes.string

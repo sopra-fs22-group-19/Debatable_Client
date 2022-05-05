@@ -1,10 +1,33 @@
 @import 'styles/theme';
 
 .base-container {
+  justify-content: center;
   margin-left: auto;
   padding-left: 15px;
   margin-right: auto;
   padding-right: 15px;
-  max-width: $DESKTOP_WIDTH;
+  width: auto;
+  height: auto;
   color: $textColor;
+  align-items: center;
+
+  & p,h2 {
+    margin: 0.2em 0;
+    text-align: center;
+    color: blue;
+  }
+
+
+}
+.base-container-hp {
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  margin-bottom: 100px;
+  width: fit-content;
+  height: auto;
+  color: $textColor;
+
+
+
 }
