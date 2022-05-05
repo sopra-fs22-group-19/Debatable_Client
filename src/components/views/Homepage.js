@@ -16,21 +16,25 @@ const Homepage = () => {
     const location = useLocation();
     const [debates, setDebates] = useState(null);
     const userId = location.state.userId;
-    const [categories, setCategories] = useState(null);
+    //const [categories, setCategories] = useState(null);
+    let categories;
 
     const logout = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("categories");
         history.push('/login');
     }
 
     const todebateRoom = async (side, debateId) => {
         try {
+            
             const requestBody = JSON.stringify({userId, debateId, side});
             const response = await api.post("/debates/rooms", requestBody);
             const debateRoom = response.data
 
             let push_to = '/debateroom/' + String(debateRoom.roomId)
 
+            localStorage.removeItem("categories");
             history.push({
                 pathname: push_to,
                 state: {
@@ -45,9 +49,8 @@ const Homepage = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-
-                console.log(localStorage.getItem('categories'));
-
+                categories = localStorage.getItem('categories');
+                console.log(categories);
 
                 const response = await api.get("/debates/" + String(userId));
                 setDebates(response.data)
