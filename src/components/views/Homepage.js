@@ -53,7 +53,7 @@ const Homepage = () => {
                 console.log(categories);
                 if(categories){
                     const requestBody = JSON.stringify(categories);
-                    const response = await api.get("/debates/categories/" , requestBody);
+                    const response = await api.get("/debates/categories" , requestBody);
                     setDebates(response.data)
                     console.log("rupal")
                 }
