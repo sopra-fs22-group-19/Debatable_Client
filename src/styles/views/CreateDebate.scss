@@ -24,6 +24,7 @@
 
     &.field {
         margin-top: 30px;
+        margin-bottom: 30px;
         flex-direction: column;
         justify-content: center;
         background-color: lighten($background, 70);
@@ -45,4 +46,16 @@
         color: black;
         width: 80%;
     }
+    &.button {
+        //margin-top: 10em;
+        background: lighten($background, 60);
+        width: auto;
+        padding: 9px;
+        border-radius: $borderRadius;
+        color: rgb(97, 26, 26);
+        margin: auto;
+        align-items: center;
+        font-family: sans-serif;
+        display: flex;
+      }
 }

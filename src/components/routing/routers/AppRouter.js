@@ -40,7 +40,9 @@ const AppRouter = () => {
             <InviteeLanding/>
         </Route>
       <Route exact path="/create_debate">
-          <CreateDebate/>
+          <GameGuard>
+            <CreateDebate/>
+          </GameGuard>
       </Route>
       </Switch>
     </BrowserRouter>
