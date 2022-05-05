@@ -3,9 +3,10 @@
 .create {
     &.container {
         margin: auto;
+        margin-bottom: 2em;
         margin-top: 1cm;
         width: 50%;
-        height: 10cm;
+        height: 7cm;
         color: rgb(97, 26, 26);
         flex-direction: column;
         background: lighten($background, 70);
@@ -47,7 +48,6 @@
         width: 80%;
     }
     &.button {
-        //margin-top: 10em;
         background: lighten($background, 60);
         width: auto;
         padding: 9px;

@@ -71,6 +71,7 @@ const CreateDebate = props => {
     }
     let content;
     content = (
+      <div>
         <div className="create container">
             <div className="create input-text">Create Debate</div>
                 
@@ -91,6 +92,10 @@ const CreateDebate = props => {
                     <label for="nameA">Science</label>
                     <input type="radio" name="nameA" id="nameB" value="Sports"  onClick={() => setfilter("Sports")}/>
                     <label for="nameA">Sports</label>
+                    <input type="radio" name="nameA" id="nameA" value="Art"  onClick={() => setfilter("Art")}/>
+                    <label for="nameA">Art</label>
+                    <input type="radio" name="nameA" id="nameB" value="Music"  onClick={() => setfilter("Music")}/>
+                    <label for="nameA">Music</label>
                     </div>
 
                     <div>
@@ -102,15 +107,17 @@ const CreateDebate = props => {
                     </div>
         
                 </div>   
-                <Button
-                  className="create button"
-                  value="Create Debate"
-                  disabled={!topic || !description || !filter}
-                  onClick={() => {
-                      create_new_debate()
-                  }}
-                    />     
-        </div>
+
+          </div>
+          <Button
+          className="create button"
+          value="Create Debate"
+          disabled={!topic || !description || !filter}
+          onClick={() => {
+              create_new_debate()
+          }}
+            />    
+      </div>
     )
     return(
         <div>
