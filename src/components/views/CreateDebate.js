@@ -1,14 +1,23 @@
 import React from "react";
-
+import "styles/views/CreateDebate.scss";
 
 
 const CreateDebate = props => {
+    let content;
+
+    content = (
+        <div className="create container">
+            Create Debate
+            <div className="create field">
+                Hello
+            </div>
+        </div>
+    )
     return(
-       <div>
-           <h>Create Me</h>
-       </div>
-
-
+        <div>
+            {content}
+        </div>
+      
     );
 };
 
