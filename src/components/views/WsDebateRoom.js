@@ -1,4 +1,5 @@
 import { Button } from 'components/ui/Button';
+import {Chat} from 'components/ui/Chat'
 import {useEffect, useState} from 'react';
 import {useHistory, useLocation} from 'react-router-dom';
 import {useParams} from 'react-router-dom/cjs/react-router-dom.min';
@@ -89,8 +90,9 @@ const DebateRoom = () => {
 
     const handleMessage =(event)=>{
         const {value}=event.target;
-        setUserData({...userData,"message": value});
+        setUserData({...userData, "message": value});
     }
+
 
 
 
@@ -113,43 +115,60 @@ const DebateRoom = () => {
         setDebateMsg([...debateMsg]);
         }
 
+    const endDebate = () =>{
+        console.log("end debate pressed");
+    }
 
-
-
-
-
+    const postMessage = () =>{
+        console.log("Message posted");
+    }
 
     return (
         <div className="container">
-            {userData.connected?
-                <div className="debate-box">
+            {userData.connected ?
+                <div>
                     <div>
-                    <ul className="debate-messages">
-                        {console.log({debateMsg})};
-                        {debateMsg.map((msg,index)=>(
-                            <li className='fesahfsahfk' key={index}>
-                                <div className="message-data">{msg}</div>
-                            </li>
-                        ))}
-                    </ul>
-                    </div>
-                    <div className="send-message">
-                        <input
-                            className="debateRoom input-text"
-                            placeholder="Enter here your argument and press ENTER"
-                            value={userData.message}
-                            onChange={handleMessage}
+                        <Chat
+                            topic = {roomData.topic}
+                            showEndDebate = {true}
+                            endDebate = {() => endDebate()}
+                            side = {"FOR"}
+                            msgs = {debateMsg}
+                            canWrite = {true}
+                            postMessage = {() => sendValue()}
                         />
-                        <button type="button" className="send-button" onClick={sendValue}>send</button>
                     </div>
+                    <div className="debate-box">
+                        <div>
+                        <ul className="debate-messages">
+                            {console.log({debateMsg})};
+                            {debateMsg.map((msg,index)=>(
+                                <li className='fesahfsahfk' key={index}>
+                                    <div className="message-data">{msg}</div>
+                                </li>
+                            ))}
+                        </ul>
+                        </div>
+                        <div className="send-message">
+                            <input
+                                className="debateRoom input-text"
+                                placeholder="Enter here your argument and press ENTER"
+                                value={userData.message}
+                                onChange={handleMessage}
+                            />
+                            <button type="button" className="send-button" onClick={sendValue}>send</button>
+                        </div>
 
+                    </div>
                 </div>
+
                 :
                 <div className="connect">
                     <button type="button" onClick={connectUser}>
                         connect
                     </button>
-                </div>}
+                </div>
+            }
         </div>
     )
 }
