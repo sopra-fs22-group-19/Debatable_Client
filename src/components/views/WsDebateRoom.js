@@ -68,7 +68,7 @@ const DebateRoom = () => {
     const onConnected = () => {
         setUserData({...userData,"connected": true,
             "userId": location.state.userId});
-        stompClient.subscribe('/debateRoom/roomId', onMessageReceived );
+        stompClient.subscribe('/debates/rooms/' + String(roomId), onMessageReceived );
         userJoin();
     }
 
@@ -81,19 +81,21 @@ const DebateRoom = () => {
             senderName: userData.username,
             status:"JOIN"
         };
-        stompClient.send("/rooms/toRoomId/msg", {}, JSON.stringify(chatMessage));
+        stompClient.send('/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
     }
 
     const connectUser=()=>{
         connect();
     }
 
-    const handleMessage =(event)=>{
+    const handleMessage = (event) => {
         const {value}=event.target;
         setUserData({...userData, "message": value});
     }
 
-
+    const handleMessage_2 = (value) => {
+        setUserData({...userData, "message": value});
+    }
 
 
     const sendValue=()=>{
@@ -105,7 +107,8 @@ const DebateRoom = () => {
                 status:"MESSAGE"
             };
             console.log(chatMessage);
-            stompClient.send("/debates/rooms/toRoomId/msg", {}, JSON.stringify(chatMessage));
+            console.log("helllooo")
+            stompClient.send('/ws/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
             setUserData({...userData,"message": ""});
         }
     }
@@ -119,9 +122,6 @@ const DebateRoom = () => {
         console.log("end debate pressed");
     }
 
-    const postMessage = () =>{
-        console.log("Message posted");
-    }
 
     return (
         <div className="container">
@@ -135,33 +135,11 @@ const DebateRoom = () => {
                             side = {"FOR"}
                             msgs = {debateMsg}
                             canWrite = {true}
-                            postMessage = {() => sendValue()}
+                            postMessage = {sendValue}
+                            handleMessage = {handleMessage}
                         />
                     </div>
-                    <div className="debate-box">
-                        <div>
-                        <ul className="debate-messages">
-                            {console.log({debateMsg})};
-                            {debateMsg.map((msg,index)=>(
-                                <li className='fesahfsahfk' key={index}>
-                                    <div className="message-data">{msg}</div>
-                                </li>
-                            ))}
-                        </ul>
-                        </div>
-                        <div className="send-message">
-                            <input
-                                className="debateRoom input-text"
-                                placeholder="Enter here your argument and press ENTER"
-                                value={userData.message}
-                                onChange={handleMessage}
-                            />
-                            <button type="button" className="send-button" onClick={sendValue}>send</button>
-                        </div>
-
-                    </div>
                 </div>
-
                 :
                 <div className="connect">
                     <button type="button" onClick={connectUser}>

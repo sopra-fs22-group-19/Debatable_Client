@@ -7,11 +7,12 @@ const WriteBox = (props) => (
             <input
                 className="debateRoom input-text"
                 placeholder="Enter here your argument and press ENTER"
+                onChange={props.handleMessage}
                 onKeyPress={
                 (ev) => {
                     if (ev.key === "Enter") {
                         ev.preventDefault();
-                        props.postMessage(ev.target.value);}
+                        props.postMessage();}
                 }}
             />
             : null}
@@ -58,7 +59,8 @@ export const Chat = props => {
                     <MessageList msgs = {props.msgs} />
                     <WriteBox
                         canWrite = {props.canWrite}
-                        postMessage = {() => { props.postMessage() } }
+                        postMessage = {props.postMessage}
+                        handleMessage = {props.handleMessage}
                     />
                 </div>
             </div>
