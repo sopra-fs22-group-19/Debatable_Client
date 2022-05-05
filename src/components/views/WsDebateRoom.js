@@ -103,14 +103,13 @@ const DebateRoom = () => {
                 status:"MESSAGE"
             };
             console.log(chatMessage);
-            stompClient.send("/debates/rooms/{roomId}/msg", {}, JSON.stringify(chatMessage));
+            stompClient.send("/debates/rooms/toRoomId/msg", {}, JSON.stringify(chatMessage));
             setUserData({...userData,"message": ""});
         }
     }
 
     const onMessageReceived = (incoming)=>{
-        var incomingData = JSON.parse(incoming.body);
-        debateMsg.push(incomingData);
+        debateMsg.push(incoming.body);
         setDebateMsg([...debateMsg]);
         }
 
@@ -124,15 +123,16 @@ const DebateRoom = () => {
         <div className="container">
             {userData.connected?
                 <div className="debate-box">
-
+                    <div>
                     <ul className="debate-messages">
+                        {console.log({debateMsg})};
                         {debateMsg.map((msg,index)=>(
-                            <li className={`message ${msg.senderName === userData.username && "self"}`} key={index}>
-                                <div className="message-data">{msg.message}</div>
+                            <li className='fesahfsahfk' key={index}>
+                                <div className="message-data">{msg}</div>
                             </li>
                         ))}
                     </ul>
-
+                    </div>
                     <div className="send-message">
                         <input
                             className="debateRoom input-text"
