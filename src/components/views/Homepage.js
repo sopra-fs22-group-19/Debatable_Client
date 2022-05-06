@@ -15,11 +15,12 @@ const Homepage = () => {
     const history = useHistory();
     const location = useLocation();
     const [debates, setDebates] = useState(null);
-    const userId = location.state.userId;
+    const userId = localStorage.getItem("userId");
     let categories = [];
 
     const logout = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("userId");
         localStorage.removeItem("categories");
         history.push('/login');
     }
