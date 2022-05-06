@@ -54,11 +54,14 @@ const Homepage = () => {
                 if(categories){
                     let query = "/debates/?categories=" + categories;
                     const response = await api.get(query);
-                    setDebates(response.data)
+                    
 
                     if (response.data.length === 0) {
                         alert("Debate topic for this filter not found. Try another filter!")
                         const response = await api.get("/debates/" + String(userId));
+                        setDebates(response.data)
+                    }
+                    else {
                         setDebates(response.data)
                     }
                 }
