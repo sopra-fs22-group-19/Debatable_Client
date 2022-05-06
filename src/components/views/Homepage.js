@@ -16,9 +16,7 @@ const Homepage = () => {
     const location = useLocation();
     const [debates, setDebates] = useState(null);
     const userId = location.state.userId;
-    //const [categories, setCategories] = useState(null);
     let categories = [];
-    let subArray = [];
 
     const logout = () => {
         localStorage.removeItem("token");
