@@ -18,6 +18,7 @@ const Homepage = () => {
     const userId = location.state.userId;
     //const [categories, setCategories] = useState(null);
     let categories = [];
+    let subArray = [];
 
     const logout = () => {
         localStorage.removeItem("token");
@@ -49,18 +50,21 @@ const Homepage = () => {
     useEffect(() => {
         async function fetchData() {
             try {
+
                 categories = localStorage.getItem('categories');
-                console.log(categories);
+
                 if(categories){
-                    const requestBody = JSON.stringify(categories);
-                    const response = await api.get("/debates/categories/" , requestBody);
+                    let query = "/debates/?categories=" + categories;
+                    const response = await api.get(query);
                     setDebates(response.data)
-                    console.log("rupal")
                 }
-                else {
-                const response = await api.get("/debates/" + String(userId));
-                setDebates(response.data)
+
+                else{
+                    const response = await api.get("/debates/" + String(userId));
+                    setDebates(response.data)
                 }
+
+
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate topics: \n${handleError(error)}`);
                 console.error("Details:", error);
