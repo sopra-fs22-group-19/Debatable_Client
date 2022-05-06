@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {Container, Navbar, Nav } from "react-bootstrap";
 import "styles/views/Header.scss";
-
+import { isProduction } from 'helpers/isProduction';
 
 /**
  * This is an example of a Functional and stateless component (View) in React. Functional components are not classes and thus don't handle internal state changes.
@@ -12,13 +12,21 @@ import "styles/views/Header.scss";
  * https://reactjs.org/docs/components-and-props.html
  * @FunctionalComponent
  */
-const Header = props => {
-return(
 
+ const getBaseLink = () => {
+    const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/'
+    //const prodURL = "https://sopra-debatable-client-app.herokuapp.com/"
+    const devURL = 'http://localhost:3000/'
+    return isProduction() ? prodURL : devURL;
+}
+
+const Header = props => {
+    const baselink = getBaseLink();
+return(
     <div className="navbar">
-        <a href="profile">User</a>
-        <a href="create_debate">Create Debate</a>
-        <a href="home">Homepage</a>
+        <a href={baselink+"profile"}>User</a>
+        <a href={baselink+"create_debate"}>Create Debate</a>
+        <a href={baselink+"home"}>Homepage</a>
         <div className="dropdown">
             <button className="dropbtn">More
                 <i className="fa fa-caret-down"></i>

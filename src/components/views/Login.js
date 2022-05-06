@@ -58,9 +58,8 @@ const Login = props => {
       let userId = null;
       const requestBody = JSON.stringify({userId});
       const response = await api.put("/debates/rooms/" + String(props.roomId), requestBody);
-      //console.log(response.data);
-      const token = response.data.user2.token;
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", response.data.user2.token);
+      localStorage.setItem("userId", response.data.user2.userId);
   }
   catch (error){
       console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);
@@ -98,6 +97,7 @@ const Login = props => {
 
       // saving tokem in local storage
       localStorage.setItem("token", user.token);
+      localStorage.setItem("userId", user.userId);
 
       // Login successfully worked --> navigate to the route
       history.push(

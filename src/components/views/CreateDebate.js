@@ -34,11 +34,10 @@ const CreateDebate = props => {
     const [topic, setTopic] = useState(null);
     const [category, setCategory] = useState(null);
     const [side, setSide] = useState(null);
+    const userId = localStorage.getItem("userId");
     const filters = ["Science", "History", "Sports", "Health", "Art", "Entertainment", "Politics", "Culture", "Economics", "Education", "Other"]
 
     const create_new_debate = async () => {
-      // TODO: user id hard coded for now
-      let userId = 2;
       try {
         const requestBody = JSON.stringify({userId, topic, description, category});
         const post_topic = await api.post("/debates", requestBody);

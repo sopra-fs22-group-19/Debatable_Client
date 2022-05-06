@@ -19,10 +19,12 @@ const AppRouter = () => {
           </GameGuard>
         </Route>
         <Route exact path="/login">
-            <Login
+          <LoginGuard>
+          <Login
             roomId = {null}
             participant = {participant}
             />
+          </LoginGuard>
         </Route>
         <Route exact path="/register">
           <Register
