@@ -32,18 +32,18 @@ const CreateDebate = props => {
     const history = useHistory();
     const [description, setDescription] = useState(null);
     const [topic, setTopic] = useState(null);
-    const [filter, setfilter] = useState(null);
+    const [category, setCategory] = useState(null);
     const [side, setSide] = useState(null);
+    const filters = ["Science", "History", "Sports", "Health", "Art", "Entertainment", "Politics", "Culture", "Economics", "Education", "Other"]
 
     const create_new_debate = async () => {
       // TODO: user id hard coded for now
-      let userId = 1;
+      let userId = 2;
       try {
-        // TODO: send filter along with topic and description
-        const requestBody = JSON.stringify({userId, topic, description});
+        const requestBody = JSON.stringify({userId, topic, description, category});
         const post_topic = await api.post("/debates", requestBody);
         console.log(post_topic.data);
-        console.log(topic, description, filter);
+        console.log(topic, description, category);
 
         const debateId = post_topic.data.debateId;
         try {
@@ -66,14 +66,19 @@ const CreateDebate = props => {
       catch (error) {
         alert(`Something went wrong while creating debate topic: \n${handleError(error)}`);
       }
-      // create a new debate room
-      
     }
+
     let content;
     content = (
       <div>
+        <div className="create heading">Create Debate</div>
         <div className="create container">
-            <div className="create input-text">Create Debate</div>
+                <div>
+                  <input type="radio" name="side" id="side" value="FOR"  onClick={() => setSide("FOR")}/>
+                  <label for="side" className="create text-filter">FOR</label>
+                  <input type="radio" name="side" id="side" value="AGAINST"  onClick={() => setSide("AGAINST")}/>
+                  <label for="side" className="create text-filter">AGAINST</label>
+                </div>
                 
                 <div className="create field">
                     <FormField
@@ -86,33 +91,21 @@ const CreateDebate = props => {
                         value={description}
                         onChange={n => setDescription(n)}
                     />
-                    <div>
-                    Field:
-                    <input type="radio" name="nameA" id="nameA" value="Science"  onClick={() => setfilter("Science")}/>
-                    <label for="nameA">Science</label>
-                    <input type="radio" name="nameA" id="nameB" value="Sports"  onClick={() => setfilter("Sports")}/>
-                    <label for="nameA">Sports</label>
-                    <input type="radio" name="nameA" id="nameA" value="Art"  onClick={() => setfilter("Art")}/>
-                    <label for="nameA">Art</label>
-                    <input type="radio" name="nameA" id="nameB" value="Music"  onClick={() => setfilter("Music")}/>
-                    <label for="nameA">Music</label>
+                    <div className="create radio">
+                    {filters.map(filter => (
+                      <div>
+                      <input type="radio" name="filter" id="filter" value={filter}  onClick={() => setCategory(String(filter))}/>
+                      <label for="filter" className="create text-filter">{filter}</label>
+                      </div>
+                    ))}  
                     </div>
-
-                    <div>
-                    SIDE:
-                    <input type="radio" name="side" id="side" value="FOR"  onClick={() => setSide("FOR")}/>
-                    <label for="side">FOR</label>
-                    <input type="radio" name="side" id="side" value="AGAINST"  onClick={() => setSide("AGAINST")}/>
-                    <label for="side">AGAINST</label>
-                    </div>
-        
                 </div>   
 
           </div>
           <Button
           className="create button"
           value="Create Debate"
-          disabled={!topic || !description || !filter}
+          disabled={!topic || !description || !category}
           onClick={() => {
               create_new_debate()
           }}
