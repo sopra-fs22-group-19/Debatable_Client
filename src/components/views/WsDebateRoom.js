@@ -19,6 +19,35 @@ const getLink = () => {
     return isProduction() ? prodURL : devURL;
 }
 
+const StartButton = (props) => (
+    <div>
+        {props.displayStartButton ?
+            <Button
+                className="debateRoom button-start"
+                value="Start Debate"
+                style={{display: props.isStartDisabled}}
+                onClick={() => {
+                    props.setIsStartDisabled("none")
+                    props.startDebate();
+                }
+                }
+            /> : null
+        }
+    </div>
+);
+
+const EndButton = (props) => (
+    <div>
+        {props.displayEndButton ?
+            <Button
+                className="debateRoom button-end"
+                value="End Debate"
+                onClick={() => {
+                    props.endDebate()
+                }}
+            /> : null}
+    </div>
+);
 
 
 const DebateRoom = () => {
@@ -53,7 +82,9 @@ const DebateRoom = () => {
 
     // UI related states (display buttons and so so)
     const [displayStartButton, setDisplayStartButton] = useState(true);
+    const [isStartDisabled, setIsStartDisabled] = useState("flex");
     const [displayEndButton, setDisplayEndButton] = useState(false);
+    const [displayInviteButton, setDisplayInviteButton] =  useState(true);
 
 
     const defineUserStartingState = (debateRoom) => {
@@ -125,7 +156,7 @@ const DebateRoom = () => {
         if (roomStatus.debateStatus === 'READY_TO_START' || roomStatus.debateStatus === 'ONE_USER_FOR') {
             await updateDebateStateAtBackend("ONGOING_" + String(userState.userSide));
             connect(); // connect to websocket
-            setDisplayStartButton(false);
+            setDisplayStartButton(true);
             setDisplayEndButton(true);
             setUserState({...userState, 'canWrite': true});
             console.log("Debate started");
@@ -207,21 +238,41 @@ const DebateRoom = () => {
 
     return (
         <div className="container">
+            <div className="debateRoom topic-container">
+                {roomStatus.topic}
+            </div>
             <div>
-                <div>
-                    <Chat
-                        topic={roomStatus.topic}
-                        displayStartButton={displayStartButton}
-                        startDebate={startDebate}
-                        showEndDebate={displayEndButton}
-                        endDebate={() => endDebate()}
-                        side={"FOR"}
-                        msgs={debateMsg}
-                        canWrite={userState.canWrite}
-                        postMessage={sendValue}
-                        handleMessage={handleMessage}
-                    />
-                </div>
+                <StartButton
+                    isStartDisabled = {isStartDisabled}
+                    setIsStartDisabled = {setIsStartDisabled}
+                    displayStartButton = {displayStartButton}
+                    startDebate={startDebate}
+                />
+            </div>
+            <div>
+                <EndButton
+                    displayEndButton = {displayEndButton}
+                    endDebate = {endDebate}
+                />
+            </div>
+            <div>
+                <Chat
+                    chatBoxPosition={'left'}
+                    side={userState.userSide}
+                    msgs={debateMsg}
+                    withWriteBox = {true}
+                    canWrite={userState.canWrite}
+                    postMessage={sendValue}
+                    handleMessage={handleMessage}
+                />
+            </div>
+            <div>
+                <Chat
+                    chatBoxPosition={'right'}
+                    side={"FOR"}
+                    msgs={debateMsg}
+                    withWriteBox = {false}
+                />
             </div>
         </div>
     )
