@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button} from "./Button";
 
 const WriteBox = (props) => (
@@ -24,13 +24,11 @@ const MessageList = (props) => (
         <div>
             <ul>
                 {props.msgs.map(msg => (
-                    <div>
                         <div
                             key = {props.msgs.indexOf(msg)}
                             className="debateRoom msg-box">
                             {msg}
                         </div>
-                    </div>
                 ))
                 }
             </ul>
@@ -40,13 +38,24 @@ const MessageList = (props) => (
 
 export const Chat = props => {
 
-    // You can use Hooks here!
+    const [isStartDisabled, setIsStartDisabled] = useState("flex");
+
     return (
         <div>
             <div className="debateRoom topic-container">
                 {props.topic}
             </div>
-
+            {props.displayStartButton ?
+                <Button
+                    className="debateRoom button-start"
+                    value="Start Debate"
+                    style={{display:isStartDisabled}}
+                    onClick={() => {
+                        setIsStartDisabled("none")
+                        props.startDebate();
+                    }
+                    }
+                /> : null}
             {props.showEndDebate ?
                 <Button
                     className="debateRoom button-end"

@@ -1,8 +1,7 @@
 import { Button } from 'components/ui/Button';
 import {Chat} from 'components/ui/Chat'
 import {useEffect, useState} from 'react';
-import {useHistory, useLocation} from 'react-router-dom';
-import {useParams} from 'react-router-dom/cjs/react-router-dom.min';
+import {useHistory, useParams} from 'react-router-dom';
 import "styles/views/wsDebateRoom.scss";
 import { isProduction } from 'helpers/isProduction';
 import {over} from 'stompjs';
@@ -11,7 +10,6 @@ import {api, handleError} from "../../helpers/api";
 
 
 var stompClient =null;
-
 
 
 const getLink = () => {
@@ -24,55 +22,148 @@ const getLink = () => {
 
 
 const DebateRoom = () => {
-    const location = useLocation();
+    const history = useHistory();
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
     let {roomId} = useParams();
     roomId = parseInt(roomId);
 
+    const [userState, setUserState] = useState({
+        userName: "",
+        userSide: "",
+        isStartingSide: false,
+        isInvitedSide: false,
+        isObserver: false,
+        canWrite: false
+    });
 
-    const [roomData, setRoomData] = useState({
+    const [roomStatus, setRoomStatus] = useState({
         topic: '',
         description: '',
-        roomId: '',
+        debateStatus: ' '
     });
 
     const [debateMsg, setDebateMsg] = useState([]);
+
     const [userData, setUserData] = useState({
         userId: '',
         connected: false,
         message: ''
     });
 
+    // UI related states (display buttons and so so)
+    const [displayStartButton, setDisplayStartButton] = useState(true);
+    const [displayEndButton, setDisplayEndButton] = useState(false);
 
+
+    const defineUserStartingState = (debateRoom) => {
+        if (debateRoom.user1) {
+            if (parseInt(userId) === debateRoom.user1.userId) {
+                setUserState({...userState,
+                    'userSide': debateRoom.side1,
+                    'isStartingSide': true,
+                    'canWrite': false
+                });
+            }
+        } else if (debateRoom.user2){
+            if (parseInt(userId) === debateRoom.user2.userId ){
+                setUserState({...userState,
+                    'userSide': debateRoom.side2,
+                    'isInvitedSide': true,
+                    'canWrite': false
+                });
+            }
+        } else{
+            setUserState({...userState,
+                'isObserver': true
+            });
+        }
+
+    }
+
+    // Populate information relevant to the debate room on mount
     useEffect(() => {
         async function fetchData() {
-            try {const response = await api.get("/debates/rooms/" + String(roomId));
+            try {
+                const response = await api.get("/debates/rooms/" + String(roomId));
                 const debateRoom = response.data
-                setRoomData({...roomData, 'topic': debateRoom.debate.topic,
-                'roomId': roomId})
+                setRoomStatus({...roomStatus,
+                    'topic': debateRoom.debate.topic,
+                    'description': debateRoom.debate.description,
+                    'debateStatus': debateRoom.debateStatus
+                    }
+                )
+                defineUserStartingState(debateRoom);
+
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
                 console.error("Details:", error);
                 alert("Something went wrong while fetching the debate room data! See the console for details.");
             }
-        }fetchData();
-        console.log(userData);
-        console.log(roomData);
-    }, [userData]);
+        } fetchData();
 
-    const connect =()=>{
+    }, []);
+
+    const updateDebateStateAtBackend = async (newState) => {
+        try {
+            // update debate state to ENDED in the backend
+            let debateState = newState;
+            const requestBody = JSON.stringify({debateState});
+            await api.put("/debates/rooms/" + String(roomId) + "/status", requestBody);
+        }
+        catch (error) {
+            console.error(`Something went wrong while updating state of debateroom in backend: \n${handleError(error)}`);
+            console.error("Details:", error);
+            alert("Something went wrong while updating the state of the debateroom to " + String(newState) + "!" +
+                " See the console for details.");
+        }
+    }
+
+    // Handle start of debate button
+    const startDebate = async () => {
+
+        if (roomStatus.debateStatus === 'READY_TO_START' || roomStatus.debateStatus === 'ONE_USER_FOR') {
+            await updateDebateStateAtBackend("ONGOING_" + String(userState.userSide));
+            connect(); // connect to websocket
+            setDisplayStartButton(false);
+            setDisplayEndButton(true);
+            setUserState({...userState, 'canWrite': true});
+            console.log("Debate started");
+        } else {
+            console.error("Cannot start debate yet, debateStatus must be at READY_TO_START");
+        }
+    }
+
+    const endDebate = async () => {
+        await updateDebateStateAtBackend("ENDED");
+
+        if (userState.userName === "Guest") {
+            if (process.env.NODE_ENV === "production") {
+                localStorage.removeItem("token");
+                localStorage.removeItem("userId");
+            }
+            history.push("/login");
+        }
+        else {
+            history.push( "/home");
+        }
+    }
+
+    // Methods related to Websocket
+    const connect =() => {
         let Sock = new SockJS('http://localhost:8080/ws-endpoint');
         stompClient = over(Sock);
         stompClient.connect({},onConnected, onError);
     }
 
     const onConnected = () => {
-        setUserData({...userData,"connected": true,
-            "userId": location.state.userId});
+        setUserData({...userData, "connected": true});
         stompClient.subscribe('/debates/rooms/' + String(roomId), onMessageReceived );
         userJoin();
     }
 
     const onError = (err) => {
+        console.log("Error connecting to the websocket")
         console.log(err);
     }
 
@@ -84,69 +175,54 @@ const DebateRoom = () => {
         stompClient.send('/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
     }
 
-    const connectUser=()=>{
-        connect();
-    }
 
     const handleMessage = (event) => {
         const {value}=event.target;
         setUserData({...userData, "message": value});
     }
 
-    const handleMessage_2 = (value) => {
-        setUserData({...userData, "message": value});
-    }
-
-
     const sendValue=()=>{
         if (stompClient) {
             var chatMessage = {
                 userId:userData.userId,
-                roomId:roomData.roomId,
+                roomId:roomStatus.roomId,
                 message: userData.message,
                 status:"MESSAGE"
             };
             console.log(chatMessage);
-            console.log("helllooo")
+            console.log(userState.isStartingSide);
+            console.log(userState.userSide);
+            console.log(userState.isInvitedSide);
+            console.log(userState.isObserver);
             stompClient.send('/ws/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
-            setUserData({...userData,"message": ""});
+            setUserData({...userData, "message": ""});
         }
     }
 
     const onMessageReceived = (incoming)=>{
         debateMsg.push(incoming.body);
         setDebateMsg([...debateMsg]);
-        }
-
-    const endDebate = () =>{
-        console.log("end debate pressed");
     }
 
 
     return (
         <div className="container">
-            {userData.connected ?
+            <div>
                 <div>
-                    <div>
-                        <Chat
-                            topic = {roomData.topic}
-                            showEndDebate = {true}
-                            endDebate = {() => endDebate()}
-                            side = {"FOR"}
-                            msgs = {debateMsg}
-                            canWrite = {true}
-                            postMessage = {sendValue}
-                            handleMessage = {handleMessage}
-                        />
-                    </div>
+                    <Chat
+                        topic={roomStatus.topic}
+                        displayStartButton={displayStartButton}
+                        startDebate={startDebate}
+                        showEndDebate={displayEndButton}
+                        endDebate={() => endDebate()}
+                        side={"FOR"}
+                        msgs={debateMsg}
+                        canWrite={userState.canWrite}
+                        postMessage={sendValue}
+                        handleMessage={handleMessage}
+                    />
                 </div>
-                :
-                <div className="connect">
-                    <button type="button" onClick={connectUser}>
-                        connect
-                    </button>
-                </div>
-            }
+            </div>
         </div>
     )
 }
