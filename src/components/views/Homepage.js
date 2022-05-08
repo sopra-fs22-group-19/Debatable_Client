@@ -50,6 +50,10 @@ const Homepage = () => {
             try {
 
                 categories = localStorage.getItem('categories');
+                //TODO: Check how to pass the values in another way to the profile
+                localStorage.setItem("actualUser", userId)
+                console.log(userId)
+                console.log(localStorage.getItem("actualUser"))
 
                 if(categories){
                     let query = "/debates/?categories=" + categories;

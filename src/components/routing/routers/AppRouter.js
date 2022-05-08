@@ -7,6 +7,8 @@ import Homepage from "components/views/Homepage";
 import DebateRoom from "../../views/DebateRoom";
 import InviteeLanding from "../../views/InviteeLanding";
 import CreateDebate from "../../views/CreateDebate";
+import Profile from "../../views/Profile";
+import EditProfile from "../../views/EditProfile";
 
 const AppRouter = () => {
   const participant = 1;
@@ -39,6 +41,13 @@ const AppRouter = () => {
         <Route exact path="/debateroom/:roomId/:participant">
             <InviteeLanding/>
         </Route>
+          <Route exact path="/profile">
+              <Profile/>
+          </Route>
+          <Route exact path="/edit/:userId">
+              <EditProfile/>
+          </Route>
+
       <Route exact path="/create_debate">
           <GameGuard>
             <CreateDebate/>
@@ -48,7 +57,11 @@ const AppRouter = () => {
     </BrowserRouter>
   );
 };
-
+/*
+      <Route exact path="/profile">
+          <Profile/>
+      </Route>
+      */
 
 
 // /debateroom/register/:roomId/:participant ---> <Register>
