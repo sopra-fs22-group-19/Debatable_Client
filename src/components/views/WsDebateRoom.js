@@ -1,7 +1,7 @@
 import { Button } from 'components/ui/Button';
 import {Chat} from 'components/ui/Chat'
 import {useEffect, useState} from 'react';
-import {useHistory, useParams} from 'react-router-dom';
+import {useHistory, useLocation, useParams} from 'react-router-dom';
 import "styles/views/wsDebateRoom.scss";
 import { isProduction } from 'helpers/isProduction';
 import {over} from 'stompjs';
@@ -13,9 +13,9 @@ var stompClient =null;
 
 
 const getLink = () => {
-    const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/debateroom/'
+    const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com'
     //const prodURL = "https://sopra-debatable-client-app.herokuapp.com/debateroom/"
-    const devURL = 'http://localhost:3000/debateroom/'
+    const devURL = 'http://localhost:3000'
     return isProduction() ? prodURL : devURL;
 }
 
@@ -51,6 +51,7 @@ const EndButton = (props) => (
 
 
 const DebateRoom = () => {
+    const location = useLocation();
     const history = useHistory();
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
@@ -60,6 +61,7 @@ const DebateRoom = () => {
     const [userState, setUserState] = useState({
         userName: "",
         userSide: "",
+        opposingSide: "",
         isStartingSide: false,
         isInvitedSide: false,
         isObserver: false,
@@ -69,7 +71,8 @@ const DebateRoom = () => {
     const [roomStatus, setRoomStatus] = useState({
         topic: '',
         description: '',
-        debateStatus: ' '
+        debateStatus: ' ',
+        debateStarted: false
     });
 
     const [debateMsg, setDebateMsg] = useState([]);
@@ -92,6 +95,7 @@ const DebateRoom = () => {
             if (parseInt(userId) === debateRoom.user1.userId) {
                 setUserState({...userState,
                     'userSide': debateRoom.side1,
+                    'opposingSide': (debateRoom.side1 === 'FOR') ? 'AGAINST' : 'FOR',
                     'isStartingSide': true,
                     'canWrite': false
                 });
@@ -100,12 +104,15 @@ const DebateRoom = () => {
             if (parseInt(userId) === debateRoom.user2.userId ){
                 setUserState({...userState,
                     'userSide': debateRoom.side2,
+                    'opposingSide': (debateRoom.side2 === 'FOR') ? 'AGAINST' : 'FOR',
                     'isInvitedSide': true,
                     'canWrite': false
                 });
             }
         } else{
             setUserState({...userState,
+                'userSide': 'FOR',
+                'opposingSide': 'AGAINST',
                 'isObserver': true
             });
         }
@@ -260,6 +267,7 @@ const DebateRoom = () => {
                     chatBoxPosition={'left'}
                     side={userState.userSide}
                     msgs={debateMsg}
+                    withInviteButton = {false}
                     withWriteBox = {true}
                     canWrite={userState.canWrite}
                     postMessage={sendValue}
@@ -269,9 +277,12 @@ const DebateRoom = () => {
             <div>
                 <Chat
                     chatBoxPosition={'right'}
-                    side={"FOR"}
+                    side={userState.opposingSide}
                     msgs={debateMsg}
                     withWriteBox = {false}
+                    withInviteButton = {displayInviteButton}
+                    isDebateStarted ={roomStatus.debateStarted}
+                    inviteLink = {getLink() + location.pathname}
                 />
             </div>
         </div>
