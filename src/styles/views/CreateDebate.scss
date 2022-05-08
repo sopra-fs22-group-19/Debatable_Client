@@ -1,0 +1,75 @@
+@import 'styles/theme';
+
+.create {
+    &.container {
+        margin: auto;
+        margin-bottom: 2em;
+        margin-top: 1cm;
+        width: 50%;
+        //height: 7cm;
+        color: rgb(97, 26, 26);
+        flex-direction: column;
+        background: lighten($background, 70);
+        font-family: sans-serif;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 0.75em;
+        justify-content: center;
+    }
+    &.heading {
+        margin-top: 20px;;
+        height: 35px;
+        background: transparent;
+        text-align: center;
+        font-size:50px;
+        font-weight: 800;
+    }
+
+    &.field {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        flex-direction: column;
+        justify-content: center;
+        background-color: lighten($background, 70);
+      }
+    &.label {
+        color: black;
+        margin-bottom: 10px;
+        font-weight: 600;
+        font-family: sans-serif;
+    }
+    &.input {
+        height: 35px;
+        padding-left: 15px;
+        margin-left: 4px;
+        border: none;
+        border-radius: 0.75em;
+        margin-bottom: 20px;
+        background: transparentize(white, 0.85);
+        color: black;
+        width: 80%;
+    }
+    &.button {
+        background: lighten($background, 60);
+        width: auto;
+        padding: 9px;
+        border-radius: $borderRadius;
+        color: rgb(97, 26, 26);
+        margin: auto;
+        align-items: center;
+        font-family: sans-serif;
+        display: flex;
+      }
+
+    &.radio {
+        padding: 6px;
+        border-radius: 50px;
+        display: inline-flex;
+        cursor: pointer;
+    }
+    &.text-filter {
+        margin-top: 2em;
+        font-family: sans-serif;
+        font-size:12px;
+    }
+}

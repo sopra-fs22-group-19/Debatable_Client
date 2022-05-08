@@ -58,9 +58,7 @@ const Login = props => {
       let userId = null;
       const requestBody = JSON.stringify({userId});
       const response = await api.put("/debates/rooms/" + String(props.roomId), requestBody);
-      //console.log(response.data);
-      const token = response.data.user2.token;
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", response.data.user2.token);
       localStorage.setItem("userId", response.data.user2.userId);
   }
   catch (error){
@@ -92,14 +90,12 @@ const Login = props => {
     try {
       let to_get = "/login?username=" + String(username) + "&password=" + String(password);
       const response = await api.get(to_get);
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
 
       // saving tokem in local storage
-      console.log(user.token);
-      console.log(user.userId);
       localStorage.setItem("token", user.token);
       localStorage.setItem("userId", user.userId);
 
