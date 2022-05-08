@@ -52,24 +52,22 @@ const Login = props => {
 
   const joinAsGuest = async () => {
     try {
-      // update the debate room with user 2 information
-      let userId = null;
-      const requestBody = JSON.stringify({userId});
-      const response = await api.put("/debates/rooms/" + String(props.roomId), requestBody);
-      localStorage.setItem("token", response.data.user2.token);
-      localStorage.setItem("userId", response.data.user2.userId);
+      // Create guest user
+      const response = await api.post("/users/guests");
+          localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userId", response.data.userId);
   }
   catch (error){
-      console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);
+      console.error(`Something went wrong while creating guest user: \n${handleError(error)}`);
       console.error("Details:", error);
-      alert("Something went wrong while updating userId in debateroom! See the console for details.");
+      alert("Something went wrong while creating guest user");
   }
-    history.push(
-        {
-          pathname: to_push,
-          state: {roomId: props.roomId}
-        }
-    );
+      history.push(
+          {
+              pathname: to_push,
+              state: {isInvitee: props.isInvitee}
+          }
+      );
   }
 
   const Guest = () => (
@@ -97,7 +95,7 @@ const Login = props => {
       history.push(
           {
             pathname: to_push,
-            state: { roomId: props.roomId }
+            state: { isInvitee: props.isInvitee}
           });
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
@@ -107,7 +105,10 @@ const Login = props => {
   function toRegister () {
     history.push({
         pathname: "/register",
-        state: { roomId: props.roomId} });
+        state: {
+            roomId: props.roomId,
+            isInvitee: props.isInvitee
+        } });
   }
 
   return (
