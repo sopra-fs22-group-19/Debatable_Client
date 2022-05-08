@@ -22,7 +22,7 @@ const AppRouter = () => {
           <LoginGuard>
           <Login
             roomId = {null}
-            participant = {participant}
+            isInvitee = {false}
             />
           </LoginGuard>
         </Route>

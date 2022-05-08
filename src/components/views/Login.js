@@ -41,11 +41,9 @@ const Login = props => {
   const [username, setUsername] = useState(null);
 
   let to_push;
-  let guest = false;
 
   // check if Login page routed for second participant. If so, guest=true to give option to login as a guest user as well.
-  if (props.participant === "2") {
-    guest=true;
+  if (props.isInvitee) {
     to_push = "/debateroom/" + String(props.roomId)
   }
   else {
@@ -67,15 +65,11 @@ const Login = props => {
       alert("Something went wrong while updating userId in debateroom! See the console for details.");
   }
     history.push(
-      {
-        pathname: to_push,
-        state: {
-          userId: null,
-          token: null,
-          participant: props.participant,
-          roomId: props.roomId}
-      }
-      );
+        {
+          pathname: to_push,
+          state: {roomId: props.roomId}
+        }
+    );
   }
 
   const Guest = () => (
@@ -101,14 +95,10 @@ const Login = props => {
 
       // Login successfully worked --> navigate to the route
       history.push(
-      {
-        pathname: to_push,
-            state: {
-              userId: user.userId,
-              token: user.token,
-              participant: props.participant,
-              roomId: props.roomId}
-      });
+          {
+            pathname: to_push,
+            state: { roomId: props.roomId }
+          });
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
@@ -117,8 +107,7 @@ const Login = props => {
   function toRegister () {
     history.push({
         pathname: "/register",
-        state: {participant: props.participant,
-          roomId: props.roomId} });
+        state: { roomId: props.roomId} });
   }
 
   return (
@@ -151,7 +140,7 @@ const Login = props => {
       onClick={() => toRegister() }>
         create account
       </div>
-      {guest ? <Guest /> : null }
+      {props.isInvitee ? <Guest /> : null }
     </BaseContainer>
   );
 };
