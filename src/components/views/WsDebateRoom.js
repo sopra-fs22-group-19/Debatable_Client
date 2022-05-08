@@ -133,8 +133,7 @@ const DebateRoom = () => {
             // update the debate room with user 2 information
             const requestBody = JSON.stringify({"userId": userId});
             const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
-            console.log(response.data.debateStatus);
-            // TODO: Send websocket message to update state to ready
+            return response.data;
         } catch (error) {
             console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);
             console.error("Details:", error);
@@ -147,7 +146,7 @@ const DebateRoom = () => {
         async function fetchData() {
             try {
                 const response = await api.get("/debates/rooms/" + String(roomId));
-                const debateRoom = response.data
+                let debateRoom = response.data
                 setRoomStatus({...roomStatus,
                     'topic': debateRoom.debate.topic,
                     'description': debateRoom.debate.description,
@@ -157,9 +156,10 @@ const DebateRoom = () => {
 
                 let userName = defineUserStartingState(debateRoom);
 
-                if (location.state.isInvitee && debateRoom.side2 === null){ addSecondParticipant(debateRoom); }
+                if (location.state.isInvitee && debateRoom.side2 === null){
+                    debateRoom = addSecondParticipant(debateRoom);
+                }
 
-                console.log(userName, debateRoom.debateStatus);
                 connectToRoomWS(userName, debateRoom.debateStatus);
 
             } catch (error) {
@@ -223,26 +223,41 @@ const DebateRoom = () => {
         stompClient.connect({}, () => onConnected(userName, debateState),  onError);
     }
 
-    const onConnected = (userName, debateState) => {
-        console.log(userName, debateState);
-        setUserData({...userData, "connected": true});
-        stompClient.subscribe('/debates/rooms/' + String(roomId), onMessageReceived );
-        userJoin(userName, debateState);
-    }
-
     const onError = (err) => {
         console.log("Error connecting to the websocket")
         console.log(err);
     }
 
+    const onConnected = (userName, debateState) => {
+        setUserData({...userData, "connected": true});
+        stompClient.subscribe('/debates/rooms/' + String(roomId), onMessageReceived );
+        userJoin(userName, debateState);
+    }
+
+    const onMessageReceived = (incoming) => {
+        let ws_response = JSON.parse(incoming.body);
+        if (ws_response.message !== null){
+            debateMsg.push(incoming.body.message);
+            setDebateMsg([...debateMsg]);
+        }
+
+        if (ws_response.debateState !== null){
+            console.log(ws_response.debateState);
+            console.log(typeof ws_response.debateState);
+
+            setRoomStatus({...roomStatus, 'debateStatus': ws_response.debateState });
+        }
+    }
+
     const userJoin=(userName, debateState)=>{
+        console.log(userName, debateState);
         var chatMessage = {
-            senderName: userName,
-            status:"JOIN",
-            debateStatus: debateState
+            userId: userId,
+            userName: userName,
+            debateState: debateState
         };
         console.log(chatMessage);
-        stompClient.send('/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
+        stompClient.send('/ws/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
     }
 
 
@@ -269,10 +284,6 @@ const DebateRoom = () => {
         }
     }
 
-    const onMessageReceived = (incoming)=>{
-        debateMsg.push(incoming.body);
-        setDebateMsg([...debateMsg]);
-    }
 
 
     return (
