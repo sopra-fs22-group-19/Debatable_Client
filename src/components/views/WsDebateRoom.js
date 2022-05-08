@@ -160,7 +160,7 @@ const DebateRoom = () => {
                 if (location.state.isInvitee && debateRoom.side2 === null){ addSecondParticipant(debateRoom); }
 
                 console.log(userName, debateRoom.debateStatus);
-                connectToRoomWS();
+                connectToRoomWS(userName, debateRoom.debateStatus);
 
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
@@ -217,16 +217,17 @@ const DebateRoom = () => {
     }
 
     // Methods related to Websocket
-    const connectToRoomWS =() => {
+    const connectToRoomWS =(userName, debateState) => {
         let Sock = new SockJS('http://localhost:8080/ws-endpoint');
         stompClient = over(Sock);
-        stompClient.connect({},onConnected, onError);
+        stompClient.connect({}, () => onConnected(userName, debateState),  onError);
     }
 
-    const onConnected = () => {
+    const onConnected = (userName, debateState) => {
+        console.log(userName, debateState);
         setUserData({...userData, "connected": true});
         stompClient.subscribe('/debates/rooms/' + String(roomId), onMessageReceived );
-        userJoin();
+        userJoin(userName, debateState);
     }
 
     const onError = (err) => {
@@ -234,11 +235,13 @@ const DebateRoom = () => {
         console.log(err);
     }
 
-    const userJoin=()=>{
+    const userJoin=(userName, debateState)=>{
         var chatMessage = {
-            senderName: userData.username,
-            status:"JOIN"
+            senderName: userName,
+            status:"JOIN",
+            debateStatus: debateState
         };
+        console.log(chatMessage);
         stompClient.send('/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
     }
 
