@@ -282,7 +282,7 @@ const DebateRoom = () => {
                     withWriteBox = {false}
                     withInviteButton = {displayInviteButton}
                     isDebateStarted ={roomStatus.debateStarted}
-                    inviteLink = {getLink() + location.pathname}
+                    inviteLink = {getLink() + location.pathname + '/invitee'}
                 />
             </div>
         </div>

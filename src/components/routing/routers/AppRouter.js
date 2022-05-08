@@ -37,7 +37,7 @@ const AppRouter = () => {
             <WsDebateRoom/>
           </GameGuard>
         </Route>
-        <Route exact path="/debateroom/:roomId/:participant">
+        <Route exact path="/debateroom/:roomId/invitee">
             <InviteeLanding/>
         </Route>
       </Switch>
