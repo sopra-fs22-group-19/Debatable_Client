@@ -4,10 +4,9 @@ import {LoginGuard} from "components/routing/routeProtectors/LoginGuard";
 import Login from "components/views/Login";
 import Register from "components/views/Register";
 import Homepage from "components/views/Homepage";
-import DebateRoom from "../../views/DebateRoom";
-import wsDebateRoom from "../../views/WsDebateRoom";
 import InviteeLanding from "../../views/InviteeLanding";
 import CreateDebate from "../../views/CreateDebate";
+import WsDebateRoom from "../../views/WsDebateRoom";
 
 const AppRouter = () => {
   const participant = 1;
@@ -51,7 +50,6 @@ const AppRouter = () => {
     </BrowserRouter>
   );
 };
-
 
 
 // /debateroom/register/:roomId/:participant ---> <Register>
