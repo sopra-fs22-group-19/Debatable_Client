@@ -119,11 +119,12 @@ const DebateRoom = () => {
 
     }
 
-    const addSecondParticipant = async (debateRoom) => {
+    const addSecondParticipant = async () => {
         try {
             // update the debate room with user 2 information
             const requestBody = JSON.stringify({"userId": userId});
             const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
+            console.log(response.data.debateStatus);
             // TODO: Send websocket message to update state to ready
         } catch (error) {
             console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);
@@ -146,7 +147,7 @@ const DebateRoom = () => {
                 )
                 defineUserStartingState(debateRoom);
 
-                if (location.state.isInvitee){ addSecondParticipant(debateRoom); }
+                if (location.state.isInvitee && debateRoom.side2 === null){ addSecondParticipant(debateRoom); }
 
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
