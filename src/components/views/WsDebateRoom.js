@@ -119,6 +119,19 @@ const DebateRoom = () => {
 
     }
 
+    const addSecondParticipant = async (debateRoom) => {
+        try {
+            // update the debate room with user 2 information
+            const requestBody = JSON.stringify({"userId": userId});
+            const response = await api.put("/debates/rooms/" + String(roomId), requestBody);
+            // TODO: Send websocket message to update state to ready
+        } catch (error) {
+            console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);
+            console.error("Details:", error);
+            alert("Something went wrong while updating userId in debateroom! See the console for details.");
+        }
+    }
+
     // Populate information relevant to the debate room on mount
     useEffect(() => {
         async function fetchData() {
@@ -132,6 +145,8 @@ const DebateRoom = () => {
                     }
                 )
                 defineUserStartingState(debateRoom);
+
+                if (location.state.isInvitee){ addSecondParticipant(debateRoom); }
 
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
