@@ -7,6 +7,7 @@ import { isProduction } from 'helpers/isProduction';
 import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
 import {api, handleError} from "../../helpers/api";
+import user from "../../models/User";
 
 
 var stompClient =null;
@@ -94,20 +95,26 @@ const DebateRoom = () => {
         if (debateRoom.user1) {
             if (parseInt(userId) === debateRoom.user1.userId) {
                 setUserState({...userState,
+                    'userName': debateRoom.user1.userName,
                     'userSide': debateRoom.side1,
                     'opposingSide': (debateRoom.side1 === 'FOR') ? 'AGAINST' : 'FOR',
                     'isStartingSide': true,
                     'canWrite': false
                 });
+
+                return debateRoom.user1.username;
             }
         } else if (debateRoom.user2){
             if (parseInt(userId) === debateRoom.user2.userId ){
                 setUserState({...userState,
+                    'userName': debateRoom.user2.userName,
                     'userSide': debateRoom.side2,
                     'opposingSide': (debateRoom.side2 === 'FOR') ? 'AGAINST' : 'FOR',
                     'isInvitedSide': true,
                     'canWrite': false
                 });
+
+                return debateRoom.user2.username;
             }
         } else{
             setUserState({...userState,
@@ -115,6 +122,8 @@ const DebateRoom = () => {
                 'opposingSide': 'AGAINST',
                 'isObserver': true
             });
+
+            return String(userId);
         }
 
     }
@@ -145,9 +154,13 @@ const DebateRoom = () => {
                     'debateStatus': debateRoom.debateStatus
                     }
                 )
-                defineUserStartingState(debateRoom);
+
+                let userName = defineUserStartingState(debateRoom);
 
                 if (location.state.isInvitee && debateRoom.side2 === null){ addSecondParticipant(debateRoom); }
+
+                console.log(userName, debateRoom.debateStatus);
+                connectToRoomWS();
 
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
@@ -178,7 +191,7 @@ const DebateRoom = () => {
 
         if (roomStatus.debateStatus === 'READY_TO_START' || roomStatus.debateStatus === 'ONE_USER_FOR') {
             await updateDebateStateAtBackend("ONGOING_" + String(userState.userSide));
-            connect(); // connect to websocket
+            connectToRoomWS(); // connect to websocket
             setDisplayStartButton(true);
             setDisplayEndButton(true);
             setUserState({...userState, 'canWrite': true});
@@ -204,7 +217,7 @@ const DebateRoom = () => {
     }
 
     // Methods related to Websocket
-    const connect =() => {
+    const connectToRoomWS =() => {
         let Sock = new SockJS('http://localhost:8080/ws-endpoint');
         stompClient = over(Sock);
         stompClient.connect({},onConnected, onError);
