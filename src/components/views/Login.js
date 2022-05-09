@@ -9,7 +9,6 @@ import PropTypes from "prop-types";
 import 'styles/views/Login_Trial.css';
 
 
-
 // BUG: since we removed localstorage token and userid because of multiple userids on same browser,
 // when we are directly trying to go to home page, it is not appearing even after login.
 // Same thing is happening for all the pages. TODO: discuss it with @Orestis.

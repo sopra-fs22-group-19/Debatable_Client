@@ -24,7 +24,7 @@
 }
 
 .border-line {
-    border-right: 1px solid #EEEEEE;
+    border-right: 1px solid rgba(238, 238, 238, 0);
 }
 
 
@@ -99,7 +99,7 @@ a {
     background-color: #1A237E;
 }
 
-@media screen and (max-width: 991px) {
+@media screen and (max-width: 1000px) {
     .logo {
         margin-left: 0px;
     }

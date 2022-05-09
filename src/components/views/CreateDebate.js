@@ -96,7 +96,7 @@ const CreateDebate = props => {
         {
             setSide("AGAINST")
         }
-        else
+       if(event.target.value!=="For"&&event.target.value!=="Against")
         {
             setCategory(event.target.value)
             console.log(category)
@@ -183,7 +183,7 @@ const CreateDebate = props => {
     )
     return(
         <div>
-            <Header height={"100"}/>
+
             {content}
         </div>
       

@@ -4,6 +4,7 @@ import {Container, Navbar, Nav } from "react-bootstrap";
 import "styles/views/Header.scss";
 import { isProduction } from 'helpers/isProduction';
 import {useHistory} from "react-router-dom";
+import {Button} from "../ui/Button";
 
     /*<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     */
@@ -35,26 +36,38 @@ const Header = props => {
         history.push('/login');
     }
 return(
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <a className="navbar-brand" href="#">
+            <img src={require('../../images/logo2.png')}
 
-    <div className="navbar">
-        <img src={require('../../images/logo2.png')}
-             className="logo-icon"
-             border="0"/>
+                                                  border="0" width="300" height="100" alt=""/>
+        </a>
+        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav">
+                <li className="nav-item active">
+                    <a className="nav-link" href={baselink+"home"}><i className="fa fa-fw fa-home"></i> Home <span className="sr-only">(current)</span></a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href={baselink+"profile"}><i className="fa fa-fw fa-user"></i>Profile</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link"href={baselink+"topics"}><i className="fa fa-fw fa-list"></i>Topics</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href={baselink+"create_debate"}><i className="fa fa-fw fa-plus-square"></i> Create Debate</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" onClick={() => logout()}><i className="fa fa-fw fa-sign-out"></i> Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
 
-        <a  href={baselink+"home"}><i className="fa fa-fw fa-home"></i> Home</a>
-        <a href={baselink+"profile"}><i className="fa fa-fw fa-user"></i> Profile</a>
-        <a href={baselink+"topics"}><i className="fa fa-fw fa-list"></i> Topics</a>
-        <a href={baselink+"create_debate"}><i className="fa fa-fw fa-plus-square"></i> Create Debate</a>
-        <a style={{"cursor":"pointer"}} onClick={() => logout()}><i className="fa fa-fw fa-sign-out"></i> Logout</a>
-
-
-
-
-
-
-
-    </div>
 );
 }
 
