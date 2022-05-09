@@ -7,7 +7,6 @@ import { isProduction } from 'helpers/isProduction';
 import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
 import {api, handleError} from "../../helpers/api";
-import user from "../../models/User";
 
 
 var stompClient =null;
@@ -15,7 +14,6 @@ var stompClient =null;
 
 const getLink = () => {
     const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com'
-    //const prodURL = "https://sopra-debatable-client-app.herokuapp.com/debateroom/"
     const devURL = 'http://localhost:3000'
     return isProduction() ? prodURL : devURL;
 }
@@ -55,7 +53,6 @@ const DebateRoom = () => {
     const location = useLocation();
     const history = useHistory();
     const userId = localStorage.getItem('userId');
-    const token = localStorage.getItem('token');
     let {roomId} = useParams();
     roomId = parseInt(roomId);
 
@@ -163,7 +160,7 @@ const DebateRoom = () => {
                 )
 
                 if (location.state.isInvitee && debateRoom.side2 === null){
-                    debateRoom = await addSecondParticipant(debateRoom);
+                    debateRoom = await addSecondParticipant();
                 }
 
                 let userName = await defineUserStartingState(debateRoom);
@@ -255,7 +252,7 @@ const DebateRoom = () => {
 
         await updateDebateStateAtBackend("ENDED");
 
-        await notifyStateChange(userState.userName, newState);
+        notifyStateChange(userState.userName, newState);
 
     }
 
