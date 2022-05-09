@@ -61,6 +61,7 @@ const DebateRoom = () => {
 
     const [userState, setUserState] = useState({
         userName: "",
+        name: "",
         userSide: "",
         opposingSide: "",
         isStartingSide: false,
@@ -74,10 +75,8 @@ const DebateRoom = () => {
         description: '',
     });
 
-    const [roomState, setRoomState] = useState({
-        debateState: '',
-        debateStarted: false
-    });
+    const [roomState, setRoomState] = useState( '');
+    const [hasDebateStarted, setHasDebateStarted] = useState( false);
 
     const [debateMsg, setDebateMsg] = useState([]);
 
@@ -89,7 +88,7 @@ const DebateRoom = () => {
 
     // UI related states (display buttons and so so)
     const [displayStartButton, setDisplayStartButton] = useState(false);
-    const [isStartDisabled, setIsStartDisabled] = useState("flex");
+    const [isStartButtonDisabled, setIsStartButtonDisabled] = useState("flex");
     const [displayEndButton, setDisplayEndButton] = useState(false);
     const [displayInviteButton, setDisplayInviteButton] =  useState(true);
 
@@ -98,6 +97,7 @@ const DebateRoom = () => {
             if (parseInt(userId) === debateRoom.user1.userId) {
                 setUserState({...userState,
                     'userName': debateRoom.user1.userName,
+                    'name': debateRoom.user1.name,
                     'userSide': debateRoom.side1,
                     'opposingSide': (debateRoom.side1 === 'FOR') ? 'AGAINST' : 'FOR',
                     'isStartingSide': true,
@@ -112,6 +112,7 @@ const DebateRoom = () => {
             if (parseInt(userId) === debateRoom.user2.userId ){
                 setUserState({...userState,
                     'userName': debateRoom.user2.userName,
+                    'name': debateRoom.user2.name,
                     'userSide': debateRoom.side2,
                     'opposingSide': (debateRoom.side2 === 'FOR') ? 'AGAINST' : 'FOR',
                     'isInvitedSide': true,
@@ -169,6 +170,8 @@ const DebateRoom = () => {
 
                 let userName = await defineUserStartingState(debateRoom);
 
+                console.log(userState);
+
                 connectToRoomWS(userName, debateRoom.debateStatus);
 
             } catch (error) {
@@ -183,18 +186,27 @@ const DebateRoom = () => {
 
     useEffect(() => {
         async function debateStateChange() {
-            if (roomState.debateState === 'READY_TO_START'){
+            if (roomState === 'READY_TO_START'){
                 if (!location.state.isInvitee){
                     console.log("Now in Ready to start");
+                    console.log(userState);
                     // Only user that created the debate can start it
                     setDisplayStartButton(true);
                     setDisplayInviteButton(false);
                 }
-            } else if (roomState.debateState === 'ONGOING_FOR' || roomState.debateState === 'ONGOING_AGAINST'){
+            } else if (roomState === 'ONGOING_FOR' || roomState === 'ONGOING_AGAINST'){
+                // Handle transition from 'READY_TO_START' --> {'ONGOING_FOR', 'ONGOING_AGAINST'}
+                if(!hasDebateStarted){
+                    setHasDebateStarted(true);
+
+
+                }
                 console.log("DISPLAY END DEBATE BUTTON")
                 setDisplayEndButton(true);
-            } else if (roomState.debateState === "ENDED"){
+            } else if (roomState === "ENDED"){
                 console.log("Call end debate function")
+                console.log(userState);
+                await getOutOfDebate();
             }
 
         } debateStateChange();
@@ -219,7 +231,7 @@ const DebateRoom = () => {
     // Handle start of debate button
     const startDebate = async () => {
 
-        if (roomState.debateState === 'READY_TO_START') {
+        if (roomState === 'READY_TO_START') {
             // Update state of the debate at the backend to ONGOING
             let newState = "ONGOING_" + String(userState.userSide);
             await updateDebateStateAtBackend(newState);
@@ -236,21 +248,28 @@ const DebateRoom = () => {
         }
     }
 
-    const endDebate = async () => {
+    const notifyEndOfDebate = async () => {
+
+        let newState = "ENDED";
+
         await updateDebateStateAtBackend("ENDED");
 
-        if (userState.userName === "Guest") {
-            if (process.env.NODE_ENV === "production") {
-                localStorage.removeItem("token");
-                localStorage.removeItem("userId");
-            }
+        await notifyStateChange(userState.userName, newState);
+
+    }
+
+    const getOutOfDebate = async () => {
+        await stompClient.unsubscribe('/debates/rooms/' + String(roomId));
+
+        if (userState.name === "Guest") {
+            localStorage.removeItem("token");
+            localStorage.removeItem("userId");
             history.push("/login");
         }
         else {
             history.push( "/home");
         }
     }
-
     // Methods related to Websocket
     const connectToRoomWS =(userName, debateState) => {
         let Sock = new SockJS('http://localhost:8080/ws-endpoint');
@@ -283,20 +302,12 @@ const DebateRoom = () => {
 
         if (ws_response.debateState !== null){
             console.log("RECEIVED A STATUS CHANGE");
-            console.log('roomState.debateStatus (old status): ' + roomState.debateState);
+            console.log('roomState (old status): ' + roomState);
             console.log('ws_response.debateState (new status): ' + ws_response.debateState);
-            console.log("set new status")
-            setRoomState({...roomState, 'debateStatus': ws_response.debateState });
-            console.log("new status: " + roomState.debateState);
-            //if (!roomState.debateStarted
-            //    && roomState.debateState === 'READY_TO_START'
-            //    && (ws_response.debateState === "ONGOING_FOR" || ws_response.debateState === "ONGOING_AGAINST")
-            //){
-            //    console.log("TRANSITION from ready to start to ongoing")
-            //    setRoomState({...roomState, 'debateStatus': ws_response.debateState, 'debateStarted': true });
-
-
-
+            console.log(typeof ws_response.debateState);
+            console.log("set new status");
+            setRoomState( ws_response.debateState );
+            console.log("new status: " + roomState);
         }
     }
 
@@ -343,8 +354,8 @@ const DebateRoom = () => {
             </div>
             <div>
                 <StartButton
-                    isStartDisabled = {isStartDisabled}
-                    setIsStartDisabled = {setIsStartDisabled}
+                    isStartDisabled = {isStartButtonDisabled}
+                    setIsStartDisabled = {setIsStartButtonDisabled}
                     displayStartButton = {displayStartButton}
                     startDebate={startDebate}
                 />
@@ -352,7 +363,7 @@ const DebateRoom = () => {
             <div>
                 <EndButton
                     displayEndButton = {displayEndButton}
-                    endDebate = {endDebate}
+                    endDebate = {notifyEndOfDebate}
                 />
             </div>
             <div>
@@ -374,11 +385,11 @@ const DebateRoom = () => {
                     chatBoxPosition={'right'}
                     side={userState.opposingSide}
                     msgs={debateMsg}
-                    displayMessageBox = {roomState.debateStarted}
+                    displayMessageBox = {hasDebateStarted}
                     withWriteBox = {false}
                     withInviteButton = {displayInviteButton && !location.state.isInvitee}
-                    displayWaitingMessage = {location.state.isInvitee && !roomState.debateStarted}
-                    isDebateStarted ={roomState.debateStarted}
+                    displayWaitingMessage = {location.state.isInvitee && !hasDebateStarted}
+                    isDebateStarted ={hasDebateStarted}
                     inviteLink = {getLink() + location.pathname + '/invitee'}
                 />
             </div>
