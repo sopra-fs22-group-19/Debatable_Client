@@ -7,7 +7,7 @@ import Topics from "components/views/Topics";
 import DebateRoom from "../../views/DebateRoom";
 import InviteeLanding from "../../views/InviteeLanding";
 import CreateDebate from "../../views/CreateDebate";
-import Homepage from "../../views/Homepage";
+import WsDebateRoom from "../../views/WsDebateRoom";
 
 const AppRouter = () => {
   const participant = 1;
@@ -15,13 +15,15 @@ const AppRouter = () => {
     <BrowserRouter>
       <Switch>
         <Route exact path="/home">
-             <Homepage/>
+          <GameGuard>
+            <Homepage/>
+          </GameGuard>
         </Route>
         <Route exact path="/login">
           <LoginGuard>
           <Login
             roomId = {null}
-            participant = {participant}
+            isInvitee = {false}
             />
           </LoginGuard>
         </Route>
@@ -37,10 +39,10 @@ const AppRouter = () => {
         </Route>
         <Route exact path="/debateroom/:roomId">
           <GameGuard>
-            <DebateRoom/>
+            <WsDebateRoom/>
           </GameGuard>
         </Route>
-        <Route exact path="/debateroom/:roomId/:participant">
+        <Route exact path="/debateroom/:roomId/invitee">
             <InviteeLanding/>
         </Route>
       <Route exact path="/create_debate">
@@ -52,7 +54,6 @@ const AppRouter = () => {
     </BrowserRouter>
   );
 };
-
 
 
 // /debateroom/register/:roomId/:participant ---> <Register>

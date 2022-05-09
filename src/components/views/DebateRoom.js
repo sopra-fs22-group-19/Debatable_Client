@@ -30,7 +30,7 @@ const Link = props => (
 )
 
 const DebateRoom = () => {
-    const history = useHistory();
+        const history = useHistory();
     const [inviteDisable, setinviteDisable] = useState(false);
     const [topic, setTopic] = useState(null);
     const [startDisable, setstartDisable] = useState("flex");
