@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import {Button} from 'components/ui/Button';
 import "styles/ui/FilterComponent.scss";
-import Homepage from "../views/Homepage";
+import Topics from "../views/Topics";
 
 
 export default function FilterComponent() {
@@ -54,7 +54,7 @@ export default function FilterComponent() {
 
             {isOpen && (
                 <div ref={dropdownRef} className="filter_dropdown">
-                    <div>
+
                         {frameworks.map((framework, index) => {const isSelected = selectedFrameworks.includes(framework);
                             return (
                                 <label key={index}>
@@ -66,7 +66,7 @@ export default function FilterComponent() {
                         <div className="filter_dropdown_actions">
                             <button onClick={() => applyFilters()} className="filter_dropdown_button">Apply</button>
                         </div>
-                    </div>
+
                 </div>
             )}
         </div>

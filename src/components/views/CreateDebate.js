@@ -5,12 +5,22 @@ import PropTypes from "prop-types";
 import {useHistory} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import "styles/views/CreateDebate.scss";
+import Header from "./Header";
+
+const optionsSide = [
+    { value: 'FOR', label: 'For' },
+    { value: 'AGAINST', label: 'Against' },
+    { value: 'vanilla', label: 'Vanilla' }
+]
+
 
 const FormField = props => {
     return (
       <div>
-        <label className="create label">
+          <label className="mb-1">
+              <h6 className="mb-0 text-sm">
           {props.label}
+              </h6>
         </label>
         <input
           className="create input"
@@ -29,16 +39,16 @@ FormField.propTypes = {
   };
 
 const CreateDebate = props => {
+    const [selected, setSelected] = React.useState("");
     const history = useHistory();
     const [description, setDescription] = useState(null);
     const [topic, setTopic] = useState(null);
     const [category, setCategory] = useState(null);
     const [side, setSide] = useState(null);
+    const userId = localStorage.getItem("userId");
     const filters = ["Science", "History", "Sports", "Health", "Art", "Entertainment", "Politics", "Culture", "Economics", "Education", "Other"]
 
     const create_new_debate = async () => {
-      // TODO: user id hard coded for now
-      let userId = 2;
       try {
         const requestBody = JSON.stringify({userId, topic, description, category});
         const post_topic = await api.post("/debates", requestBody);
@@ -67,53 +77,113 @@ const CreateDebate = props => {
         alert(`Something went wrong while creating debate topic: \n${handleError(error)}`);
       }
     }
-
+    let id
+    function myFunction(id) {
+        let sel = document.getElementById(id);
+        sel.addEventListener ("change", function () {
+        let show = document.getElementById('show');
+        show.innerHTML = this.value;
+    })
+    }
+    const changeSelectOptionHandler = (event) => {
+        setSelected(event.target.value);
+        console.log(event.target.value);
+        if(event.target.value==="For")
+        {
+            setSide("FOR")
+        }
+        else if (event.target.value)
+        {
+            setSide("AGAINST")
+        }
+       if(event.target.value!=="For"&&event.target.value!=="Against")
+        {
+            setCategory(event.target.value)
+            console.log(category)
+        }
+    };
     let content;
     content = (
-      <div>
-        <div className="create heading">Create Debate</div>
-        <div className="create container">
-                <div>
-                  <input type="radio" name="side" id="side" value="FOR"  onClick={() => setSide("FOR")}/>
-                  <label for="side" className="create text-filter">FOR</label>
-                  <input type="radio" name="side" id="side" value="AGAINST"  onClick={() => setSide("AGAINST")}/>
-                  <label for="side" className="create text-filter">AGAINST</label>
-                </div>
-                
-                <div className="create field">
-                    <FormField
-                        label="Enter Topic"
-                        value={topic}
-                        onChange={un => setTopic(un)}
-                    />
-                    <FormField
-                        label="Description"
-                        value={description}
-                        onChange={n => setDescription(n)}
-                    />
-                    <div className="create radio">
-                    {filters.map(filter => (
-                      <div>
-                      <input type="radio" name="filter" id="filter" value={filter}  onClick={() => setCategory(String(filter))}/>
-                      <label for="filter" className="create text-filter">{filter}</label>
-                      </div>
-                    ))}  
-                    </div>
-                </div>   
 
-          </div>
-          <Button
-          className="create button"
-          value="Create Debate"
-          disabled={!topic || !description || !category}
-          onClick={() => {
-              create_new_debate()
-          }}
-            />    
-      </div>
+
+
+            <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto" style={{"align-items": "center"}}>
+                <div className="create heading">Create Debate</div>
+                <div className="card card0 border-0">
+                    <div className="row d-flex">
+                        <div className="row px-3" style={{"margin-top": "10px", "margin-bottom": "10px"}}>
+                            <div style={{"display":"inline-flex",
+                                "align-items": "center"}}>
+                                <label className="mb-1">
+                                    <h4 className="mb-0 text-sm" style={{"margin-right": "65px","margin-top": "10px", "margin-bottom": "10px"}}>
+                                        Your Side
+                                    </h4>
+
+                                </label>
+                                <select className={"dropList"} onChange={changeSelectOptionHandler}>
+                                    <option>Choose Side ...</option>
+                                    <option>For</option>
+                                    <option>Against</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                                <div className="row px-3">
+                                    <FormField
+                                        label="Enter Topic"
+                                        value={topic}
+                                        onChange={un => setTopic(un)}
+                                    />
+                                </div>
+                                <div className="row px-3">
+                                    <FormField
+                                        label="Description"
+                                        value={description}
+                                        onChange={n => setDescription(n)}
+                                    />
+                                </div>
+                                <div className="row px-3" style={{"margin-top": "10px", "margin-bottom": "10px"}}>
+                                    <div style={{"display":"inline-flex",
+                                        "align-items": "center"}}>
+                                        <label className="mb-1">
+                                            <h4 className="mb-0 text-sm" style={{"margin-right": "10px","margin-top": "10px", "margin-bottom": "10px"}}>
+                                                Category of Topic
+                                            </h4>
+
+                                        </label>
+                                        <select className={"dropList"} onChange={changeSelectOptionHandler}>
+                                            <option>Choose tag ...</option>
+                                            {filters.map(filter => (
+                                                <option>
+                                                    {filter}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="row mb-3 px-3">
+                                    <Button
+                                        className="create button"
+                                        value="Create Debate"
+                                        disabled={!topic || !description || !category}
+                                        onClick={() => {
+                                            create_new_debate()
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                </div>
+            </div>
+
+
+
+
     )
     return(
         <div>
+            <Header/>
             {content}
         </div>
       

@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "styles/index.scss";
 import App from "App";
+
 /**
 import {createStore} from "redux";
 import rootReducer from "./store/reducers/rootReducer";
@@ -16,5 +17,6 @@ import {Provider} from "redux";
 /**
 const store = createStore(rootReducer);
  */
+//Load an icon library
 
 ReactDOM.render(<App />, document.getElementById("root"));

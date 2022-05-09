@@ -1,29 +1,30 @@
 @import 'styles/theme';
 
+
 .login {
   &.container {
-    margin-top: 2em;
-    min-height: 300px;
+    padding: 10px;
     @include center;
-    flex-direction: column;
-
-  }
-  &.form {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
-    width: 80%;
-    max-width: 30em;
-    height: 20em;
-    font-size: 16px;
-    font-weight: 300;
-    padding-left: 37px;
+  }
+  .logo
+  {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: center;
+    padding-left: 20px;
     padding-right: 37px;
     border-radius: 0.75em;
-    background-color: $background;
+    background-color: transparent;
     transition: opacity 0.5s ease, transform 0.5s ease;
-    box-shadow: $dropShadow;
+
+
   }
+
+
   &.field {
     display: flex;
     flex-direction: column;
@@ -58,26 +59,43 @@
     cursor: pointer;
   }
   &.register-container {
-    margin-top: 2em;
-    min-height: 400px;
+    padding: 10px;
     /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
     @include center;
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
   }
   &.register-form {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 60%;
+    width: 90%;
     max-width: 30em;
-    height: 25em;
+    height: 30em;
     font-size: 16px;
     font-weight: 300;
     padding-left: 37px;
     padding-right: 37px;
     border-radius: 0.75em;
-    background-color: $background;
+    background-color: #A8AD9B;
     transition: opacity 0.5s ease, transform 0.5s ease;
     box-shadow: $dropShadow;
+  }
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 90%;
+    max-width: 30em;
+    height: 20em;
+    font-size: 10px;
+    font-weight: 300;
+    padding-left: 37px;
+    padding-right: 37px;
+    border-radius: 0.75em;
+    background-color: #A8AD9B;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+
   }
 }

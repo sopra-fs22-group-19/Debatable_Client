@@ -7,7 +7,7 @@
 .filter_button {
   border-radius: 5px;
   padding: 8px 16px;
-  background-color: #408aeb;
+  background-color: rgba(80, 154, 165, 0.85);
   cursor: pointer;
   font-weight: 500;
   color: white;
@@ -22,9 +22,12 @@
   outline: 1px auto -webkit-focus-ring-color;
 }
 
-.filter__dropdown {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+
+
+.filter_dropdown {
+  box-shadow: 0 1px 3px 0 rgba(5, 5, 5, 0.44), 0 1px 2px 0 rgba(0, 0, 0, 0.08);
   padding: 0.25rem;
+  border-radius: 10px;
   display: none;
   width: 16rem;
   z-index: 50;
@@ -35,11 +38,11 @@
   background-color: white;
 }
 @media (min-width: 768px) {
-  .filter__dropdown {
+  .filter_dropdown {
     display: block;
   }
 }
-.filter__dropdown__actions {
+.filter_dropdown_actions {
   border-top-width: 1px;
   border-top-color: #e4e7eb;
   border-top-style: solid;
@@ -49,10 +52,10 @@
   padding: 0.75rem 0.5rem 0.25rem 0.5rem;
 }
 
-.filter__dropdown__button {
+.filter_dropdown_actions button {
   border-radius: 0.125rem;
   padding: 0.25rem 0.5rem;
-  background-color: #2b7de9;
+  background-color: rgba(80, 154, 165, 0.85);
   border-color: transparent;
   color: white;
   font-weight: 600;

@@ -13,6 +13,7 @@ export const LoginGuard = props => {
   return <Redirect to="/home"/>;
 };
 
+
 LoginGuard.propTypes = {
   children: PropTypes.node
 }
