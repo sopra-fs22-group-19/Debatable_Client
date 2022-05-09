@@ -69,10 +69,13 @@ const DebateRoom = () => {
         canWrite: false
     });
 
-    const [roomStatus, setRoomStatus] = useState({
+    const [roomInformation, setRoomInformation] = useState({
         topic: '',
         description: '',
-        debateStatus: ' ',
+    });
+
+    const [roomState, setRoomState] = useState({
+        debateState: '',
         debateStarted: false
     });
 
@@ -85,11 +88,10 @@ const DebateRoom = () => {
     });
 
     // UI related states (display buttons and so so)
-    const [displayStartButton, setDisplayStartButton] = useState(true);
+    const [displayStartButton, setDisplayStartButton] = useState(false);
     const [isStartDisabled, setIsStartDisabled] = useState("flex");
     const [displayEndButton, setDisplayEndButton] = useState(false);
     const [displayInviteButton, setDisplayInviteButton] =  useState(true);
-
 
     const defineUserStartingState = (debateRoom) => {
         if (debateRoom.user1) {
@@ -150,14 +152,14 @@ const DebateRoom = () => {
 
     // Populate information relevant to the debate room on mount
     useEffect(() => {
-        async function fetchData() {
+        async function setUserAndRoomStateOnMount() {
             try {
                 const response = await api.get("/debates/rooms/" + String(roomId));
                 let debateRoom = response.data
-                setRoomStatus({...roomStatus,
+
+                setRoomInformation({...roomInformation,
                     'topic': debateRoom.debate.topic,
                     'description': debateRoom.debate.description,
-                    'debateStatus': debateRoom.debateStatus
                     }
                 )
 
@@ -166,6 +168,7 @@ const DebateRoom = () => {
                 }
 
                 let userName = await defineUserStartingState(debateRoom);
+
                 connectToRoomWS(userName, debateRoom.debateStatus);
 
             } catch (error) {
@@ -173,9 +176,30 @@ const DebateRoom = () => {
                 console.error("Details:", error);
                 alert("Something went wrong while fetching the debate room data! See the console for details.");
             }
-        } fetchData();
+        } setUserAndRoomStateOnMount();
 
     }, []);
+
+
+    useEffect(() => {
+        async function debateStateChange() {
+            if (roomState.debateState === 'READY_TO_START'){
+                if (!location.state.isInvitee){
+                    console.log("Now in Ready to start");
+                    // Only user that created the debate can start it
+                    setDisplayStartButton(true);
+                    setDisplayInviteButton(false);
+                }
+            } else if (roomState.debateState === 'ONGOING_FOR' || roomState.debateState === 'ONGOING_AGAINST'){
+                console.log("DISPLAY END DEBATE BUTTON")
+                setDisplayEndButton(true);
+            } else if (roomState.debateState === "ENDED"){
+                console.log("Call end debate function")
+            }
+
+        } debateStateChange();
+
+    }, [roomState]);
 
     const updateDebateStateAtBackend = async (newState) => {
         try {
@@ -195,13 +219,18 @@ const DebateRoom = () => {
     // Handle start of debate button
     const startDebate = async () => {
 
-        if (roomStatus.debateStatus === 'READY_TO_START' || roomStatus.debateStatus === 'ONE_USER_FOR') {
-            await updateDebateStateAtBackend("ONGOING_" + String(userState.userSide));
-            connectToRoomWS(); // connect to websocket
-            setDisplayStartButton(true);
+        if (roomState.debateState === 'READY_TO_START') {
+            // Update state of the debate at the backend to ONGOING
+            let newState = "ONGOING_" + String(userState.userSide);
+            await updateDebateStateAtBackend(newState);
+
+            // Notify all other members of the channel the debate has started
+            notifyStateChange(userState.userName, newState);
+            setDisplayStartButton(false);
             setDisplayEndButton(true);
             setUserState({...userState, 'canWrite': true});
             console.log("Debate started");
+
         } else {
             console.error("Cannot start debate yet, debateStatus must be at READY_TO_START");
         }
@@ -237,10 +266,11 @@ const DebateRoom = () => {
     const onConnected = (userName, debateState) => {
         setUserData({...userData, "connected": true});
         stompClient.subscribe('/debates/rooms/' + String(roomId), onMessageReceived );
-        userJoin(userName, debateState);
+        notifyStateChange(userName, debateState);
     }
 
     const onMessageReceived = (incoming) => {
+        console.log("RECIEVED A MESSAGE");
         let ws_response = JSON.parse(incoming.body);
 
         if (ws_response.message !== null){
@@ -252,13 +282,25 @@ const DebateRoom = () => {
         }
 
         if (ws_response.debateState !== null){
-            console.log(ws_response.debateState);
-            setRoomStatus({...roomStatus, 'debateStatus': ws_response.debateState });
+            console.log("RECEIVED A STATUS CHANGE");
+            console.log('roomState.debateStatus (old status): ' + roomState.debateState);
+            console.log('ws_response.debateState (new status): ' + ws_response.debateState);
+            console.log("set new status")
+            setRoomState({...roomState, 'debateStatus': ws_response.debateState });
+            console.log("new status: " + roomState.debateState);
+            //if (!roomState.debateStarted
+            //    && roomState.debateState === 'READY_TO_START'
+            //    && (ws_response.debateState === "ONGOING_FOR" || ws_response.debateState === "ONGOING_AGAINST")
+            //){
+            //    console.log("TRANSITION from ready to start to ongoing")
+            //    setRoomState({...roomState, 'debateStatus': ws_response.debateState, 'debateStarted': true });
+
+
+
         }
     }
 
-    const userJoin=(userName, debateState)=>{
-        console.log(userName, debateState);
+    const notifyStateChange=(userName, debateState)=>{
         var chatMessage = {
             userId: userId,
             userName: userName,
@@ -278,7 +320,7 @@ const DebateRoom = () => {
         if (stompClient) {
             var chatMessage = {
                 userId:userData.userId,
-                roomId:roomStatus.roomId,
+                roomId:roomState.roomId,
                 message: userData.message,
                 status:"MESSAGE"
             };
@@ -297,7 +339,7 @@ const DebateRoom = () => {
     return (
         <div className="container">
             <div className="debateRoom topic-container">
-                {roomStatus.topic}
+                {roomInformation.topic}
             </div>
             <div>
                 <StartButton
@@ -318,7 +360,9 @@ const DebateRoom = () => {
                     chatBoxPosition={'left'}
                     side={userState.userSide}
                     msgs={debateMsg}
+                    displayMessageBox = {true}
                     withInviteButton = {false}
+                    displayWaitingMessage = {false}
                     withWriteBox = {true}
                     canWrite={userState.canWrite}
                     postMessage={sendValue}
@@ -330,9 +374,11 @@ const DebateRoom = () => {
                     chatBoxPosition={'right'}
                     side={userState.opposingSide}
                     msgs={debateMsg}
+                    displayMessageBox = {roomState.debateStarted}
                     withWriteBox = {false}
-                    withInviteButton = {displayInviteButton}
-                    isDebateStarted ={roomStatus.debateStarted}
+                    withInviteButton = {displayInviteButton && !location.state.isInvitee}
+                    displayWaitingMessage = {location.state.isInvitee && !roomState.debateStarted}
+                    isDebateStarted ={roomState.debateStarted}
                     inviteLink = {getLink() + location.pathname + '/invitee'}
                 />
             </div>

@@ -72,8 +72,14 @@ export const Chat = props => {
                     <InviteLink
                         isDebateStarted = {props.isDebateStarted}
                         inviteLink = {props.inviteLink}
-                    />:
-                    <MessageList msgs={props.msgs}/>
+                    /> : null
+                }
+                {props.displayWaitingMessage ?
+                    <div className='debateRoom text' > Waiting for 1st participant to start the debate! </div>: null
+                }
+                {props.displayMessageBox ?
+                    <MessageList msgs={props.msgs}/> :
+                    null
                 }
                 {props.withWriteBox ?
                     <WriteBox
@@ -81,7 +87,8 @@ export const Chat = props => {
                         postMessage={props.postMessage}
                         handleMessage={props.handleMessage}
                     /> :
-                    null}
+                    null
+                }
             </div>
         </div>
     );
