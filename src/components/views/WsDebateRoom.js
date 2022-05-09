@@ -82,11 +82,7 @@ const DebateRoom = () => {
     const [debateAGAINSTMsgs, setDebateAGAINSTMsgs] = useState([]);
 
 
-    const [userData, setUserData] = useState({
-        userId: '',
-        connected: false,
-        message: ''
-    });
+    const [messageContent, setMessageContent] = useState('');
 
     // UI related states (display buttons and so so)
     const [displayStartButton, setDisplayStartButton] = useState(false);
@@ -172,8 +168,6 @@ const DebateRoom = () => {
 
                 let userName = await defineUserStartingState(debateRoom);
 
-                console.log(userState);
-
                 connectToRoomWS(userName, debateRoom.debateStatus);
 
             } catch (error) {
@@ -191,7 +185,6 @@ const DebateRoom = () => {
             if (roomState === 'READY_TO_START'){
                 if (!location.state.isInvitee){
                     console.log("Now in Ready to start");
-                    console.log(userState);
                     // Only user that created the debate can start it
                     setDisplayStartButton(true);
                     setDisplayInviteButton(false);
@@ -199,15 +192,21 @@ const DebateRoom = () => {
             } else if (roomState === 'ONGOING_FOR' || roomState === 'ONGOING_AGAINST'){
                 // Handle transition from 'READY_TO_START' --> {'ONGOING_FOR', 'ONGOING_AGAINST'}
                 if(!hasDebateStarted){
+                    console.log("Transition to start of debate");
                     setHasDebateStarted(true);
-
-
+                    setDisplayEndButton(true);
                 }
-                console.log("DISPLAY END DEBATE BUTTON")
-                setDisplayEndButton(true);
+
+                // Handle change of turns
+                console.log("Change of turns");
+                if (roomState.split('_')[1] === userState.userSide){
+                    setUserState({...userState, 'canWrite': true});
+                } else {
+                    setUserState({...userState, 'canWrite': false});
+                }
+
             } else if (roomState === "ENDED"){
                 console.log("Call end debate function")
-                console.log(userState);
                 await getOutOfDebate();
             }
 
@@ -285,16 +284,16 @@ const DebateRoom = () => {
     }
 
     const onConnected = (userName, debateState) => {
-        setUserData({...userData, "connected": true});
         stompClient.subscribe('/debates/rooms/' + String(roomId), onMessageReceived );
         notifyStateChange(userName, debateState);
     }
 
     const onMessageReceived = (incoming) => {
-        console.log("RECIEVED A MESSAGE");
+
         let ws_response = JSON.parse(incoming.body);
 
         if (ws_response.message !== null){
+            console.log("RECIEVED A MESSAGE");
             if(ws_response.message !== ''){
                 console.log(ws_response.userSide);
                 if (ws_response.userSide === "FOR"){
@@ -329,24 +328,26 @@ const DebateRoom = () => {
 
     const handleMessage = (event) => {
         const {value}=event.target;
-        setUserData({...userData, "message": value});
+        setMessageContent(value);
     }
 
     const sendValue=()=>{
         if (stompClient) {
             var chatMessage = {
-                userId:userData.userId,
-                roomId:roomState.roomId,
-                message: userData.message,
-                status:"MESSAGE"
+                userId: userId,
+                roomId: roomState.roomId,
+                userSide: userState.userSide,
+                message: messageContent,
             };
             console.log(chatMessage);
-            console.log(userState.isStartingSide);
-            console.log(userState.userSide);
-            console.log(userState.isInvitedSide);
-            console.log(userState.isObserver);
             stompClient.send('/ws/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
-            setUserData({...userData, "message": ""});
+
+            // Change turns after sending the message
+            if (userState.userSide === 'FOR'){
+                notifyStateChange(userState.userName, 'ONGOING_AGAINST');
+            } else{
+                notifyStateChange(userState.userName, 'ONGOING_FOR')
+            }
         }
     }
 
@@ -375,13 +376,13 @@ const DebateRoom = () => {
                 <Chat
                     chatBoxPosition={'left'}
                     side={userState.userSide}
-                    msgs={userState.userSide === "FOR" ?  debateAGAINSTMsgs: debateFORMsgs}
+                    msgs={userState.userSide === "FOR" ?  debateFORMsgs: debateAGAINSTMsgs}
                     displayMessageBox = {true}
                     withInviteButton = {false}
                     displayWaitingMessage = {false}
                     withWriteBox = {true}
                     canWrite={userState.canWrite}
-                    postMessage={sendValue}
+                    postMessage={() => sendValue()}
                     handleMessage={handleMessage}
                 />
             </div>
@@ -389,7 +390,7 @@ const DebateRoom = () => {
                 <Chat
                     chatBoxPosition={'right'}
                     side={userState.opposingSide}
-                    msgs={userState.opposingSide === "FOR" ? debateAGAINSTMsgs: debateFORMsgs}
+                    msgs={userState.opposingSide === "FOR" ? debateFORMsgs: debateAGAINSTMsgs}
                     displayMessageBox = {hasDebateStarted}
                     withWriteBox = {false}
                     withInviteButton = {displayInviteButton && !location.state.isInvitee}
