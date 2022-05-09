@@ -6,6 +6,7 @@ import {useParams} from 'react-router-dom/cjs/react-router-dom.min';
 import "styles/views/DebateRoom.scss";
 import { isProduction } from 'helpers/isProduction';
 import { useLocation } from "react-router-dom";
+import Header from "./Header";
 
 var waitStart = false;
 var waitJoin = false;
@@ -188,7 +189,7 @@ const DebateRoom = () => {
         else {
             history.push(
                 {
-                  pathname: "/home",
+                  pathname: "/topics",
                   state: {userId: userId}
                 }
             );
@@ -219,7 +220,7 @@ const DebateRoom = () => {
                 else {
                     history.push(
                         {
-                          pathname: "/home",
+                          pathname: "/topics",
                           state: {userId: userId}
                         }
                     );
@@ -483,6 +484,7 @@ const DebateRoom = () => {
 
     return (
         <div>
+            <Header height={"100"}/>
             {content}
         </div>
     );

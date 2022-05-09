@@ -3,6 +3,10 @@ import PropTypes from "prop-types";
 import {Container, Navbar, Nav } from "react-bootstrap";
 import "styles/views/Header.scss";
 import { isProduction } from 'helpers/isProduction';
+import {useHistory} from "react-router-dom";
+
+    /*<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    */
 
 /**
  * This is an example of a Functional and stateless component (View) in React. Functional components are not classes and thus don't handle internal state changes.
@@ -21,25 +25,36 @@ import { isProduction } from 'helpers/isProduction';
 }
 
 const Header = props => {
+    const history = useHistory();
     const baselink = getBaseLink();
+    const logout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("username");
+        localStorage.removeItem("categories");
+        history.push('/login');
+    }
 return(
+
     <div className="navbar">
-        <a href={baselink+"profile"}>User</a>
-        <a href={baselink+"create_debate"}>Create Debate</a>
-        <a href={baselink+"home"}>Homepage</a>
-        <div className="dropdown">
-            <button className="dropbtn">More
-                <i className="fa fa-caret-down"></i>
-            </button>
-            <div className="dropdown-content">
-                <a href="#">Link 1</a>
-                <a href="#">Link 2</a>
-                <a href="#">Link 3</a>
-            </div>
-        </div>
+        <img src={require('../../images/logo2.png')}
+             className="logo-icon"
+             border="0"/>
+
+
+        <a  href={baselink+"home"}><i className="fa fa-fw fa-home"></i> Home</a>
+        <a href={baselink+"profile"}><i className="fa fa-fw fa-user"></i> Profile</a>
+        <a href={baselink+"topics"}><i className="fa fa-fw fa-list"></i> Topics</a>
+        <a href={baselink+"create_debate"}><i className="fa fa-fw fa-plus-square"></i> Create Debate</a>
+        <a style={{"cursor":"pointer"}} onClick={() => logout()}><i className="fa fa-fw fa-sign-out"></i> Logout</a>
+
+
+
+
+
+
+
     </div>
-
-
 );
 }
 
@@ -51,3 +66,34 @@ Header.propTypes = {
  * Don't forget to export your component!
  */
 export default Header;
+
+/*
+<div className="navbar-box">
+
+    <div className="icons-col">
+
+        <a className={"logo"}>
+            <img src={require('../../images/logo2.png')}
+                 className="logo-icon"
+                 border="0"/>
+        </a>
+
+        <a className={"profile"} href={baselink+"profile"}>
+            <img src={require('../../images/profile-icon.png')}
+                 className="profile-icon"
+                 border="0"/></a>
+        <a className={"home"} href={baselink+"home"}>
+            <img src={require('../../images/home.png')}
+                 className="home-icon"
+                 border="0"/>
+        </a>
+    </div>
+    <div className="text-col">
+
+        <a className="create-debate" href={baselink+"create_debate"}>Create Debate</a>
+        <a className="logout" onClick={() => logout()}>
+            Logout
+        </a>
+    </div>
+</div>
+*/
