@@ -78,7 +78,9 @@ const DebateRoom = () => {
     const [roomState, setRoomState] = useState( '');
     const [hasDebateStarted, setHasDebateStarted] = useState( false);
 
-    const [debateMsg, setDebateMsg] = useState([]);
+    const [debateFORMsgs, setDebateFORMsgs] = useState([]);
+    const [debateAGAINSTMsgs, setDebateAGAINSTMsgs] = useState([]);
+
 
     const [userData, setUserData] = useState({
         userId: '',
@@ -294,20 +296,23 @@ const DebateRoom = () => {
 
         if (ws_response.message !== null){
             if(ws_response.message !== ''){
-                console.log('message added')
-                debateMsg.push(incoming.body.message);
-                setDebateMsg([...debateMsg]);
+                console.log(ws_response.userSide);
+                if (ws_response.userSide === "FOR"){
+                    console.log("added for");
+                    debateFORMsgs.push(ws_response.message);
+                    setDebateFORMsgs([...debateFORMsgs]);
+                } else {
+                    console.log("added against");
+                    debateAGAINSTMsgs.push(ws_response.message);
+                    setDebateAGAINSTMsgs([...debateAGAINSTMsgs]);
+                }
             }
         }
 
         if (ws_response.debateState !== null){
             console.log("RECEIVED A STATUS CHANGE");
-            console.log('roomState (old status): ' + roomState);
             console.log('ws_response.debateState (new status): ' + ws_response.debateState);
-            console.log(typeof ws_response.debateState);
-            console.log("set new status");
             setRoomState( ws_response.debateState );
-            console.log("new status: " + roomState);
         }
     }
 
@@ -370,7 +375,7 @@ const DebateRoom = () => {
                 <Chat
                     chatBoxPosition={'left'}
                     side={userState.userSide}
-                    msgs={debateMsg}
+                    msgs={userState.userSide === "FOR" ?  debateAGAINSTMsgs: debateFORMsgs}
                     displayMessageBox = {true}
                     withInviteButton = {false}
                     displayWaitingMessage = {false}
@@ -384,7 +389,7 @@ const DebateRoom = () => {
                 <Chat
                     chatBoxPosition={'right'}
                     side={userState.opposingSide}
-                    msgs={debateMsg}
+                    msgs={userState.opposingSide === "FOR" ? debateAGAINSTMsgs: debateFORMsgs}
                     displayMessageBox = {hasDebateStarted}
                     withWriteBox = {false}
                     withInviteButton = {displayInviteButton && !location.state.isInvitee}
