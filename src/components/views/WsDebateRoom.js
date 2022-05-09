@@ -104,7 +104,9 @@ const DebateRoom = () => {
 
                 return debateRoom.user1.username;
             }
-        } else if (debateRoom.user2){
+        }
+
+        if (debateRoom.user2){
             if (parseInt(userId) === debateRoom.user2.userId ){
                 setUserState({...userState,
                     'userName': debateRoom.user2.userName,
@@ -116,12 +118,17 @@ const DebateRoom = () => {
 
                 return debateRoom.user2.username;
             }
-        } else{
-            setUserState({...userState,
-                'userSide': 'FOR',
-                'opposingSide': 'AGAINST',
-                'isObserver': true
-            });
+        }
+
+        // If they are an Observer
+        if (debateRoom.user1 && debateRoom.user2){
+            if(parseInt(userId) !== debateRoom.user1.userId && parseInt(userId) !== debateRoom.user2.userId){
+                setUserState({...userState,
+                    'userSide': 'FOR',
+                    'opposingSide': 'AGAINST',
+                    'isObserver': true
+                });
+            }
 
             return String(userId);
         }
@@ -154,12 +161,11 @@ const DebateRoom = () => {
                     }
                 )
 
-                let userName = defineUserStartingState(debateRoom);
-
                 if (location.state.isInvitee && debateRoom.side2 === null){
-                    debateRoom = addSecondParticipant(debateRoom);
+                    debateRoom = await addSecondParticipant(debateRoom);
                 }
 
+                let userName = await defineUserStartingState(debateRoom);
                 connectToRoomWS(userName, debateRoom.debateStatus);
 
             } catch (error) {
@@ -236,15 +242,17 @@ const DebateRoom = () => {
 
     const onMessageReceived = (incoming) => {
         let ws_response = JSON.parse(incoming.body);
+
         if (ws_response.message !== null){
-            debateMsg.push(incoming.body.message);
-            setDebateMsg([...debateMsg]);
+            if(ws_response.message !== ''){
+                console.log('message added')
+                debateMsg.push(incoming.body.message);
+                setDebateMsg([...debateMsg]);
+            }
         }
 
         if (ws_response.debateState !== null){
             console.log(ws_response.debateState);
-            console.log(typeof ws_response.debateState);
-
             setRoomStatus({...roomStatus, 'debateStatus': ws_response.debateState });
         }
     }
