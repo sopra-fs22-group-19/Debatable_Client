@@ -50,30 +50,18 @@ const Register = props => {
       localStorage.setItem("userId", user.userId);
       localStorage.setItem("token", user.token);
 
-      if (location.state.participant === "2")
+      if (location.state.isInvitee)
       {
         to_push = "/debateroom/" + String(location.state.roomId)
         history.push(
-        {
-          pathname: to_push,
-              state: {
-            userId: user.userId,
-            token: user.token,
-            participant: location.state.participant,
-            roomId: location.state.roomId}
-        });
+            {
+              pathname: to_push,
+              state: {isInvitee: location.state.isInvitee}
+            });
       }
       else
       {
-        history.push(
-            {
-              pathname: "/home",
-              state: {
-                userId: user.userId,
-                token: user.token,
-                participant: location.state.participant,
-                roomId: location.state.roomId}
-            });
+        history.push("/home");
       }
 
     } catch (error) {
@@ -82,8 +70,8 @@ const Register = props => {
   };
 
   function toLogin () {
-    if (location.state.participant === "2") {
-      let push_to = "/debateroom/" + location.state.roomId + "/" + location.state.participant;
+    if (location.state.isInvitee) {
+      let push_to = "/debateroom/" + location.state.roomId + "/invitee";
       history.push(push_to);
     }
     else {

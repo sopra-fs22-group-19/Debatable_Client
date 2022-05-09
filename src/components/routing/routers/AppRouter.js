@@ -4,9 +4,9 @@ import {LoginGuard} from "components/routing/routeProtectors/LoginGuard";
 import Login from "components/views/Login";
 import Register from "components/views/Register";
 import Homepage from "components/views/Homepage";
-import DebateRoom from "../../views/DebateRoom";
 import InviteeLanding from "../../views/InviteeLanding";
 import CreateDebate from "../../views/CreateDebate";
+import WsDebateRoom from "../../views/WsDebateRoom";
 
 const AppRouter = () => {
   const participant = 1;
@@ -22,7 +22,7 @@ const AppRouter = () => {
           <LoginGuard>
           <Login
             roomId = {null}
-            participant = {participant}
+            isInvitee = {false}
             />
           </LoginGuard>
         </Route>
@@ -35,10 +35,10 @@ const AppRouter = () => {
         </Route>
         <Route exact path="/debateroom/:roomId">
           <GameGuard>
-            <DebateRoom/>
+            <WsDebateRoom/>
           </GameGuard>
         </Route>
-        <Route exact path="/debateroom/:roomId/:participant">
+        <Route exact path="/debateroom/:roomId/invitee">
             <InviteeLanding/>
         </Route>
       <Route exact path="/create_debate">
@@ -50,7 +50,6 @@ const AppRouter = () => {
     </BrowserRouter>
   );
 };
-
 
 
 // /debateroom/register/:roomId/:participant ---> <Register>

@@ -3,11 +3,10 @@ import {useParams} from "react-router-dom/cjs/react-router-dom.min";
 
 const InviteeLanding = () => {
     const {roomId} = useParams()
-    const {participant} = useParams()
 
     let content = (<Login
+        isInvitee= {true}
         roomId= {roomId}
-        participant= {participant}
         />)
 
     return (
