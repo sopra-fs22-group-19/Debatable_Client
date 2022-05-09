@@ -183,7 +183,7 @@ const CreateDebate = props => {
     )
     return(
         <div>
-
+            <Header/>
             {content}
         </div>
       

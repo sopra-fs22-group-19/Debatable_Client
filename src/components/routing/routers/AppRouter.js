@@ -7,6 +7,7 @@ import Topics from "components/views/Topics";
 import DebateRoom from "../../views/DebateRoom";
 import InviteeLanding from "../../views/InviteeLanding";
 import CreateDebate from "../../views/CreateDebate";
+import Homepage from "../../views/Homepage";
 import WsDebateRoom from "../../views/WsDebateRoom";
 
 const AppRouter = () => {

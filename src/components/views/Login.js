@@ -166,15 +166,13 @@ const Login = props => {
                                   className="text-danger " onClick={() => toRegister()} >Register</a></small>
                           </div>
                           <div className="row mb-4 px-3">
-                          {guest ? <Guest /> : null }
+                              {props.isInvitee ? <Guest /> : null }
                           </div>
                       </div>
                   </div>
               </div>
           </div>
       </div>
-      {props.isInvitee ? <Guest /> : null }
-    </BaseContainer>
   );
 };
 
