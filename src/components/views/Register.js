@@ -3,7 +3,7 @@ import {api, handleError} from 'helpers/api';
 import User from 'models/User';
 import {useHistory} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
-import 'styles/views/Login.scss';
+import 'styles/views/Login_Trial.css';
 import 'styles/ui/BaseContainer.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
@@ -11,12 +11,15 @@ import { useLocation } from "react-router-dom";
 
 const FormField = props => {
   return (
-    <div className="login field">
-      <label className="login label">
+    <div className="field">
+      <label className="mb-1">
+        <h6 className="mb-0 text-sm">
         {props.label}
+        </h6>
       </label>
       <input
-        className="login input"
+          type={props.label==="Password"? "password":"text"}
+        className="input"
         placeholder="enter here.."
         value={props.value}
         onChange={e => props.onChange(e.target.value)}
@@ -49,6 +52,7 @@ const Register = props => {
 
       localStorage.setItem("userId", user.userId);
       localStorage.setItem("token", user.token);
+      localStorage.setItem("username", user.username);
 
       if (location.state.isInvitee)
       {
@@ -80,41 +84,72 @@ const Register = props => {
   }
 
   return (
-    <BaseContainer className="base-container">
-      <div className="login register-container">
-        <div className="login register-form">
-          <FormField
-            label="Name"
-            value={name}
-            onChange={un => setName(un)}
-          />
-          <FormField
-            label="Username"
-            value={username}
-            onChange={un => setUsername(un)}
-          />
-          <FormField
-            label="Password"
-            value={password}
-            onChange={n => setPassword(n)}
-          />
-          <div className="login button-container">
-            <Button
-              disabled={!username || !password || !name}
-              width="100%"
-              onClick={() => doRegister()}
-            >
-              Sign Up
-            </Button>
+
+
+
+  <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto">
+    <div className="card card0 border-0">
+      <div className="row d-flex">
+        <div className="col-lg-6">
+
+          <img src={require('../../images/logo2.png')}
+               className="logo"
+               border="0"/>
+
+
+        </div>
+        <div className="col-lg-6">
+          <div className="card2 card border-0 px-4 py-5">
+            <div className="row mb-4 px-3">
+
+            </div>
+            <div className="row px-3">
+              <FormField
+                  label="Name"
+                  value={name}
+                  onChange={un => setName(un)}
+              />
+            </div>
+            <div className="row px-3">
+              <FormField
+                  label="Username"
+                  value={username}
+                  onChange={un => setUsername(un)}
+              />
+            </div>
+            <div className="row px-3">
+              <FormField
+                  label="Password"
+                  value={password}
+                  onChange={n => setPassword(n)}
+              />
+            </div>
+
+            <div className="row mb-3 px-3">
+              <Button
+                  disabled={!username || !password || !name}
+                  width="100%"
+                  onClick={() => doRegister()}
+              >
+                Sign Up
+              </Button>
+            </div>
+            <div className="row mb-4 px-3">
+              <small className="font-weight-bold">Do you already have an account? <a
+                  className="text-danger " onClick={() => toLogin()} >Login</a></small>
+            </div>
+            <div className="row mb-4 px-3">
+
+            </div>
           </div>
         </div>
       </div>
-      <div 
-      className='login create-account'
-      onClick={() => toLogin() }>
-        Log In
-      </div>
-    </BaseContainer>
-  );
+    </div>
+  </div>
+
+
+
+);
 };
 export default Register;
+
