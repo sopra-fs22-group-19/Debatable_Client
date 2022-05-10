@@ -4,7 +4,7 @@ import User from 'models/User';
 import {useHistory} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import 'styles/views/Login_Trial.css';
-import 'styles/ui/BaseContainer.scss';
+
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { useLocation } from "react-router-dom";
@@ -13,7 +13,7 @@ const FormField = props => {
   return (
     <div className="field">
       <label className="mb-1">
-        <h6 className="mb-0 text-sm">
+        <h6 >
         {props.label}
         </h6>
       </label>
@@ -84,24 +84,21 @@ const Register = props => {
   }
 
   return (
-
-
-
-  <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto">
-    <div className="card card0 border-0">
+  <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto" style={{"background-color":"white", "height":"100vh"}}>
+    <div id="card" className="card card0 border-0">
       <div className="row d-flex">
-        <div className="col-lg-6">
+        <div className="col-lg-6  d-flex" >
 
           <img src={require('../../images/logo2.png')}
                className="logo"
                border="0"/>
-
-
         </div>
         <div className="col-lg-6">
-          <div className="card2 card border-0 px-4 py-5">
-            <div className="row mb-4 px-3">
-
+          <div id="card2" className="card2 card border-0 px-4 py-5">
+            <div className="row mb-4 px-3 d-flex justify-content-center">
+                <h5>
+                  Sign up to It's Debatable
+                </h5>
             </div>
             <div className="row px-3">
               <FormField
@@ -125,18 +122,18 @@ const Register = props => {
               />
             </div>
 
-            <div className="row mb-3 px-3">
+            <div className="row mb-3 px-3 d-flex justify-content-center">
               <Button
                   disabled={!username || !password || !name}
-                  width="100%"
+                  width="50%"
                   onClick={() => doRegister()}
               >
                 Sign Up
               </Button>
             </div>
             <div className="row mb-4 px-3">
-              <small className="font-weight-bold">Do you already have an account? <a
-                  className="text-danger " onClick={() => toLogin()} >Login</a></small>
+              <h6> Do you already have an account? <a
+                  className="text-danger " onClick={() => toLogin()} >Login</a></h6>
             </div>
             <div className="row mb-4 px-3">
 

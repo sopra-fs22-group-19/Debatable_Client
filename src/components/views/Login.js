@@ -17,7 +17,7 @@ const FormField = props => {
   return (
     <div className="field">
       <label class="mb-1">
-          <h6 className="mb-0 text-sm">
+          <h6 >
         {props.label}
           </h6>
       </label>
@@ -116,13 +116,13 @@ const Login = props => {
         } });
   }
 
-  //col-6
+
 
   return (
-      <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto">
-          <div className="card card0 border-0">
+      <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto"style={{"background-color":"white", "height":"100vh"}}>
+          <div id="card" className="card card0 border-0" >
               <div className="row d-flex">
-                  <div className="col-lg-6">
+                  <div className="col-lg-6  d-flex" >
 
                               <img src={require('../../images/logo2.png')}
                                    className="logo"
@@ -131,9 +131,9 @@ const Login = props => {
 
                   </div>
                   <div className="col-lg-6">
-                      <div className="card2 card border-0 px-4 py-5">
-                          <div className="row mb-4 px-3">
-
+                      <div id="card2" className="card2 card border-0 px-4 py-5">
+                          <div className="row mb-4 px-3  d-flex justify-content-center" >
+                              <h4>Log In to It's Debatable</h4>
                           </div>
 
                           <div className="row px-3">
@@ -152,18 +152,18 @@ const Login = props => {
                                   />
                           </div>
 
-                          <div className="row mb-3 px-3">
+                          <div className="row mb-3 px-3 d-flex justify-content-center">
                               <Button
                                   disabled={!username || !password}
-                                  width="100%"
+                                  width="50%"
                                   onClick={() => doLogin()}
                               >
                                   LOG IN
                               </Button>
                           </div>
                           <div className="row mb-4 px-3">
-                              <small className="font-weight-bold">Don't have an account? <a
-                                  className="text-danger " onClick={() => toRegister()} >Register</a></small>
+                              <h6>Don't have an account? <a
+                                  className="text-danger " onClick={() => toRegister()} >Register</a></h6>
                           </div>
                           <div className="row mb-4 px-3">
                               {props.isInvitee ? <Guest /> : null }

@@ -18,7 +18,7 @@ const FormField = props => {
     return (
       <div>
           <label className="mb-1">
-              <h6 className="mb-0 text-sm">
+              <h6 >
           {props.label}
               </h6>
         </label>
@@ -105,19 +105,23 @@ const CreateDebate = props => {
     let content;
     content = (
 
+        <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto" style={{"align-items": "center"}}>
+            <div id={"card-create"} className="card card0 border-0">
+                <div className="row d-flex">
+                    <div className={"row"}>
+                        <div className="create heading">Create Debate</div>
+                    </div>
+                    <div className={"row"}>
+                    <div className="col"/>
+                    <div className="col">
 
-
-            <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto" style={{"align-items": "center"}}>
-                <div className="create heading">Create Debate</div>
-                <div className="card card0 border-0">
-                    <div className="row d-flex">
-                        <div className="row px-3" style={{"margin-top": "10px", "margin-bottom": "10px"}}>
+                        <div className={"row"}>
                             <div style={{"display":"inline-flex",
                                 "align-items": "center"}}>
                                 <label className="mb-1">
-                                    <h4 className="mb-0 text-sm" style={{"margin-right": "65px","margin-top": "10px", "margin-bottom": "10px"}}>
+                                    <h6  style={{"margin-right": "65px","margin-top": "10px", "margin-bottom": "10px"}}>
                                         Your Side
-                                    </h4>
+                                    </h6>
 
                                 </label>
                                 <select className={"dropList"} onChange={changeSelectOptionHandler}>
@@ -127,55 +131,61 @@ const CreateDebate = props => {
                                 </select>
                             </div>
                         </div>
+                        <div className={"row"}>
+                            <FormField
+                                label="Enter Topic"
+                                value={topic}
+                                onChange={un => setTopic(un)}
+                            />
+                        </div>
+                        <div className={"row"}>
+                            <FormField
+                                label="Description"
+                                value={description}
+                                onChange={n => setDescription(n)}
+                            />
+                        </div>
+                        <div className={"row"}>
+                            <div style={{"display":"inline-flex",
+                                "align-items": "center"}}>
+                                <label className="mb-1">
+                                    <h6  style={{"margin-right": "10px","margin-top": "10px", "margin-bottom": "10px"}}>
+                                        Category of Topic
+                                    </h6>
 
-
-
-                                <div className="row px-3">
-                                    <FormField
-                                        label="Enter Topic"
-                                        value={topic}
-                                        onChange={un => setTopic(un)}
-                                    />
-                                </div>
-                                <div className="row px-3">
-                                    <FormField
-                                        label="Description"
-                                        value={description}
-                                        onChange={n => setDescription(n)}
-                                    />
-                                </div>
-                                <div className="row px-3" style={{"margin-top": "10px", "margin-bottom": "10px"}}>
-                                    <div style={{"display":"inline-flex",
-                                        "align-items": "center"}}>
-                                        <label className="mb-1">
-                                            <h4 className="mb-0 text-sm" style={{"margin-right": "10px","margin-top": "10px", "margin-bottom": "10px"}}>
-                                                Category of Topic
-                                            </h4>
-
-                                        </label>
-                                        <select className={"dropList"} onChange={changeSelectOptionHandler}>
-                                            <option>Choose tag ...</option>
-                                            {filters.map(filter => (
-                                                <option>
-                                                    {filter}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="row mb-3 px-3">
-                                    <Button
-                                        className="create button"
-                                        value="Create Debate"
-                                        disabled={!topic || !description || !category}
-                                        onClick={() => {
-                                            create_new_debate()
-                                        }}
-                                    />
-                                </div>
+                                </label>
+                                <select className={"dropList"} onChange={changeSelectOptionHandler}>
+                                    <option>Choose tag ...</option>
+                                    {filters.map(filter => (
+                                        <option>
+                                            {filter}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
+                        </div>
+
+                    </div>
+                    <div className="col"/>
+                    </div>
+                    <div className="row" style={{"padding-top": "5px"}}>
+                        <div className="col"/>
+                        <div className="col">
+                            <Button
+                                className="create button"
+                                value="Create Debate"
+                                disabled={!topic || !description || !category}
+                                onClick={() => {
+                                    create_new_debate()
+                                }}
+                            />
+                        </div>
+                        <div className="col"/>
+                    </div>
+
                 </div>
             </div>
+        </div>
 
 
 

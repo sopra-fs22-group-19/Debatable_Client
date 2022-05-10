@@ -1,36 +1,18 @@
 *{padding: 0; margin: 0; box-sizing: border-box;}
-body{height: 900px;}
-header {
-    background: url('http://www.autodatz.com/wp-content/uploads/2017/05/Old-Car-Wallpapers-Hd-36-with-Old-Car-Wallpapers-Hd.jpg');
-    text-align: center;
-    width: 100%;
-    height: auto;
-    background-size: cover;
-    background-attachment: fixed;
-    position: relative;
-    overflow: hidden;
-    border-radius: 0 0 85% 85% / 30%;
-}
-header .overlay{
-    width: 100%;
-    height: 100%;
-    padding: 50px;
-    color: rgba(255, 255, 255, 0);
-    text-shadow: 1px 1px 1px #333;
-    background-image: linear-gradient( 135deg, #9f05ff69 10%, #fd5e086b 100%);
 
+
+
+.line{
+    border-bottom: 1px solid white;
+    position: inherit;
 }
 
-.button
-{
-
-}
 .animated {
-
+    text-align: center;
     background-repeat: no-repeat;
     background-position: left top;
-    padding-top: 95px;
-    margin-bottom: 60px;
+    padding-top: 10px;
+    margin-bottom: 30px;
     -webkit-animation-duration: 3s;
     animation-duration: 3s;
     -webkit-animation-fill-mode: both;
@@ -38,7 +20,7 @@ header .overlay{
 
 .welcome{
 
-    align-items: center;
+
     font-family: "Lucida Console", Monaco, monospace;
     font-size: 50px;
     letter-spacing: 2px;
@@ -75,14 +57,21 @@ h1 {
 h3 {
     font-family: "Lucida Console", Monaco, monospace;
     font-size: 20px;
-    margin-left: 1000px ;
-    margin-right: 1000px ;
-    border-top: 2px solid rgb(252, 252, 252);
     margin-bottom: 5px;
-    margin-top: 20px;
-    padding-top: 20px;
-
+    margin-top: 5px;
+    padding-top: 5px;
 }
+#card-home{
+    box-shadow: none;
+}
+
+#description{
+    color:white;
+}
+#button{
+    padding-top: 30px;
+}
+
  p {
     font-family: "Lucida Console", Monaco, monospace;
      margin-bottom: 5px;
@@ -111,13 +100,7 @@ button:hover{
     width: 100%;
 }
 
-.card2 {
-    margin: 0px 100px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
 
-}
 
 .logo {
     width: 100%;
@@ -137,43 +120,6 @@ button:hover{
 
 .text-sm {
     font-size: 14px !important;
-}
-
-::placeholder {
-    color: #BDBDBD;
-    opacity: 1;
-    font-weight: 350
-}
-
-:-ms-input-placeholder {
-    color: #BDBDBD;
-    font-weight: 300
-}
-
-::-ms-input-placeholder {
-    color: #BDBDBD;
-    font-weight: 300
-}
-
-input, textarea {
-    padding: 10px 12px 10px 12px;
-    border: 1px solid lightgrey;
-    border-radius: 2px;
-    margin-bottom: 5px;
-    margin-top: 2px;
-    width: 100%;
-    box-sizing: border-box;
-    color: #2C3E50;
-    font-size: 14px;
-    letter-spacing: 1px;
-}
-
-input:focus, textarea:focus {
-    -moz-box-shadow: none !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-    border: 1px solid rgba(99, 213, 225, 0.85);
-    outline-width: 0;
 }
 
 button:focus {
@@ -219,14 +165,12 @@ a {
         border-right: none;
     }
 
-    .card2 {
-        border-top: 1px solid #EEEEEE !important;
-        margin: 0px 15px;
-    }
+
     .card {
         position: relative;
         display: flex;
         flex-direction: column;
+        justify-content: center;
         min-width: 0;
         word-wrap: break-word;
         background-color: rgba(114, 24, 24, 0);

@@ -8,13 +8,19 @@ html, body {
 
   margin: 0;
   padding: 0;
-  min-height: 100% !important;
-  height: 100%;
+  min-height: 100vh !important;
+  height: 100vh;
   font-family: $fontDefault;
   background-color: #B9CC8FDD
 }
-root
-{min-height: 100vh;
+
+#root
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
 input,
 textarea,

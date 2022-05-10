@@ -36,8 +36,8 @@ const Header = props => {
         history.push('/login');
     }
 return(
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a className="navbar-brand" href="#">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light py-lg-0">
+        <a className="navbar-brand mr-auto " href="#">
             <img src={require('../../images/logo2.png')}
 
                                                   border="0" width="300" height="100" alt=""/>
@@ -46,9 +46,9 @@ return(
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav">
-                <li className="nav-item active">
+        <div className="collapse navbar-collapse" id="navbarNav" >
+            <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
                     <a className="nav-link" href={baselink+"home"}><i className="fa fa-fw fa-home"></i> Home <span className="sr-only">(current)</span></a>
                 </li>
                 <li className="nav-item">

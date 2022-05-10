@@ -7,7 +7,7 @@
 .filter_button {
   border-radius: 5px;
   padding: 8px 16px;
-  background-color: rgba(80, 154, 165, 0.85);
+  background-color: rgba(99, 213, 225, 0.85);
   cursor: pointer;
   font-weight: 500;
   color: white;
@@ -15,7 +15,7 @@
   line-height: 1.5;
 }
 .filter_button:hover {
-  background-color: #092b58;
+  background-color: #1d5bad;
 }
 .filter_button:focus {
   outline: 1px dashed;
@@ -55,7 +55,7 @@
 .filter_dropdown_actions button {
   border-radius: 0.125rem;
   padding: 0.25rem 0.5rem;
-  background-color: rgba(80, 154, 165, 0.85);
+  background-color: rgba(99, 213, 225, 0.85);
   border-color: transparent;
   color: white;
   font-weight: 600;
