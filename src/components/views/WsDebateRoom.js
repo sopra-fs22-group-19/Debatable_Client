@@ -8,6 +8,7 @@ import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
 import {api, handleError} from "../../helpers/api";
 import Header from './Header';
+import Timer from "../ui/Timer";
 
 var stompClient =null;
 
@@ -69,6 +70,7 @@ const DebateRoom = () => {
     const [roomInformation, setRoomInformation] = useState({
         topic: '',
         description: '',
+        timeToWriteMessageSeconds: 30
     });
 
     const [roomState, setRoomState] = useState( '');
@@ -325,7 +327,14 @@ const DebateRoom = () => {
                 </div>
                 <div className="row d-flex justify-content-center">
                     <div className="col-sm"></div>
-                    <div className="col-sm d-flex justify-content-center"> timer</div>
+                    <div className="col-sm d-flex justify-content-center">
+                        {hasDebateStarted && userState.canWrite ?
+                            <Timer
+                                initialMinute={Math.floor(roomInformation.timeToWriteMessageSeconds / 60)}
+                                initialSeconds={roomInformation.timeToWriteMessageSeconds % 60}
+                                triggerMsgSend={() => sendValue()}
+                            /> : null}
+                    </div>
                     <div className="col-sm"></div>
                 </div>
                 <div className="row ">
