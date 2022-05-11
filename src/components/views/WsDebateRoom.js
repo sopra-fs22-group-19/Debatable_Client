@@ -28,7 +28,7 @@ const StartButton = (props) => (
                 onClick={() => {
                     props.setIsStartDisabled("none")
                     props.startDebate();
-                    }
+                }
                 }
             /> : null
         }
@@ -79,6 +79,7 @@ const DebateRoom = () => {
 
     const [debateFORMsgs, setDebateFORMsgs] = useState([]);
     const [debateAGAINSTMsgs, setDebateAGAINSTMsgs] = useState([]);
+
 
     const [messageContent, setMessageContent] = useState('');
 
