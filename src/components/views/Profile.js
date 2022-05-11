@@ -6,6 +6,7 @@ import {Button} from 'components/ui/Button';
 import 'styles/views/Profile.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import { Link } from 'react-router-dom';
+import Header from "./Header";
 
 
 const Profile = props => {
@@ -49,6 +50,7 @@ const Profile = props => {
 
     return (
         <BaseContainer>
+            <Header/>
             <div className="profile container">
                 <div className="profile form">
                     <FormField label="Username"/>

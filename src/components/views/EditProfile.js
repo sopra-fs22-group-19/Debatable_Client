@@ -7,6 +7,7 @@ import 'styles/views/Profile.scss';
 import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import Header from "./Header";
 
 const FormField = props => {
     return (
@@ -51,6 +52,7 @@ const EditProfile = props => {
 
     return (
         <BaseContainer>
+            <Header/>
             <div className="profile container">
                 <div className="profile form">
                     <FormField label="Username: " value={username} onChange={un => setUsername(un)}/>
