@@ -45,7 +45,7 @@ const WriteBox = (props) => (
         {props.canWrite ?
             <input
                 className="debateRoom input-text"
-                placeholder="Enter here your argument..."
+                placeholder="Enter here your argument and press ENTER"
                 onChange={props.handleMessage}
                 onKeyPress={
                     (ev) => {
