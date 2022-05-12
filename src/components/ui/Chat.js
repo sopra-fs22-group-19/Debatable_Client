@@ -1,29 +1,51 @@
 import React, {useState} from 'react';
 import {Button} from "./Button";
+import "styles/ui/Chat.css";
 
 const MessageList = (props) => (
-    <div className="debateRoom chat-child">
-        <div>
-            <ul>
+    <div className="row debateRoom chat-child">
+
+            <ul  style={{"display":"inline"}}>
                 {props.msgs.map(msg => (
                         <div
                             key = {props.msgs.indexOf(msg)}
                             className="debateRoom msg-box">
-                            {msg}
+                            <p>{msg}</p>
+                            <div className="dropdown show">
+                                <a href="#" role="button"
+                                   id="translate" data-toggle="dropdown" aria-haspopup="true"
+                                   aria-expanded="false">
+                                    Translate
+                                </a>
+
+                                <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a className="dropdown-item" href="#">English</a>
+                                    <a className="dropdown-item" href="#">German</a>
+                                </div>
+
                         </div>
+
+                        </div>
+
+
+
+
+
+
                 ))
                 }
+
             </ul>
-        </div>
+
     </div>
 );
 
 const WriteBox = (props) => (
-    <div className="debateRoom writer-child">
+    <div className=" row debateRoom writer-child">
         {props.canWrite ?
             <input
                 className="debateRoom input-text"
-                placeholder="Enter here your argument and press ENTER"
+                placeholder="Enter here your argument..."
                 onChange={props.handleMessage}
                 onKeyPress={
                     (ev) => {
@@ -42,14 +64,16 @@ export const InviteLink = props => {
     const [showInviteLink, setShowInviteLink] = useState(false);
 
     return (
-        <div>
-            {props.isDebateStarted ? null : <div className='debateRoom text'>Invite user to join!</div>}
+        <div className="row debateRoom chat-child-invite">
+            {props.isDebateStarted ? null : <div className='row debateRoom text'>Invite user to join!</div>}
+            <div className={"row justify-content-center"}>
             <Button
                 className="debateRoom button-container"
                 value="INVITE"
                 hidden={showInviteLink}
                 onClick={ () => { setShowInviteLink(true); } }
             />
+            </div>
             {showInviteLink ? <div className='debateRoom parent-link'>
                 Share this link for other participant to Join!
                 <div className='debateRoom child-link'>
@@ -65,9 +89,14 @@ export const InviteLink = props => {
 export const Chat = props => {
 
     return (
-        <div>
-            <div className={"debateRoom chat-box-" + props.chatBoxPosition}>
-                <div>{props.side}</div>
+             <div  className={"container-fluid debateRoom chat-box-" + props.chatBoxPosition}>
+                <div  className="row chat-header">
+                    <div className="user_info">
+                        <span><h2>{props.side}</h2></span>
+                        <p style={{"color":"#00000069"}}>{localStorage.username}</p>
+                    </div>
+                </div>
+
                 {props.withInviteButton ?
                     <InviteLink
                         isDebateStarted = {props.isDebateStarted}
@@ -75,7 +104,7 @@ export const Chat = props => {
                     /> : null
                 }
                 {props.displayWaitingMessage ?
-                    <div className='debateRoom text' > Waiting for 1st participant to start the debate! </div>: null
+                    <div  id={"waitMsg"} className='row debateRoom-text' > Waiting for 1st participant to start the debate! </div>: null
                 }
                 {props.displayMessageBox ?
                     <MessageList msgs={props.msgs}/> :
@@ -90,7 +119,7 @@ export const Chat = props => {
                     null
                 }
             </div>
-        </div>
+
     );
 }
 
