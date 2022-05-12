@@ -54,6 +54,7 @@ const Topics = () => {
             try {
 
                 categories = localStorage.getItem('categories');
+                localStorage.setItem("actualUser", userId);
 
                 if(categories){
                     let query = "/debates/?categories=" + categories;
