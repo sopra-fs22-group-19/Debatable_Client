@@ -10,6 +10,7 @@ import {api, handleError} from "../../helpers/api";
 import Header from './Header';
 import Timer from "../ui/Timer";
 
+
 var stompClient =null;
 
 const getLink = () => {
@@ -79,8 +80,6 @@ const DebateRoom = () => {
 
     const [debateFORMsgs, setDebateFORMsgs] = useState([]);
     const [debateAGAINSTMsgs, setDebateAGAINSTMsgs] = useState([]);
-
-
     const [messageContent, setMessageContent] = useState('');
 
     // UI related states (display buttons and so so)
@@ -213,6 +212,7 @@ const DebateRoom = () => {
             } else if (roomState === 'ONGOING_FOR' || roomState === 'ONGOING_AGAINST'){
                 // Handle transition from 'READY_TO_START' --> {'ONGOING_FOR', 'ONGOING_AGAINST'}
                 if(!hasDebateStarted){
+                    console.log("Transition to start of debate");
                     setHasDebateStarted(true);
                     setDisplayEndButton(true);
                 }
@@ -338,6 +338,7 @@ const DebateRoom = () => {
                 userSide: userState.userSide,
                 message: messageContent,
             };
+            console.log(chatMessage);
             stompClient.send('/ws/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
 
             // Change turns after sending the message
