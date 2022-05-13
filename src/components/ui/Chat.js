@@ -87,13 +87,13 @@ export const InviteLink = props => {
 
 
 export const Chat = props => {
-
+    console.log("User name in me: "+ props.username);
     return (
              <div  className={"container-fluid debateRoom chat-box-" + props.chatBoxPosition}>
                 <div  className="row chat-header">
                     <div className="user_info">
                         <span><h2>{props.side}</h2></span>
-                        <p style={{"color":"#00000069"}}>{localStorage.username}</p>
+                        <p style={{"color":"#00000069"}}>{props.username}</p>
                     </div>
                 </div>
 
