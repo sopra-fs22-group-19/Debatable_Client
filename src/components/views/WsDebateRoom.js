@@ -178,13 +178,11 @@ const DebateRoom = () => {
             } else if (roomState === 'ONGOING_FOR' || roomState === 'ONGOING_AGAINST'){
                 // Handle transition from 'READY_TO_START' --> {'ONGOING_FOR', 'ONGOING_AGAINST'}
                 if(!hasDebateStarted){
-                    console.log("Transition to start of debate");
                     setHasDebateStarted(true);
                     setDisplayEndButton(true);
                 }
 
                 // Handle change of turns
-                console.log("Change of turns");
                 if (roomState.split('_')[1] === userState.userSide){
                     setUserState({...userState, 'canWrite': true});
                 } else {
@@ -255,8 +253,8 @@ const DebateRoom = () => {
     }
 
     const onError = (err) => {
-        console.log("Error connecting to the websocket")
-        console.log(err);
+        console.error("Error connecting to the websocket")
+        console.error(err);
     }
 
     const onConnected = (userName, debateState) => {
@@ -267,15 +265,11 @@ const DebateRoom = () => {
     const onMessageReceived = (incoming) => {
         let ws_response = JSON.parse(incoming.body);
         if (ws_response.message !== null){
-            console.log("RECIEVED A MESSAGE");
             if(ws_response.message !== ''){
-                console.log(ws_response.userSide);
                 if (ws_response.userSide === "FOR"){
-                    console.log("added for");
                     debateFORMsgs.push(ws_response.message);
                     setDebateFORMsgs([...debateFORMsgs]);
                 } else {
-                    console.log("added against");
                     debateAGAINSTMsgs.push(ws_response.message);
                     setDebateAGAINSTMsgs([...debateAGAINSTMsgs]);
                 }
@@ -283,8 +277,6 @@ const DebateRoom = () => {
         }
 
         if (ws_response.debateState !== null){
-            console.log("RECEIVED A STATUS CHANGE");
-            console.log('ws_response.debateState (new status): ' + ws_response.debateState);
             setRoomState( ws_response.debateState );
         }
     }
@@ -295,7 +287,6 @@ const DebateRoom = () => {
             userName: userName,
             debateState: debateState
         };
-        console.log(chatMessage);
         stompClient.send('/ws/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
     }
 
@@ -312,7 +303,6 @@ const DebateRoom = () => {
                 userSide: userState.userSide,
                 message: messageContent,
             };
-            console.log(chatMessage);
             stompClient.send('/ws/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
 
             // Change turns after sending the message
@@ -386,48 +376,3 @@ const DebateRoom = () => {
 }
 
 export default DebateRoom;
-/*
-<div>
-    <StartButton
-        isStartDisabled = {isStartButtonDisabled}
-        setIsStartDisabled = {setIsStartButtonDisabled}
-        displayStartButton = {displayStartButton}
-        startDebate={startDebate}
-    />
-</div>
-<div>
-    <EndButton
-        displayEndButton = {displayEndButton}
-        endDebate = {notifyEndOfDebate}
-    />
-</div>
-<div>
-    <Chat
-        chatBoxPosition={'left'}
-        side={userState.userSide}
-        msgs={userState.userSide === "FOR" ?  debateFORMsgs: debateAGAINSTMsgs}
-        displayMessageBox = {true}
-        withInviteButton = {false}
-        displayWaitingMessage = {false}
-        withWriteBox = {true}
-        canWrite={userState.canWrite}
-        postMessage={() => sendValue()}
-        handleMessage={handleMessage}
-    />
-</div>
-
-<div>
-    <Chat
-        chatBoxPosition={'right'}
-        side={userState.opposingSide}
-        msgs={userState.opposingSide === "FOR" ? debateFORMsgs: debateAGAINSTMsgs}
-        displayMessageBox = {hasDebateStarted}
-        withWriteBox = {false}
-        withInviteButton = {displayInviteButton && !location.state.isInvitee}
-        displayWaitingMessage = {location.state.isInvitee && !hasDebateStarted}
-        isDebateStarted ={hasDebateStarted}
-        inviteLink = {getLink() + location.pathname + '/invitee'}
-    />
-</div>
-</div>
-*/

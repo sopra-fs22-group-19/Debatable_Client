@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
-//import User from 'models/User';
 import {Button} from 'components/ui/Button';
 import 'styles/views/Profile.scss';
 import BaseContainer from "components/ui/BaseContainer";
@@ -20,8 +19,6 @@ const Profile = props => {
         async function fetchData() {
             try {
                 const response = await api.get(`/users/${userId}`);
-
-                //const user = new User(response.data);
 
                 localStorage.setItem("editUser", userId)
                 console.log(localStorage.getItem("editUser"))
