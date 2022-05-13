@@ -7,6 +7,7 @@ import { isProduction } from 'helpers/isProduction';
 import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
 import {api, handleError} from "../../helpers/api";
+import Header from './Header';
 
 
 var stompClient =null;
@@ -351,6 +352,8 @@ const DebateRoom = () => {
 
 
     return (
+        <div>
+        <Header height={"100"}/>
         <div className="container">
             <div class="row d-flex justify-content-center">
             <div className="debateRoom topic-container">
@@ -410,7 +413,7 @@ const DebateRoom = () => {
                 </div>
             </div>
             </div>
-
+        </div>
     )
 }
 
