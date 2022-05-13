@@ -7,6 +7,7 @@ import { isProduction } from 'helpers/isProduction';
 import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
 import {api, handleError} from "../../helpers/api";
+import Header from './Header';
 
 
 var stompClient =null;
@@ -351,53 +352,114 @@ const DebateRoom = () => {
 
 
     return (
+        <div>
+        <Header height={"100"}/>
         <div className="container">
+            <div class="row d-flex justify-content-center">
             <div className="debateRoom topic-container">
                 {roomInformation.topic}
             </div>
-            <div>
-                <StartButton
-                    isStartDisabled = {isStartButtonDisabled}
-                    setIsStartDisabled = {setIsStartButtonDisabled}
-                    displayStartButton = {displayStartButton}
-                    startDebate={startDebate}
-                />
+             </div>
+            <div className="row d-flex justify-content-center">
+                <div className="col-sm"></div>
+                <div className="col-sm d-flex justify-content-center"> timer</div>
+                <div className="col-sm"></div>
             </div>
-            <div>
-                <EndButton
-                    displayEndButton = {displayEndButton}
-                    endDebate = {notifyEndOfDebate}
-                />
+            <div className="row ">
+                <div className="col-5 d-flex">
+                    <Chat
+                        chatBoxPosition={'left'}
+                        side={userState.userSide}
+                        msgs={userState.userSide === "FOR" ?  debateFORMsgs: debateAGAINSTMsgs}
+                        displayMessageBox = {true}
+                        withInviteButton = {false}
+                        displayWaitingMessage = {false}
+                        withWriteBox = {true}
+                        canWrite={userState.canWrite}
+                        postMessage={() => sendValue()}
+                        handleMessage={handleMessage}
+                    />
+                </div>
+                <div className="col-2 d-flex justify-content-center align-items-center">
+
+                        <StartButton
+                            isStartDisabled = {isStartButtonDisabled}
+                            setIsStartDisabled = {setIsStartButtonDisabled}
+                            displayStartButton = {displayStartButton}
+                            startDebate={startDebate}
+                        />
+
+
+                        <EndButton
+                            displayEndButton = {displayEndButton}
+                            endDebate = {notifyEndOfDebate}
+                        />
+
+                    </div>
+
+
+                <div className="col-5 d-flex justify-content-center">
+                    <Chat
+                        chatBoxPosition={'right'}
+                        side={userState.opposingSide}
+                        msgs={userState.opposingSide === "FOR" ? debateFORMsgs: debateAGAINSTMsgs}
+                        displayMessageBox = {hasDebateStarted}
+                        withWriteBox = {false}
+                        withInviteButton = {displayInviteButton && !location.state.isInvitee}
+                        displayWaitingMessage = {location.state.isInvitee && !hasDebateStarted}
+                        isDebateStarted ={hasDebateStarted}
+                        inviteLink = {getLink() + location.pathname + '/invitee'}
+                    />
+                </div>
             </div>
-            <div>
-                <Chat
-                    chatBoxPosition={'left'}
-                    side={userState.userSide}
-                    msgs={userState.userSide === "FOR" ?  debateFORMsgs: debateAGAINSTMsgs}
-                    displayMessageBox = {true}
-                    withInviteButton = {false}
-                    displayWaitingMessage = {false}
-                    withWriteBox = {true}
-                    canWrite={userState.canWrite}
-                    postMessage={() => sendValue()}
-                    handleMessage={handleMessage}
-                />
-            </div>
-            <div>
-                <Chat
-                    chatBoxPosition={'right'}
-                    side={userState.opposingSide}
-                    msgs={userState.opposingSide === "FOR" ? debateFORMsgs: debateAGAINSTMsgs}
-                    displayMessageBox = {hasDebateStarted}
-                    withWriteBox = {false}
-                    withInviteButton = {displayInviteButton && !location.state.isInvitee}
-                    displayWaitingMessage = {location.state.isInvitee && !hasDebateStarted}
-                    isDebateStarted ={hasDebateStarted}
-                    inviteLink = {getLink() + location.pathname + '/invitee'}
-                />
             </div>
         </div>
     )
 }
 
 export default DebateRoom;
+/*
+<div>
+    <StartButton
+        isStartDisabled = {isStartButtonDisabled}
+        setIsStartDisabled = {setIsStartButtonDisabled}
+        displayStartButton = {displayStartButton}
+        startDebate={startDebate}
+    />
+</div>
+<div>
+    <EndButton
+        displayEndButton = {displayEndButton}
+        endDebate = {notifyEndOfDebate}
+    />
+</div>
+<div>
+    <Chat
+        chatBoxPosition={'left'}
+        side={userState.userSide}
+        msgs={userState.userSide === "FOR" ?  debateFORMsgs: debateAGAINSTMsgs}
+        displayMessageBox = {true}
+        withInviteButton = {false}
+        displayWaitingMessage = {false}
+        withWriteBox = {true}
+        canWrite={userState.canWrite}
+        postMessage={() => sendValue()}
+        handleMessage={handleMessage}
+    />
+</div>
+
+<div>
+    <Chat
+        chatBoxPosition={'right'}
+        side={userState.opposingSide}
+        msgs={userState.opposingSide === "FOR" ? debateFORMsgs: debateAGAINSTMsgs}
+        displayMessageBox = {hasDebateStarted}
+        withWriteBox = {false}
+        withInviteButton = {displayInviteButton && !location.state.isInvitee}
+        displayWaitingMessage = {location.state.isInvitee && !hasDebateStarted}
+        isDebateStarted ={hasDebateStarted}
+        inviteLink = {getLink() + location.pathname + '/invitee'}
+    />
+</div>
+</div>
+*/

@@ -1,0 +1,58 @@
+.chat-header {
+    color: #444;
+    display: block;
+    padding: 10px;
+    position: relative;
+
+}
+
+.chat-side
+{
+    display: inline-block;
+    font-size: 18px;
+    margin: 0;
+    line-height: 1;
+}
+.chat-username
+{
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+.chat-window{
+    bottom:0;
+    position:fixed;
+    float:right;
+    margin-left:10px;
+}
+#debateRoom child-link {
+    margin-top: 1em;
+    margin-bottom: 1.25em;
+    padding: 0.25em;
+    width: 90%;
+    border-radius:10px;
+    background: black;
+}
+
+#invite-text {
+    margin-top: 1em;
+    margin-bottom: 1.25em;
+
+    padding: 0.25em;
+    width: 90%;
+    border-radius:10px;
+    background: rgba(99, 213, 225, 0.85);
+}
+
+#waitMsg
+
+{
+    justify-content: center;
+    margin-top: 10em;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 20px, rgba(0, 0, 0, 0.11) 0px 6px 6px;
+    border-radius: 10px;
+    overflow-wrap: break-word;
+
+
+}
+
