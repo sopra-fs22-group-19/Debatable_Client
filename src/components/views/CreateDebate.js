@@ -70,11 +70,11 @@ const CreateDebate = props => {
 
     const changeSelectOptionHandler = (event) => {
         console.log(event.target.value);
-        if(event.target.value==="For")
+        if(event.target.value === "For")
         {
             setSide("FOR")
         }
-        else if (event.target.value)
+        else if (event.target.value === "Against")
         {
             setSide("AGAINST")
         }
