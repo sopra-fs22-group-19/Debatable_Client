@@ -7,12 +7,11 @@ import {Button} from 'components/ui/Button';
 import "styles/views/CreateDebate.scss";
 import Header from "./Header";
 
-const optionsSide = [
+/*const optionsSide = [
     { value: 'FOR', label: 'For' },
     { value: 'AGAINST', label: 'Against' },
     { value: 'vanilla', label: 'Vanilla' }
-]
-
+]*/
 
 const FormField = props => {
     return (
@@ -39,7 +38,6 @@ FormField.propTypes = {
   };
 
 const CreateDebate = props => {
-    const [selected, setSelected] = React.useState("");
     const history = useHistory();
     const [description, setDescription] = useState(null);
     const [topic, setTopic] = useState(null);
@@ -77,16 +75,8 @@ const CreateDebate = props => {
         alert(`Something went wrong while creating debate topic: \n${handleError(error)}`);
       }
     }
-    let id
-    function myFunction(id) {
-        let sel = document.getElementById(id);
-        sel.addEventListener ("change", function () {
-        let show = document.getElementById('show');
-        show.innerHTML = this.value;
-    })
-    }
+
     const changeSelectOptionHandler = (event) => {
-        setSelected(event.target.value);
         console.log(event.target.value);
         if(event.target.value==="For")
         {
@@ -166,8 +156,7 @@ const CreateDebate = props => {
                         </div>
 
                     </div>
-                    <div className="col"/>
-                    </div>
+                    <div className="col"/></div>
                     <div className="row" style={{"padding-top": "5px"}}>
                         <div className="col"/>
                         <div className="col">
@@ -182,21 +171,16 @@ const CreateDebate = props => {
                         </div>
                         <div className="col"/>
                     </div>
-
                 </div>
             </div>
         </div>
-
-
-
-
     )
+
     return(
         <div>
             <Header/>
             {content}
         </div>
-      
     );
 };
 

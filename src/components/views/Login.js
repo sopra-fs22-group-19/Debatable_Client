@@ -8,11 +8,6 @@ import 'styles/logo.css';
 import PropTypes from "prop-types";
 import 'styles/views/Login_Trial.css';
 
-
-// BUG: since we removed localstorage token and userid because of multiple userids on same browser,
-// when we are directly trying to go to home page, it is not appearing even after login.
-// Same thing is happening for all the pages. TODO: discuss it with @Orestis.
-
 const FormField = props => {
   return (
     <div className="field">
@@ -91,7 +86,7 @@ const Login = props => {
       // Get the returned user and update a new object.
       const user = new User(response.data);
 
-      // saving tokem in local storage
+      // saving token in local storage
       localStorage.setItem("token", user.token);
       localStorage.setItem("userId", user.userId);
       localStorage.setItem("username", user.username);
@@ -116,66 +111,60 @@ const Login = props => {
         } });
   }
 
-
-
   return (
       <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto"style={{"background-color":"white", "height":"100vh"}}>
-          <div id="card" className="card card0 border-0" >
-              <div className="row d-flex">
-                  <div className="col-lg-6  d-flex" >
+        <div id="card" className="card card0 border-0" >
+            <div className="row d-flex">
+              <div className="col-lg-6  d-flex" >
+                  <img src={require('../../images/logo2.png')}
+                  className="logo"
+                  border="0"/>
+              </div>
+              <div className="col-lg-6">
+                  <div id="card2" className="card2 card border-0 px-4 py-5">
+                      <div className="row mb-4 px-3  d-flex justify-content-center" >
+                          <h4>Log In to It's Debatable</h4>
+                      </div>
 
-                              <img src={require('../../images/logo2.png')}
-                                   className="logo"
-                                   border="0"/>
-
-
-                  </div>
-                  <div className="col-lg-6">
-                      <div id="card2" className="card2 card border-0 px-4 py-5">
-                          <div className="row mb-4 px-3  d-flex justify-content-center" >
-                              <h4>Log In to It's Debatable</h4>
-                          </div>
-
-                          <div className="row px-3">
-                              <FormField
-                              label="Username"
-                              value={username}
-                              onChange={un => setUsername(un)}
+                      <div className="row px-3">
+                          <FormField
+                          label="Username"
+                          value={username}
+                          onChange={un => setUsername(un)}
+                          />
+                      </div>
+                      <div className="row px-3">
+                          <FormField
+                              label="Password"
+                              type={password}
+                              value={password}
+                              onChange={n => setPassword(n)}
                               />
-                          </div>
-                          <div className="row px-3">
-                              <FormField
-                                  label="Password"
-                                  type={password}
-                                  value={password}
-                                  onChange={n => setPassword(n)}
-                                  />
-                          </div>
+                      </div>
 
-                          <div className="row mb-3 px-3 d-flex justify-content-center">
-                              <Button
-                                  disabled={!username || !password}
-                                  width="50%"
-                                  onClick={() => doLogin()}
-                              >
-                                  LOG IN
-                              </Button>
-                          </div>
-                          <div className="row mb-4 px-3">
-                              <h6>Don't have an account? <a
-                                  className="text-danger " onClick={() => toRegister()} >Register</a></h6>
-                          </div>
-                          <div className="row mb-4 px-3">
-                              {props.isInvitee ? <Guest /> : null }
-                          </div>
+                      <div className="row mb-3 px-3 d-flex justify-content-center">
+                          <Button
+                              disabled={!username || !password}
+                              width="50%"
+                              onClick={() => doLogin()}
+                          >
+                              LOG IN
+                          </Button>
+                      </div>
+                      <div className="row mb-4 px-3">
+                          <h6>Don't have an account? 
+                            <a className="text-danger " onClick={() => toRegister()} >Register</a>
+                          </h6>
+                      </div>
+                      <div className="row mb-4 px-3">
+                          {props.isInvitee ? <Guest /> : null }
                       </div>
                   </div>
               </div>
-          </div>
+            </div>
+        </div>
       </div>
   );
 };
 
 export default Login;
-
-//
