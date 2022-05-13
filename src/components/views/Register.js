@@ -4,8 +4,6 @@ import User from 'models/User';
 import {useHistory} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import 'styles/views/Login_Trial.css';
-
-import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import { useLocation } from "react-router-dom";
 
@@ -143,9 +141,6 @@ const Register = props => {
       </div>
     </div>
   </div>
-
-
-
 );
 };
 export default Register;

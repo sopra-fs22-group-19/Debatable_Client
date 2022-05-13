@@ -12,7 +12,6 @@ import Homepage from "../../views/Homepage";
 import WsDebateRoom from "../../views/WsDebateRoom";
 
 const AppRouter = () => {
-  const participant = 1;
   return (
     <BrowserRouter>
       <Switch>
@@ -47,27 +46,20 @@ const AppRouter = () => {
         <Route exact path="/debateroom/:roomId/invitee">
             <InviteeLanding/>
         </Route>
-          <Route exact path="/profile">
-              <Profile/>
-          </Route>
-          <Route exact path="/edit/:userId">
-              <EditProfile/>
-          </Route>
-
-      <Route exact path="/create_debate">
-          <GameGuard>
-            <CreateDebate/>
-          </GameGuard>
-      </Route>
+        <Route exact path="/profile">
+            <Profile/>
+        </Route>
+        <Route exact path="/edit/:userId">
+            <EditProfile/>
+        </Route>
+        <Route exact path="/create_debate">
+            <GameGuard>
+              <CreateDebate/>
+            </GameGuard>
+        </Route>
       </Switch>
     </BrowserRouter>
   );
 };
-/*
-      <Route exact path="/profile">
-          <Profile/>
-      </Route>
-      */
 
-// /debateroom/register/:roomId/:participant ---> <Register>
 export default AppRouter;

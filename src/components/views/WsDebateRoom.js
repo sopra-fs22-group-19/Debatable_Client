@@ -9,9 +9,7 @@ import SockJS from 'sockjs-client';
 import {api, handleError} from "../../helpers/api";
 import Header from './Header';
 
-
 var stompClient =null;
-
 
 const getLink = () => {
     const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com'
@@ -29,7 +27,7 @@ const StartButton = (props) => (
                 onClick={() => {
                     props.setIsStartDisabled("none")
                     props.startDebate();
-                }
+                    }
                 }
             /> : null
         }
@@ -79,7 +77,6 @@ const DebateRoom = () => {
     const [debateFORMsgs, setDebateFORMsgs] = useState([]);
     const [debateAGAINSTMsgs, setDebateAGAINSTMsgs] = useState([]);
 
-
     const [messageContent, setMessageContent] = useState('');
 
     // UI related states (display buttons and so so)
@@ -99,7 +96,6 @@ const DebateRoom = () => {
                     'isStartingSide': true,
                     'canWrite': false
                 });
-
                 return debateRoom.user1.username;
             }
         }
@@ -114,7 +110,6 @@ const DebateRoom = () => {
                     'isInvitedSide': true,
                     'canWrite': false
                 });
-
                 return debateRoom.user2.username;
             }
         }
@@ -128,10 +123,8 @@ const DebateRoom = () => {
                     'isObserver': true
                 });
             }
-
             return String(userId);
         }
-
     }
 
     const addSecondParticipant = async () => {
@@ -163,18 +156,14 @@ const DebateRoom = () => {
                 if (location.state.isInvitee && debateRoom.side2 === null){
                     debateRoom = await addSecondParticipant();
                 }
-
                 let userName = await defineUserStartingState(debateRoom);
-
                 connectToRoomWS(userName, debateRoom.debateStatus);
-
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
                 console.error("Details:", error);
                 alert("Something went wrong while fetching the debate room data! See the console for details.");
             }
         } setUserAndRoomStateOnMount();
-
     }, []);
 
 
@@ -182,7 +171,6 @@ const DebateRoom = () => {
         async function debateStateChange() {
             if (roomState === 'READY_TO_START'){
                 if (!location.state.isInvitee){
-                    console.log("Now in Ready to start");
                     // Only user that created the debate can start it
                     setDisplayStartButton(true);
                     setDisplayInviteButton(false);
@@ -190,26 +178,20 @@ const DebateRoom = () => {
             } else if (roomState === 'ONGOING_FOR' || roomState === 'ONGOING_AGAINST'){
                 // Handle transition from 'READY_TO_START' --> {'ONGOING_FOR', 'ONGOING_AGAINST'}
                 if(!hasDebateStarted){
-                    console.log("Transition to start of debate");
                     setHasDebateStarted(true);
                     setDisplayEndButton(true);
                 }
 
                 // Handle change of turns
-                console.log("Change of turns");
                 if (roomState.split('_')[1] === userState.userSide){
                     setUserState({...userState, 'canWrite': true});
                 } else {
                     setUserState({...userState, 'canWrite': false});
                 }
-
             } else if (roomState === "ENDED"){
-                console.log("Call end debate function")
                 await getOutOfDebate();
             }
-
         } debateStateChange();
-
     }, [roomState]);
 
     const updateDebateStateAtBackend = async (newState) => {
@@ -240,21 +222,15 @@ const DebateRoom = () => {
             setDisplayStartButton(false);
             setDisplayEndButton(true);
             setUserState({...userState, 'canWrite': true});
-            console.log("Debate started");
-
         } else {
             console.error("Cannot start debate yet, debateStatus must be at READY_TO_START");
         }
     }
 
     const notifyEndOfDebate = async () => {
-
         let newState = "ENDED";
-
         await updateDebateStateAtBackend("ENDED");
-
         notifyStateChange(userState.userName, newState);
-
     }
 
     const getOutOfDebate = async () => {
@@ -277,8 +253,8 @@ const DebateRoom = () => {
     }
 
     const onError = (err) => {
-        console.log("Error connecting to the websocket")
-        console.log(err);
+        console.error("Error connecting to the websocket")
+        console.error(err);
     }
 
     const onConnected = (userName, debateState) => {
@@ -287,19 +263,13 @@ const DebateRoom = () => {
     }
 
     const onMessageReceived = (incoming) => {
-
         let ws_response = JSON.parse(incoming.body);
-
         if (ws_response.message !== null){
-            console.log("RECIEVED A MESSAGE");
             if(ws_response.message !== ''){
-                console.log(ws_response.userSide);
                 if (ws_response.userSide === "FOR"){
-                    console.log("added for");
                     debateFORMsgs.push(ws_response.message);
                     setDebateFORMsgs([...debateFORMsgs]);
                 } else {
-                    console.log("added against");
                     debateAGAINSTMsgs.push(ws_response.message);
                     setDebateAGAINSTMsgs([...debateAGAINSTMsgs]);
                 }
@@ -307,8 +277,6 @@ const DebateRoom = () => {
         }
 
         if (ws_response.debateState !== null){
-            console.log("RECEIVED A STATUS CHANGE");
-            console.log('ws_response.debateState (new status): ' + ws_response.debateState);
             setRoomState( ws_response.debateState );
         }
     }
@@ -319,10 +287,8 @@ const DebateRoom = () => {
             userName: userName,
             debateState: debateState
         };
-        console.log(chatMessage);
         stompClient.send('/ws/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
     }
-
 
     const handleMessage = (event) => {
         const {value}=event.target;
@@ -337,7 +303,6 @@ const DebateRoom = () => {
                 userSide: userState.userSide,
                 message: messageContent,
             };
-            console.log(chatMessage);
             stompClient.send('/ws/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
 
             // Change turns after sending the message
@@ -349,117 +314,65 @@ const DebateRoom = () => {
         }
     }
 
-
-
     return (
         <div>
-        <Header height={"100"}/>
-        <div className="container">
-            <div class="row d-flex justify-content-center">
-            <div className="debateRoom topic-container">
-                {roomInformation.topic}
-            </div>
-             </div>
-            <div className="row d-flex justify-content-center">
-                <div className="col-sm"></div>
-                <div className="col-sm d-flex justify-content-center"> timer</div>
-                <div className="col-sm"></div>
-            </div>
-            <div className="row ">
-                <div className="col-5 d-flex">
-                    <Chat
-                        chatBoxPosition={'left'}
-                        side={userState.userSide}
-                        msgs={userState.userSide === "FOR" ?  debateFORMsgs: debateAGAINSTMsgs}
-                        displayMessageBox = {true}
-                        withInviteButton = {false}
-                        displayWaitingMessage = {false}
-                        withWriteBox = {true}
-                        canWrite={userState.canWrite}
-                        postMessage={() => sendValue()}
-                        handleMessage={handleMessage}
-                    />
+            <Header height={"100"}/>
+            <div className="container">
+                <div class="row d-flex justify-content-center">
+                <div className="debateRoom topic-container">
+                    {roomInformation.topic}
                 </div>
-                <div className="col-2 d-flex justify-content-center align-items-center">
-
-                        <StartButton
-                            isStartDisabled = {isStartButtonDisabled}
-                            setIsStartDisabled = {setIsStartButtonDisabled}
-                            displayStartButton = {displayStartButton}
-                            startDebate={startDebate}
+                </div>
+                <div className="row d-flex justify-content-center">
+                    <div className="col-sm"></div>
+                    <div className="col-sm d-flex justify-content-center"> timer</div>
+                    <div className="col-sm"></div>
+                </div>
+                <div className="row ">
+                    <div className="col-5 d-flex">
+                        <Chat
+                            chatBoxPosition={'left'}
+                            side={userState.userSide}
+                            msgs={userState.userSide === "FOR" ?  debateFORMsgs: debateAGAINSTMsgs}
+                            displayMessageBox = {true}
+                            withInviteButton = {false}
+                            displayWaitingMessage = {false}
+                            withWriteBox = {true}
+                            canWrite={userState.canWrite}
+                            postMessage={() => sendValue()}
+                            handleMessage={handleMessage}
                         />
-
-
-                        <EndButton
-                            displayEndButton = {displayEndButton}
-                            endDebate = {notifyEndOfDebate}
-                        />
-
+                    </div>
+                    <div className="col-2 d-flex justify-content-center align-items-center">
+                            <StartButton
+                                isStartDisabled = {isStartButtonDisabled}
+                                setIsStartDisabled = {setIsStartButtonDisabled}
+                                displayStartButton = {displayStartButton}
+                                startDebate={startDebate}
+                            />
+                            <EndButton
+                                displayEndButton = {displayEndButton}
+                                endDebate = {notifyEndOfDebate}
+                            />
                     </div>
 
-
-                <div className="col-5 d-flex justify-content-center">
-                    <Chat
-                        chatBoxPosition={'right'}
-                        side={userState.opposingSide}
-                        msgs={userState.opposingSide === "FOR" ? debateFORMsgs: debateAGAINSTMsgs}
-                        displayMessageBox = {hasDebateStarted}
-                        withWriteBox = {false}
-                        withInviteButton = {displayInviteButton && !location.state.isInvitee}
-                        displayWaitingMessage = {location.state.isInvitee && !hasDebateStarted}
-                        isDebateStarted ={hasDebateStarted}
-                        inviteLink = {getLink() + location.pathname + '/invitee'}
-                    />
+                    <div className="col-5 d-flex justify-content-center">
+                        <Chat
+                            chatBoxPosition={'right'}
+                            side={userState.opposingSide}
+                            msgs={userState.opposingSide === "FOR" ? debateFORMsgs: debateAGAINSTMsgs}
+                            displayMessageBox = {hasDebateStarted}
+                            withWriteBox = {false}
+                            withInviteButton = {displayInviteButton && !location.state.isInvitee}
+                            displayWaitingMessage = {location.state.isInvitee && !hasDebateStarted}
+                            isDebateStarted ={hasDebateStarted}
+                            inviteLink = {getLink() + location.pathname + '/invitee'}
+                        />
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     )
 }
 
 export default DebateRoom;
-/*
-<div>
-    <StartButton
-        isStartDisabled = {isStartButtonDisabled}
-        setIsStartDisabled = {setIsStartButtonDisabled}
-        displayStartButton = {displayStartButton}
-        startDebate={startDebate}
-    />
-</div>
-<div>
-    <EndButton
-        displayEndButton = {displayEndButton}
-        endDebate = {notifyEndOfDebate}
-    />
-</div>
-<div>
-    <Chat
-        chatBoxPosition={'left'}
-        side={userState.userSide}
-        msgs={userState.userSide === "FOR" ?  debateFORMsgs: debateAGAINSTMsgs}
-        displayMessageBox = {true}
-        withInviteButton = {false}
-        displayWaitingMessage = {false}
-        withWriteBox = {true}
-        canWrite={userState.canWrite}
-        postMessage={() => sendValue()}
-        handleMessage={handleMessage}
-    />
-</div>
-
-<div>
-    <Chat
-        chatBoxPosition={'right'}
-        side={userState.opposingSide}
-        msgs={userState.opposingSide === "FOR" ? debateFORMsgs: debateAGAINSTMsgs}
-        displayMessageBox = {hasDebateStarted}
-        withWriteBox = {false}
-        withInviteButton = {displayInviteButton && !location.state.isInvitee}
-        displayWaitingMessage = {location.state.isInvitee && !hasDebateStarted}
-        isDebateStarted ={hasDebateStarted}
-        inviteLink = {getLink() + location.pathname + '/invitee'}
-    />
-</div>
-</div>
-*/

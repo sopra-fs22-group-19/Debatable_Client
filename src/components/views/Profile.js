@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
-import User from 'models/User';
-import {useHistory} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import 'styles/views/Profile.scss';
 import BaseContainer from "components/ui/BaseContainer";
@@ -22,13 +20,11 @@ const Profile = props => {
             try {
                 const response = await api.get(`/users/${userId}`);
 
-                const user = new User(response.data);
-
                 localStorage.setItem("editUser", userId)
                 console.log(localStorage.getItem("editUser"))
 
-                setUsername(user.username);
-                setName(user.name);
+                setUsername(response.data["username"]);
+                setName(response.data["name"]);
 
             } catch (error) {
                 console.error(`Something went wrong while displaying the user info: \n${handleError(error)}`);
@@ -38,7 +34,7 @@ const Profile = props => {
         }
 
         fetchData();
-    }, []);
+    }, [userId]);
 
     const FormField = props => {
         return (
@@ -50,7 +46,7 @@ const Profile = props => {
 
     return (
         <BaseContainer>
-            <Header/>
+            <Header height={"100"}/>
             <div className="profile container">
                 <div className="profile form">
                     <FormField label="Username"/>

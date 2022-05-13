@@ -7,19 +7,12 @@ import {Button} from 'components/ui/Button';
 import "styles/views/CreateDebate.scss";
 import Header from "./Header";
 
-const optionsSide = [
-    { value: 'FOR', label: 'For' },
-    { value: 'AGAINST', label: 'Against' },
-    { value: 'vanilla', label: 'Vanilla' }
-]
-
-
 const FormField = props => {
     return (
       <div>
           <label className="mb-1">
               <h6 >
-          {props.label}
+                {props.label}
               </h6>
         </label>
         <input
@@ -39,7 +32,6 @@ FormField.propTypes = {
   };
 
 const CreateDebate = props => {
-    const [selected, setSelected] = React.useState("");
     const history = useHistory();
     const [description, setDescription] = useState(null);
     const [topic, setTopic] = useState(null);
@@ -52,10 +44,8 @@ const CreateDebate = props => {
       try {
         const requestBody = JSON.stringify({userId, topic, description, category});
         const post_topic = await api.post("/debates", requestBody);
-        console.log(post_topic.data);
-        console.log(topic, description, category);
-
         const debateId = post_topic.data.debateId;
+
         try {
           const body = JSON.stringify({userId, debateId, side});
           const post_room = await api.post("/debates/rooms", body);
@@ -77,16 +67,8 @@ const CreateDebate = props => {
         alert(`Something went wrong while creating debate topic: \n${handleError(error)}`);
       }
     }
-    let id
-    function myFunction(id) {
-        let sel = document.getElementById(id);
-        sel.addEventListener ("change", function () {
-        let show = document.getElementById('show');
-        show.innerHTML = this.value;
-    })
-    }
+
     const changeSelectOptionHandler = (event) => {
-        setSelected(event.target.value);
         console.log(event.target.value);
         if(event.target.value==="For")
         {
@@ -102,9 +84,10 @@ const CreateDebate = props => {
             console.log(category)
         }
     };
-    let content;
-    content = (
 
+    let content;
+
+    content = (
         <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto" style={{"align-items": "center"}}>
             <div id={"card-create"} className="card card0 border-0">
                 <div className="row d-flex">
@@ -164,10 +147,8 @@ const CreateDebate = props => {
                                 </select>
                             </div>
                         </div>
-
                     </div>
-                    <div className="col"/>
-                    </div>
+                    <div className="col"/></div>
                     <div className="row" style={{"padding-top": "5px"}}>
                         <div className="col"/>
                         <div className="col">
@@ -182,21 +163,16 @@ const CreateDebate = props => {
                         </div>
                         <div className="col"/>
                     </div>
-
                 </div>
             </div>
         </div>
-
-
-
-
     )
+
     return(
         <div>
             <Header/>
             {content}
         </div>
-      
     );
 };
 

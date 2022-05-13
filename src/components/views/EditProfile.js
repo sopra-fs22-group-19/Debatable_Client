@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {api, handleError} from 'helpers/api';
-import User from 'models/User';
 import {useHistory, useParams} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import 'styles/views/Profile.scss';
@@ -39,12 +38,8 @@ const EditProfile = props => {
     const doUpdate = async () => {
         try {
             const requestBody = JSON.stringify({username, name, password});
-            const response = await api.put(`/users/${userId}`, requestBody);
-
-            const user = new User(response.data);
-
+            await api.put(`/users/${userId}`, requestBody);
             history.push(`/profile`);
-
         } catch (error) {
             alert(`Something went wrong during the process: \n${handleError(error)}`);
         }
@@ -52,7 +47,7 @@ const EditProfile = props => {
 
     return (
         <BaseContainer>
-            <Header/>
+            <Header height={"100"}/>
             <div className="profile container">
                 <div className="profile form">
                     <FormField label="Username: " value={username} onChange={un => setUsername(un)}/>
