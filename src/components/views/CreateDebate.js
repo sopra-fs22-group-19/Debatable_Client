@@ -12,7 +12,7 @@ const FormField = props => {
       <div>
           <label className="mb-1">
               <h6 >
-          {props.label}
+                {props.label}
               </h6>
         </label>
         <input
@@ -44,10 +44,8 @@ const CreateDebate = props => {
       try {
         const requestBody = JSON.stringify({userId, topic, description, category});
         const post_topic = await api.post("/debates", requestBody);
-        console.log(post_topic.data);
-        console.log(topic, description, category);
-
         const debateId = post_topic.data.debateId;
+
         try {
           const body = JSON.stringify({userId, debateId, side});
           const post_room = await api.post("/debates/rooms", body);
@@ -86,9 +84,10 @@ const CreateDebate = props => {
             console.log(category)
         }
     };
-    let content;
-    content = (
 
+    let content;
+
+    content = (
         <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto" style={{"align-items": "center"}}>
             <div id={"card-create"} className="card card0 border-0">
                 <div className="row d-flex">
@@ -148,7 +147,6 @@ const CreateDebate = props => {
                                 </select>
                             </div>
                         </div>
-
                     </div>
                     <div className="col"/></div>
                     <div className="row" style={{"padding-top": "5px"}}>
