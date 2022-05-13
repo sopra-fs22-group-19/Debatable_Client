@@ -7,12 +7,6 @@ import {Button} from 'components/ui/Button';
 import "styles/views/CreateDebate.scss";
 import Header from "./Header";
 
-/*const optionsSide = [
-    { value: 'FOR', label: 'For' },
-    { value: 'AGAINST', label: 'Against' },
-    { value: 'vanilla', label: 'Vanilla' }
-]*/
-
 const FormField = props => {
     return (
       <div>
