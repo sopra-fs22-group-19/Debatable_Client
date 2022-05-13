@@ -52,7 +52,7 @@ const EditProfile = props => {
 
     return (
         <BaseContainer>
-            <Header/>
+            <Header height={"100"}/>
             <div className="profile container">
                 <div className="profile form">
                     <FormField label="Username: " value={username} onChange={un => setUsername(un)}/>
