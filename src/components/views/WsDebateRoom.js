@@ -361,13 +361,13 @@ const DebateRoom = () => {
                 </div>
                 <div className="row d-flex justify-content-center">
                     <div className="col-sm"></div>
-                    <div className="col-sm d-flex justify-content-center">
+                    <div className="col-smd-flex justify-content-center" style={{"margin-top": "30px"}}>
                         {hasDebateStarted && userState.canWrite ?
-                            <Timer
-                                initialMinute={Math.floor(roomInformation.timeToWriteMessageSeconds / 60)}
-                                initialSeconds={roomInformation.timeToWriteMessageSeconds % 60}
-                                triggerMsgSend={() => sendValue()}
-                            /> : null}
+                        <Timer
+                            initialMinute={Math.floor(roomInformation.timeToWriteMessageSeconds / 60)}
+                            initialSeconds={roomInformation.timeToWriteMessageSeconds % 60}
+                            triggerMsgSend={() => sendValue()}
+                        /> : null}
                     </div>
                     <div className="col-sm"></div>
                 </div>
@@ -388,16 +388,16 @@ const DebateRoom = () => {
                         />
                     </div>
                     <div className="col-2 d-flex justify-content-center align-items-center">
-                            <StartButton
-                                isStartDisabled = {isStartButtonDisabled}
-                                setIsStartDisabled = {setIsStartButtonDisabled}
-                                displayStartButton = {displayStartButton}
-                                startDebate={startDebate}
-                            />
-                            <EndButton
-                                displayEndButton = {displayEndButton}
-                                endDebate = {notifyEndOfDebate}
-                            />
+                        <StartButton
+                            isStartDisabled = {isStartButtonDisabled}
+                            setIsStartDisabled = {setIsStartButtonDisabled}
+                            displayStartButton = {displayStartButton}
+                            startDebate={startDebate}
+                        />
+                        <EndButton
+                            displayEndButton = {displayEndButton}
+                            endDebate = {notifyEndOfDebate}
+                        />
                     </div>
 
                     <div className="col-5 d-flex justify-content-center">
@@ -417,6 +417,7 @@ const DebateRoom = () => {
                 </div>
             </div>
         </div>
+
     )
 }
 
