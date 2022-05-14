@@ -77,11 +77,11 @@ export const Chat = props => {
                                     Translate
                                 </a>
                                 <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a className="dropdown-item" href='javascript:;' onClick={()=>{Translate('ZH', msg)}}>Chinese</a>
                                     <a className="dropdown-item" href='javascript:;' onClick={()=>{Translate('EN', msg)}}>English</a>
                                     <a className="dropdown-item" href='javascript:;' onClick={()=>{Translate('DE', msg)}}>German</a>
-                                    <a className="dropdown-item" href='javascript:;' onClick={()=>{Translate('ES', msg)}}>Spanish</a>
-                                    <a className="dropdown-item" href='javascript:;' onClick={()=>{Translate('ZH', msg)}}>Chinese</a>
                                     <a className="dropdown-item" href='javascript:;' onClick={()=>{Translate('EL', msg)}}>Greek</a>
+                                    <a className="dropdown-item" href='javascript:;' onClick={()=>{Translate('ES', msg)}}>Spanish</a>
                                 </div>
                             </div>
                         </div>
