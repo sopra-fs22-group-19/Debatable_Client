@@ -4,11 +4,11 @@ import {api, handleError} from 'helpers/api';
 import "styles/ui/Chat.css";
 
 
+
+
 const WriteBox = (props) => {
-
-const [count, setCount] = React.useState(0);
-return(
-
+    const [count, setCount] = React.useState(0);
+    return(
     <div className=" row debateRoom writer-child">
         {props.canWrite ?
                 <div id={"wrapper"}>
@@ -36,10 +36,8 @@ return(
                 </div>
             : null}
     </div>
-
-)
+    )
 };
-
 
 
 
