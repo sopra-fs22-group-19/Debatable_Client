@@ -1,4 +1,3 @@
-import React from 'react'
 import {useState, useEffect} from 'react';
 import "styles/ui/TImer.css";
 
@@ -27,11 +26,20 @@ const Timer = (props) => {
         };
     }, );
 
+    const displaySeconds = () => {
+        if (seconds < 10) {
+            // Pad the number so that it displays 09 instead of 9
+            return `0${seconds}`;
+        } else{
+            return String(seconds);
+        }
+    }
+
     return (
         <div className="icon-time">
             {minutes === 0 && seconds === 0
                 ? null
-                : <h1> {minutes}:{seconds < 10 ? `0${seconds}` : seconds}</h1>
+                : <h1> {minutes}:{displaySeconds()}</h1>
             }
         </div>
     )
