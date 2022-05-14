@@ -361,7 +361,7 @@ const DebateRoom = () => {
                 </div>
                 <div className="row d-flex justify-content-center">
                     <div className="col-sm"></div>
-                    <div className="col-smd-flex justify-content-center" style={{"margin-top": "30px"}}>
+                    <div className="col-sm d-flex justify-content-center" style={{"margin-top": "30px"}}>
                         {hasDebateStarted && userState.canWrite ?
                         <Timer
                             initialMinute={Math.floor(roomInformation.timeToWriteMessageSeconds / 60)}

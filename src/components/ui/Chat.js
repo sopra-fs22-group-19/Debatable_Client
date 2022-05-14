@@ -14,17 +14,19 @@ const WriteBox = (props) => {
                 <div id={"wrapper"}>
                     <div className="input-group">
                     <input id="debateRoom-input-text" type="text" className="form-control input-sm chat_input"
-                           placeholder="Write your argument here..."onChange={e => { setCount(e.target.value.length); props.handleMessage() }}
+                           placeholder="Write your argument here..."onChange={e => { setCount(e.target.value.length); props.handleMessage(e) }}
                            maxlength="2000"
                            onKeyPress={(ev) => {
                                if (ev.key === "Enter") {
                                    ev.preventDefault();
+                                   setCount(0);
                                    props.postMessage();
-                               setCount(0)}
+                               }
                            }}/>
                     <span style={{"align-self":"center"}} className="input-group-btn">
                             <button className="btn btn-dark btn-sm" id="btn-chat"
-                                    onClick={()=>{props.postMessage();}}>
+                                    onClick={()=>{props.postMessage();
+                                        setCount(0);}}>
                                 <i className="fa fa-paper-plane fa-1x"
                                    aria-hidden="true"></i></button>
                             </span>
