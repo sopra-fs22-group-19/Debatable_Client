@@ -20,7 +20,7 @@ const WriteBox = (props) => (
             : null}
     </div>
 );
-
+// msgs={props.msgs}
 export const InviteLink = props => {
     const [showInviteLink, setShowInviteLink] = useState(false);
     return (
@@ -60,7 +60,7 @@ export const Chat = props => {
         }
       }
 
-    const MessageList = (props) => (
+    const MessageList = () => (
         <div className="row debateRoom chat-child">
                 <ul style={{"display":"inline"}}>
                     {props.msgs.map(msg => (
@@ -110,7 +110,7 @@ export const Chat = props => {
                     <div  id={"waitMsg"} className='row debateRoom-text' > Waiting for 1st participant to start the debate! </div>: null
                 }
                 {props.displayMessageBox ?
-                    <MessageList msgs={props.msgs}/> :
+                    <MessageList/> :
                     null
                 }
                 {props.withWriteBox ?
