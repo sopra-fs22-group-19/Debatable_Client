@@ -8,6 +8,7 @@ import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
 import {api, handleError} from "../../helpers/api";
 import Header from './Header';
+import Timer from "../ui/Timer";
 
 var stompClient =null;
 
@@ -59,6 +60,7 @@ const DebateRoom = () => {
         userName: "",
         name: "",
         userSide: "",
+        opponentsName: "",
         opposingSide: "",
         isStartingSide: false,
         isInvitedSide: false,
@@ -69,6 +71,7 @@ const DebateRoom = () => {
     const [roomInformation, setRoomInformation] = useState({
         topic: '',
         description: '',
+        timeToWriteMessageSeconds: 30
     });
 
     const [roomState, setRoomState] = useState( '');
@@ -88,28 +91,30 @@ const DebateRoom = () => {
     const defineUserStartingState = (debateRoom) => {
         if (debateRoom.user1) {
             if (parseInt(userId) === debateRoom.user1.userId) {
-                setUserState({...userState,
-                    'userName': debateRoom.user1.userName,
+                setUserState(prevUserState => ({...prevUserState,
+                    'userName': debateRoom.user1.username,
                     'name': debateRoom.user1.name,
                     'userSide': debateRoom.side1,
                     'opposingSide': (debateRoom.side1 === 'FOR') ? 'AGAINST' : 'FOR',
                     'isStartingSide': true,
                     'canWrite': false
-                });
+                }));
+
                 return debateRoom.user1.username;
             }
         }
 
         if (debateRoom.user2){
             if (parseInt(userId) === debateRoom.user2.userId ){
-                setUserState({...userState,
-                    'userName': debateRoom.user2.userName,
+                setUserState(prevUserState => ({...prevUserState,
+                    'userName': debateRoom.user2.username,
                     'name': debateRoom.user2.name,
                     'userSide': debateRoom.side2,
                     'opposingSide': (debateRoom.side2 === 'FOR') ? 'AGAINST' : 'FOR',
                     'isInvitedSide': true,
                     'canWrite': false
-                });
+                }));
+
                 return debateRoom.user2.username;
             }
         }
@@ -117,11 +122,13 @@ const DebateRoom = () => {
         // If they are an Observer
         if (debateRoom.user1 && debateRoom.user2){
             if(parseInt(userId) !== debateRoom.user1.userId && parseInt(userId) !== debateRoom.user2.userId){
-                setUserState({...userState,
+                setUserState(prevUserState => ({...prevUserState,
                     'userSide': 'FOR',
+                    'userName': debateRoom.user1.username,
+                    'opponentsName': debateRoom.user2.username,
                     'opposingSide': 'AGAINST',
                     'isObserver': true
-                });
+                }));
             }
             return String(userId);
         }
@@ -140,6 +147,29 @@ const DebateRoom = () => {
         }
     }
 
+    const getOpponentsName = async() => {
+        try {
+            // update the debate room with user 2 information
+            const response = await api.get("/debates/rooms/" + String(roomId));
+            if (!location.state.isInvitee && parseInt(userId) === response.data.user1.userId ){
+                setUserState(prevUserState => ({...prevUserState,
+                    'opponentsName': response.data.user2.username}));
+            } else if (location.state.isInvitee &&  parseInt(userId) === response.data.user2.userId ){
+                setUserState(prevUserState => ({...prevUserState,
+                    'opponentsName': response.data.user1.username}));
+            } else{
+                setUserState(prevUserState => ({...prevUserState,
+                    'userName': response.data.user1.userName,
+                    'opponentsName': response.data.user2.userName}));
+            }
+
+        } catch (error) {
+            console.error(`Something went wrong while updating userId in debateroom: \n${handleError(error)}`);
+            console.error("Details:", error);
+            alert("Something went wrong while fetching the opponents name! See the console for details.");
+        }
+    }
+
     // Populate information relevant to the debate room on mount
     useEffect(() => {
         async function setUserAndRoomStateOnMount() {
@@ -155,6 +185,7 @@ const DebateRoom = () => {
 
                 if (location.state.isInvitee && debateRoom.side2 === null){
                     debateRoom = await addSecondParticipant();
+                    getOpponentsName();
                 }
                 let userName = await defineUserStartingState(debateRoom);
                 connectToRoomWS(userName, debateRoom.debateStatus);
@@ -174,6 +205,9 @@ const DebateRoom = () => {
                     // Only user that created the debate can start it
                     setDisplayStartButton(true);
                     setDisplayInviteButton(false);
+                    getOpponentsName();
+
+                    // get name of the opponent
                 }
             } else if (roomState === 'ONGOING_FOR' || roomState === 'ONGOING_AGAINST'){
                 // Handle transition from 'READY_TO_START' --> {'ONGOING_FOR', 'ONGOING_AGAINST'}
@@ -325,7 +359,14 @@ const DebateRoom = () => {
                 </div>
                 <div className="row d-flex justify-content-center">
                     <div className="col-sm"></div>
-                    <div className="col-sm d-flex justify-content-center"> timer</div>
+                    <div className="col-sm d-flex justify-content-center">
+                        {hasDebateStarted && userState.canWrite ?
+                            <Timer
+                                initialMinute={Math.floor(roomInformation.timeToWriteMessageSeconds / 60)}
+                                initialSeconds={roomInformation.timeToWriteMessageSeconds % 60}
+                                triggerMsgSend={() => sendValue()}
+                            /> : null}
+                    </div>
                     <div className="col-sm"></div>
                 </div>
                 <div className="row ">
@@ -333,6 +374,7 @@ const DebateRoom = () => {
                         <Chat
                             chatBoxPosition={'left'}
                             side={userState.userSide}
+                            username={userState.userName}
                             msgs={userState.userSide === "FOR" ?  debateFORMsgs: debateAGAINSTMsgs}
                             displayMessageBox = {true}
                             withInviteButton = {false}
@@ -360,6 +402,7 @@ const DebateRoom = () => {
                         <Chat
                             chatBoxPosition={'right'}
                             side={userState.opposingSide}
+                            username={ userState.opponentsName}
                             msgs={userState.opposingSide === "FOR" ? debateFORMsgs: debateAGAINSTMsgs}
                             displayMessageBox = {hasDebateStarted}
                             withWriteBox = {false}
