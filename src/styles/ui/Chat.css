@@ -34,6 +34,17 @@
     background: black;
 }
 
+#debateRoom-input-text{
+    background: transparent;
+    border: none;
+    text-align: center;
+    color: black;
+}
+
+.wrapper {
+    max-width: 75%;
+    margin: auto;
+}
 #invite-text {
     margin-top: 1em;
     margin-bottom: 1.25em;

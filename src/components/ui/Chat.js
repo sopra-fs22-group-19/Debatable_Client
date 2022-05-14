@@ -40,23 +40,43 @@ const MessageList = (props) => (
     </div>
 );
 
-const WriteBox = (props) => (
+
+const WriteBox = (props) => {
+
+const [count, setCount] = React.useState(0);
+return(
+
     <div className=" row debateRoom writer-child">
         {props.canWrite ?
-            <input
-                className="debateRoom input-text"
-                placeholder="Enter here your argument and press ENTER"
-                onChange={props.handleMessage}
-                onKeyPress={
-                    (ev) => {
-                        if (ev.key === "Enter") {
-                            ev.preventDefault();
-                            props.postMessage();}
-                    }}
-            />
+                <div id={"wrapper"}>
+                    <div className="input-group">
+                    <input id="debateRoom-input-text" type="text" className="form-control input-sm chat_input"
+                           placeholder="Write your argument here..."onChange={e => { setCount(e.target.value.length); props.handleMessage() }}
+                           maxlength="2000"
+                           onKeyPress={(ev) => {
+                               if (ev.key === "Enter") {
+                                   ev.preventDefault();
+                                   props.postMessage();
+                               setCount(0)}
+                           }}/>
+                    <span style={{"align-self":"center"}} className="input-group-btn">
+                            <button className="btn btn-dark btn-sm" id="btn-chat"
+                                    onClick={()=>{props.postMessage();}}>
+                                <i className="fa fa-paper-plane fa-1x"
+                                   aria-hidden="true"></i></button>
+                            </span>
+                    </div>
+
+            <p style={{"font-size":"12px", "margin-top":"0.4em"}}>
+                {count}/2000
+            </p>
+                </div>
             : null}
-    </div>
-);
+                </div>
+
+
+)
+};
 
 
 
