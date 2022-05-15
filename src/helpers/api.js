@@ -1,10 +1,32 @@
 import axios from 'axios';
 import { getDomain } from 'helpers/getDomain';
 
+
+const token = localStorage.getItem("token");
+
+
+// , 'Authorization':'Basic '+ token
 export const api = axios.create({
   baseURL: getDomain(),
   headers: { 'Content-Type': 'application/json' }
 });
+
+export const auth_api = axios.create({
+  baseURL: getDomain(),
+  headers: { authorization: 'Basic ' + token }
+});
+
+export function authHeader() {
+  // return authorization header with basic auth credentials
+  let userId = JSON.parse(localStorage.getItem('userId'));
+
+  if (userId && token) {
+    return { Authorization: `Bearer ${token}` };
+  } else {
+    return {};
+  }
+}
+
 
 export const handleError = error => {
   const response = error.response;
