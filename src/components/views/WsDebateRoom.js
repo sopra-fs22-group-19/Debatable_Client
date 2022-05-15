@@ -79,7 +79,8 @@ const DebateRoom = () => {
 
     const [debateFORMsgs, setDebateFORMsgs] = useState([]);
     const [debateAGAINSTMsgs, setDebateAGAINSTMsgs] = useState([]);
-    const [messageContent, setMessageContent] = useState('');
+
+    const [messageToSend, setMessageToSend] = useState('');
 
     // UI related states (display buttons and so so)
     const [displayStartButton, setDisplayStartButton] = useState(false);
@@ -211,7 +212,6 @@ const DebateRoom = () => {
             } else if (roomState === 'ONGOING_FOR' || roomState === 'ONGOING_AGAINST'){
                 // Handle transition from 'READY_TO_START' --> {'ONGOING_FOR', 'ONGOING_AGAINST'}
                 if(!hasDebateStarted){
-                    console.log("Transition to start of debate");
                     setHasDebateStarted(true);
                     setDisplayEndButton(true);
                 }
@@ -298,13 +298,13 @@ const DebateRoom = () => {
 
     const onMessageReceived = (incoming) => {
         let ws_response = JSON.parse(incoming.body);
-        if (ws_response.message !== null){
-            if(ws_response.message !== ''){
+        if (ws_response.messageContent !== null){
+            if(ws_response.messageContent !== ''){
                 if (ws_response.userSide === "FOR"){
-                    debateFORMsgs.push(ws_response.message);
+                    debateFORMsgs.push(ws_response.messageContent);
                     setDebateFORMsgs([...debateFORMsgs]);
                 } else {
-                    debateAGAINSTMsgs.push(ws_response.message);
+                    debateAGAINSTMsgs.push(ws_response.messageContent);
                     setDebateAGAINSTMsgs([...debateAGAINSTMsgs]);
                 }
             }
@@ -326,7 +326,7 @@ const DebateRoom = () => {
 
     const handleMessage = (event) => {
         const {value}=event.target;
-        setMessageContent(value);
+        setMessageToSend(value);
     }
 
     const sendValue=()=>{
@@ -335,9 +335,8 @@ const DebateRoom = () => {
                 userId: userId,
                 roomId: roomState.roomId,
                 userSide: userState.userSide,
-                message: messageContent,
+                messageContent: messageToSend,
             };
-            console.log(chatMessage);
             stompClient.send('/ws/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
 
             // Change turns after sending the message
