@@ -79,7 +79,6 @@ const DebateRoom = () => {
 
     const [debateFORMsgs, setDebateFORMsgs] = useState([]);
     const [debateAGAINSTMsgs, setDebateAGAINSTMsgs] = useState([]);
-
     const [messageContent, setMessageContent] = useState('');
 
     // UI related states (display buttons and so so)
@@ -212,6 +211,7 @@ const DebateRoom = () => {
             } else if (roomState === 'ONGOING_FOR' || roomState === 'ONGOING_AGAINST'){
                 // Handle transition from 'READY_TO_START' --> {'ONGOING_FOR', 'ONGOING_AGAINST'}
                 if(!hasDebateStarted){
+                    console.log("Transition to start of debate");
                     setHasDebateStarted(true);
                     setDisplayEndButton(true);
                 }
@@ -337,6 +337,7 @@ const DebateRoom = () => {
                 userSide: userState.userSide,
                 message: messageContent,
             };
+            console.log(chatMessage);
             stompClient.send('/ws/debates/rooms/' + String(roomId) + '/msg', {}, JSON.stringify(chatMessage));
 
             // Change turns after sending the message
@@ -359,7 +360,7 @@ const DebateRoom = () => {
                 </div>
                 <div className="row d-flex justify-content-center">
                     <div className="col-sm"></div>
-                    <div className="col-sm d-flex justify-content-center">
+                    <div className="col-sm d-flex justify-content-center" style={{"margin-top": "30px"}}>
                         {hasDebateStarted && userState.canWrite ?
                             <Timer
                                 initialMinute={Math.floor(roomInformation.timeToWriteMessageSeconds / 60)}
