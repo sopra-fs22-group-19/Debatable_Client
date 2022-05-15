@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import "styles/ui/TImer.css";
+import "styles/ui/Timer.sass";
 
 const Timer = (props) => {
     const {initialMinute = 0, initialSeconds = 0, triggerMsgSend} = props;
@@ -36,10 +36,17 @@ const Timer = (props) => {
     }
 
     return (
-        <div className="icon-time">
+        <div>
             {minutes === 0 && seconds === 0
                 ? null
-                : <h1> {minutes}:{displaySeconds()}</h1>
+
+                :
+                <div className="icon-time" style={{"position":"fixed","margin-top":"5px"}}>
+                <svg width="100" height="100">
+                    <circle className="circle" cx="50" cy="50" r="40"/>
+                </svg>
+                <span className="timer">{minutes}:{displaySeconds()}</span>
+                </div>
             }
         </div>
     )
