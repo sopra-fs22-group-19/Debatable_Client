@@ -131,13 +131,17 @@ const DebateRoom = () => {
                     setAllUserStates(
                         true, debateRoom.user1.userId, debateRoom.user1.username, debateRoom.side1,
                         null, null);
+                    return {userName: debateRoom.user1.username, isInvitee: false,
+                        advocatingUser: {id: debateRoom.user1.userId, side: debateRoom.side1},
+                        opponentUser: null};
                 } else {
                     setAllUserStates(
                         true, debateRoom.user1.userId, debateRoom.user1.username, debateRoom.side1,
                         debateRoom.user2.username, debateRoom.user2.userId);
+                    return {userName: debateRoom.user1.username, isInvitee: false,
+                        advocatingUser: {id: debateRoom.user1.userId, side: debateRoom.side1},
+                        opponentUser: {id: debateRoom.user2.userId, side: debateRoom.side2}};
                 }
-
-                return {userName: debateRoom.user1.username, isInvitee: false};
             }
         } else {
             let errorMsg = "Something went wrong while creating the debateroom!"
@@ -154,7 +158,9 @@ const DebateRoom = () => {
                     false, debateRoom.user2.userId, debateRoom.user2.username, debateRoom.side2,
                     debateRoom.user1.username, debateRoom.user1.userId);
 
-                return {userName: debateRoom.user2.username, isInvitee: true};
+                return {userName: debateRoom.user2.username, isInvitee: true,
+                    advocatingUser: {id: debateRoom.user2.userId, side: debateRoom.side2},
+                    opponentUser: {id: debateRoom.user1.userId, side: debateRoom.side1}};
             }
         }
 
@@ -170,7 +176,10 @@ const DebateRoom = () => {
                 }));
 
             }
-            return {userName: `Observer: ${String(userId)}`, isInvitee: true};
+            return {userName: `Observer: ${String(userId)}`, isInvitee: true,
+                advocatingUser: {id: debateRoom.user1.userId, side: debateRoom.side1},
+                opponentUser: {id: debateRoom.user2.userId, side: debateRoom.side2}};
+
         }
 
     }
@@ -219,25 +228,51 @@ const DebateRoom = () => {
         }
     }
 
-    const getMessagingHistory = async() => {
+    const addMessageFor = (msg) => {
+        debateFORMsgs.push(msg);
+        setDebateFORMsgs([...debateFORMsgs]);
+        //setDebateFORMsgs(prevDebateFORMsgs => ([...prevDebateFORMsgs, debateFORMsgs]));
+    }
+
+    const addMessageAgainst = (msg) => {
+        debateAGAINSTMsgs.push(msg);
+        setDebateAGAINSTMsgs([...debateAGAINSTMsgs]);
+        //setDebateAGAINSTMsgs(prevDebateAGAINSTMsgs => ([...prevDebateAGAINSTMsgs, debateAGAINSTMsgs]));
+    }
+
+    const pushListOfMessages = (msgList, side) => {
+        if (side === "FOR"){
+            msgList.map(msg => (addMessageFor(msg)))
+        } else {
+            msgList.map(msg => (addMessageAgainst(msg)))
+        }
+    }
+
+    const getMessagingHistory = async(advocatingUser, opponentUser) => {
         // Get messages of the user
         try {
-            const response = await api.get(`/debates/rooms/${String(roomId)}/users/${String(userId)}/msgs`);
-            console.log('mesages of user: ');
-            console.log(response);
+            const response = await api.get(`/debates/rooms/${String(roomId)}/users/${String(advocatingUser.id)}/msgs`);
+            if (response.data.length > 0){
+                console.log("My messages: ");
+                console.log(response.data);
+                pushListOfMessages(response.data, advocatingUser.side);
+            }
         } catch (error) {
-            console.error(`Something went wrong fetching the messages of user ${String(userId)} in debateroom ${String(roomId)}: \n
+            console.error(`Something went wrong fetching the messages of user ${String(advocatingUser.id)} in debateroom ${String(roomId)}: \n
             ${handleError(error)}`);
             console.error("Details:", error);
             alert("Something went wrong while fetching the opponents name! See the console for details.");
         }
 
         // Get messages of the opponent
-        if (opponentUser.id != null) {
+        if (opponentUser != null) {
             try {
                 const response = await api.get(`/debates/rooms/${String(roomId)}/users/${String(opponentUser.id)}/msgs`);
-                console.log('mesages of opponent: ');
-                console.log(response);
+                if (response.data.length > 0){
+                    console.log("Oponent user message: ");
+                    console.log(response.data);
+                    pushListOfMessages(response.data, opponentUser.side);
+                }
             } catch (error) {
                 console.error(`Something went wrong fetching the messages of user ${String(opponentUser.id)} in debateroom ${String(roomId)}: \n
             ${handleError(error)}`);
@@ -265,12 +300,10 @@ const DebateRoom = () => {
                 }
 
                 let userInfo = await defineUserStartingState(debateRoom);
-                console.log(userInfo);
 
                 connectToRoomWS(userInfo.userName, debateRoom.debateStatus);
-                setRoomState(debateRoom.debateStatus);
-                console.log(userState);
-                //await getMessagingHistory();
+                setRoomState(() => debateRoom.debateStatus);
+                await getMessagingHistory(userInfo.advocatingUser, userInfo.opponentUser);
 
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
@@ -395,11 +428,9 @@ const DebateRoom = () => {
         if (ws_response.messageContent !== null){
             if(ws_response.messageContent !== ''){
                 if (ws_response.userSide === "FOR"){
-                    debateFORMsgs.push(ws_response.messageContent);
-                    setDebateFORMsgs([...debateFORMsgs]);
+                    addMessageFor(ws_response.messageContent);
                 } else {
-                    debateAGAINSTMsgs.push(ws_response.messageContent);
-                    setDebateAGAINSTMsgs([...debateAGAINSTMsgs]);
+                    addMessageAgainst(ws_response.messageContent);
                 }
             }
         }
@@ -439,8 +470,15 @@ const DebateRoom = () => {
             } else{
                 notifyStateChange(advocatingUser.userName, 'ONGOING_FOR')
             }
+            setMessageToSend("");
         }
     }
+
+    console.log("for messages");
+    console.log(debateFORMsgs);
+
+    console.log("against messages");
+    console.log(debateAGAINSTMsgs);
 
     return (
         <div>
