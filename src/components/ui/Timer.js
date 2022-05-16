@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import "styles/ui/Timer.css";
+import "styles/ui/Timer.sass";
 
 const Timer = (props) => {
     const {initialMinute = 0, initialSeconds = 0, triggerMsgSend} = props;
