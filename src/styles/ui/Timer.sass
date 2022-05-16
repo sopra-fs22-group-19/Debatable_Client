@@ -1,0 +1,32 @@
+@keyframes circletimer
+  0%
+    stroke-dashoffset: 250
+    stroke-dasharray: 250
+  100%
+    stroke-dashoffset: 0
+    stroke-dasharray: 250
+
+svg
+  background-color: transparent
+  position: absolute
+  background-color: transparent
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%) rotateZ(-90deg)
+  .circle
+    stroke: rgba(188, 0, 84, 1)
+    stroke-width: 10
+    fill: transparent
+    stroke-dashoffset: 500
+    stroke-dasharray: 0
+    animation: 30s circletimer linear
+
+.timer
+  position: absolute
+  display: block
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  color: rgba(188, 0, 84, 1)
+  font-size: 25px
+  font-weight: 700
