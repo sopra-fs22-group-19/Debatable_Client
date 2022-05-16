@@ -53,7 +53,7 @@ const Login = props => {
     try {
       // Create guest user
       const response = await api.post("/users/guests");
-          localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.token);
       localStorage.setItem("userId", response.data.userId);
   }
   catch (error){
@@ -64,7 +64,10 @@ const Login = props => {
       history.push(
           {
               pathname: to_push,
-              state: {isInvitee: props.isInvitee}
+              state: {
+                  isInvitee: props.isInvitee,
+                  isGuest: props.isGuest
+              }
           }
       );
   }

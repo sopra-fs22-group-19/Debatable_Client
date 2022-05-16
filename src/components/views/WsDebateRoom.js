@@ -59,7 +59,7 @@ const DebateRoom = () => {
     const [userState, setUserState] = useState({
         isStartingSide: false,
         isInvitedSide: false,
-        isGuest: false,
+        isGuest: location.state.isGuest,
         isObserver: false,
         canWrite: false
     });
@@ -171,8 +171,6 @@ const DebateRoom = () => {
         }
 
     }
-
-    //TODO: Add check on mount if the user is a guest user or not
 
     const addSecondParticipant = async () => {
         try {
