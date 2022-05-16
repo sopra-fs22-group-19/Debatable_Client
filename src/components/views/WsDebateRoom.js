@@ -270,7 +270,7 @@ const DebateRoom = () => {
                 connectToRoomWS(userInfo.userName, debateRoom.debateStatus);
                 setRoomState(debateRoom.debateStatus);
                 console.log(userState);
-                await getMessagingHistory();
+                //await getMessagingHistory();
 
             } catch (error) {
                 console.error(`Something went wrong while fetching the debate room data: \n${handleError(error)}`);
@@ -298,17 +298,23 @@ const DebateRoom = () => {
                     // get name of the opponent
                 }
             } else if (roomState === 'ONGOING_FOR' || roomState === 'ONGOING_AGAINST'){
-                // Handle transition from 'READY_TO_START' --> {'ONGOING_FOR', 'ONGOING_AGAINST'}
-                if(!hasDebateStarted){
-                    setHasDebateStarted(true);
-                    setDisplayEndButton(true);
-                }
+                if (!userState.isObserver) {
+                    // Handle transition from 'READY_TO_START' --> {'ONGOING_FOR', 'ONGOING_AGAINST'}
+                    if (!hasDebateStarted) {
+                        setHasDebateStarted(true);
+                        setDisplayEndButton(true);
+                    }
 
-                // Handle change of turns
-                if (roomState.split('_')[1] === advocatingUser.side){
-                    setUserState({...userState, 'canWrite': true});
+                    // Handle change of turns
+                    if (roomState.split('_')[1] === advocatingUser.side) {
+                        setUserState({...userState, 'canWrite': true});
+                    } else {
+                        setUserState({...userState, 'canWrite': false});
+                    }
                 } else {
-                    setUserState({...userState, 'canWrite': false});
+                    if (!hasDebateStarted) {
+                        setHasDebateStarted(true);
+                    }
                 }
             } else if (roomState === "ENDED"){
                 await getOutOfDebate();
