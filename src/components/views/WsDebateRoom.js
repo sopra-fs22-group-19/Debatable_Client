@@ -96,78 +96,81 @@ const DebateRoom = () => {
     const [displayEndButton, setDisplayEndButton] = useState(false);
     const [displayInviteButton, setDisplayInviteButton] =  useState(false);
 
-    const defineUserStartingState = (debateRoom) => {
-        if (debateRoom.user1) {
-            if (parseInt(userId) === debateRoom.user1.userId) {
-                setUserState(prevUserState => ({...prevUserState,
-                    'isStartingSide': true,
-                    'canWrite': false
-                }));
+    const setAllUserStates = (isStartingSide, advocatingUserId, advocatingUserName, advocatingUserSide,
+                              opponnentUserName, OpponennentUserId) => {
+        setUserState(prevUserState => ({...prevUserState,
+            'isStartingSide': isStartingSide,
+            'isInvitedSide': !isStartingSide,
+        }));
 
-                setAdvocatingUser(prevAdvocatingUser => ({...prevAdvocatingUser,
-                    'id': debateRoom.user1.userId,
-                    'userName': debateRoom.user1.username,
-                    'side': debateRoom.side1
-                }));
+        setAdvocatingUser(prevAdvocatingUser => ({...prevAdvocatingUser,
+            'id': advocatingUserId,
+            'userName': advocatingUserName,
+            'side': advocatingUserSide
+        }));
 
-                setOpponentUser(prevOpponentUser => ({...prevOpponentUser,
-                    'side': (debateRoom.side1 === 'FOR') ? 'AGAINST' : 'FOR',
-                }));
+        setOpponentUser(prevOpponentUser => ({...prevOpponentUser,
+            'side': (advocatingUserSide === 'FOR') ? 'AGAINST' : 'FOR',
+        }));
 
-                return debateRoom.user1.username;
-            }
+        if (opponnentUserName){
+            setOpponentUser(prevOpponentUser => ({...prevOpponentUser, 'userName': opponnentUserName}));
         }
 
-        if (debateRoom.user2){
-            if (parseInt(userId) === debateRoom.user2.userId ){
-                setUserState(prevUserState => ({...prevUserState,
-                    'isInvitedSide': true,
-                    'canWrite': false
-                }));
+        if (OpponennentUserId){
+            setOpponentUser(prevOpponentUser => ({...prevOpponentUser, 'id': OpponennentUserId}));
+        }
 
-                setAdvocatingUser(prevAdvocatingUser => ({...prevAdvocatingUser,
-                    'id': debateRoom.user2.userId,
-                    'userName': debateRoom.user2.username,
-                    'side': debateRoom.side2
-                }));
+    }
 
-                setOpponentUser(prevOpponentUser => ({...prevOpponentUser,
-                    'side': (debateRoom.side2 === 'FOR') ? 'AGAINST' : 'FOR',
-                }))
-
-                // Check if it is a guest user
-                if (debateRoom.user2.name === "Guest"){
-                    setUserState(prevUserState => ({...prevUserState,
-                        'isGuest': true,
-                    }));
+    const defineUserStartingState = async (debateRoom) => {
+        // If they are the creators of the debate
+        if (debateRoom.user1) {
+            if (parseInt(userId) === debateRoom.user1.userId) {
+                if (debateRoom.user2 === null){
+                    setAllUserStates(
+                        true, debateRoom.user1.userId, debateRoom.user1.username, debateRoom.side1,
+                        null, null);
+                } else {
+                    setAllUserStates(
+                        true, debateRoom.user1.userId, debateRoom.user1.username, debateRoom.side1,
+                        debateRoom.user2.username, debateRoom.user2.userId);
                 }
 
-                return debateRoom.user2.username;
+                return {userName: debateRoom.user1.username, isInvitee: false};
+            }
+        } else {
+            let errorMsg = "Something went wrong while creating the debateroom!"
+            console.error(errorMsg + " There is no creating user");
+            alert(errorMsg + " See the console for details.");
+        }
+
+        // If they are or should be the second user
+        if (debateRoom.user2) {
+            // If second participant has already been added and the current client is the second participant,
+            //  then add retrieve their information in the debate
+            if (parseInt(userId) === debateRoom.user2.userId) {
+                setAllUserStates(
+                    false, debateRoom.user2.userId, debateRoom.user2.username, debateRoom.side2,
+                    debateRoom.user1.username, debateRoom.user1.userId);
+
+                return {userName: debateRoom.user2.username, isInvitee: true};
             }
         }
 
         // If they are an Observer
-        if (debateRoom.user1 && debateRoom.user2){
-            if(parseInt(userId) !== debateRoom.user1.userId && parseInt(userId) !== debateRoom.user2.userId){
-                setUserState(prevUserState => ({...prevUserState,
-                    'isInvitedSide': true,
-                    'canWrite': false,
+        if (debateRoom.user1 && debateRoom.user2) {
+            if (parseInt(userId) !== debateRoom.user1.userId && parseInt(userId) !== debateRoom.user2.userId) {
+                setAllUserStates(false, debateRoom.user2.userId, debateRoom.user2.username, debateRoom.side2,
+                    debateRoom.user1.username, debateRoom.user1.userId);
+
+                setUserState(prevUserState => ({
+                    ...prevUserState,
                     'isObserver': true
                 }));
 
-                setAdvocatingUser(prevAdvocatingUser => ({...prevAdvocatingUser,
-                    'id': debateRoom.user1.userId,
-                    'userName': debateRoom.user1.username,
-                    'side': 'FOR'
-                }));
-
-                setOpponentUser(prevOpponentUser => ({...prevOpponentUser,
-                    'id': debateRoom.user2.userId,
-                    'userName': debateRoom.user2.username,
-                    'side': 'AGAINST',
-                }))
             }
-            return String(userId);
+            return {userName: `Observer: ${String(userId)}`, isInvitee: true};
         }
 
     }
@@ -189,12 +192,12 @@ const DebateRoom = () => {
         try {
             // update the debate room with user 2 information
             const response = await api.get("/debates/rooms/" + String(roomId));
-            if (!location.state.isInvitee && parseInt(userId) === response.data.user1.userId ){
+            if (userState.isStartingSide && parseInt(userId) === response.data.user1.userId ){
                 setOpponentUser(prevOpponentUser => ({...prevOpponentUser,
                     'id': response.data.user2.userId,
                     'userName': response.data.user2.username
                 }))
-            } else if (location.state.isInvitee &&  parseInt(userId) === response.data.user2.userId ){
+            } else if (userState.isInvitedSide && parseInt(userId) === response.data.user2.userId ){
                 setOpponentUser(prevOpponentUser => ({...prevOpponentUser,
                     'id': response.data.user1.userId,
                     'userName': response.data.user1.username
@@ -205,7 +208,7 @@ const DebateRoom = () => {
                 }));
                 setOpponentUser(prevOpponentUser => ({...prevOpponentUser,
                     'id': response.data.user2.userId,
-                    'userName': response.data.user2.userName
+                    'userName': response.data.user2.username
                 }))
             }
 
@@ -259,10 +262,12 @@ const DebateRoom = () => {
 
                 if (location.state.isInvitee && debateRoom.side2 === null){
                     debateRoom = await addSecondParticipant();
-                    getOpponentsInfo();
                 }
-                let userName = await defineUserStartingState(debateRoom);
-                connectToRoomWS(userName, debateRoom.debateStatus);
+
+                let userInfo = await defineUserStartingState(debateRoom);
+                console.log(userInfo);
+
+                connectToRoomWS(userInfo.userName, debateRoom.debateStatus);
                 setRoomState(debateRoom.debateStatus);
                 console.log(userState);
                 await getMessagingHistory();
@@ -279,12 +284,12 @@ const DebateRoom = () => {
     useEffect(() => {
         async function debateStateChange() {
             if (roomState === 'ONE_USER_FOR' || roomState === 'ONE_USER_AGAINST'){
-                if (!location.state.isInvitee){
+                if (!userState.isInvitedSide){
                     setDisplayInviteButton(true);
                 }
             }
             if (roomState === 'READY_TO_START'){
-                if (!location.state.isInvitee){
+                if (userState.isStartingSide){
                     // Only user that created the debate can start it
                     setDisplayStartButton(true);
                     setDisplayInviteButton(false);
@@ -443,7 +448,7 @@ const DebateRoom = () => {
                 <div className="row d-flex justify-content-center">
                     <div className="col-sm"></div>
                     <div className="col-sm d-flex justify-content-center" style={{"margin-top": "30px"}}>
-                        {hasDebateStarted && userState.canWrite ?
+                        {hasDebateStarted && userState.canWrite && !userState.isObserver ?
                             <Timer
                                 initialMinute={Math.floor(roomInformation.timeToWriteMessageSeconds / 60)}
                                 initialSeconds={roomInformation.timeToWriteMessageSeconds % 60}
@@ -472,11 +477,11 @@ const DebateRoom = () => {
                             <StartButton
                                 isStartDisabled = {isStartButtonDisabled}
                                 setIsStartDisabled = {setIsStartButtonDisabled}
-                                displayStartButton = {displayStartButton}
+                                displayStartButton = {displayStartButton && !userState.isObserver}
                                 startDebate={startDebate}
                             />
                             <EndButton
-                                displayEndButton = {displayEndButton}
+                                displayEndButton = {displayEndButton && !userState.isObserver}
                                 endDebate = {notifyEndOfDebate}
                             />
                     </div>
@@ -489,8 +494,8 @@ const DebateRoom = () => {
                             msgs={opponentUser.side === "FOR" ? debateFORMsgs: debateAGAINSTMsgs}
                             displayMessageBox = {hasDebateStarted}
                             withWriteBox = {false}
-                            withInviteButton = {displayInviteButton && !location.state.isInvitee}
-                            displayWaitingMessage = {location.state.isInvitee && !hasDebateStarted}
+                            withInviteButton = {displayInviteButton && userState.isStartingSide}
+                            displayWaitingMessage = {userState.isInvitedSide && !hasDebateStarted}
                             isDebateStarted ={hasDebateStarted}
                             inviteLink = {getLink() + location.pathname + '/invitee'}
                         />
