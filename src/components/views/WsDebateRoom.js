@@ -231,13 +231,11 @@ const DebateRoom = () => {
     const addMessageFor = (msg) => {
         debateFORMsgs.push(msg);
         setDebateFORMsgs([...debateFORMsgs]);
-        //setDebateFORMsgs(prevDebateFORMsgs => ([...prevDebateFORMsgs, debateFORMsgs]));
     }
 
     const addMessageAgainst = (msg) => {
         debateAGAINSTMsgs.push(msg);
         setDebateAGAINSTMsgs([...debateAGAINSTMsgs]);
-        //setDebateAGAINSTMsgs(prevDebateAGAINSTMsgs => ([...prevDebateAGAINSTMsgs, debateAGAINSTMsgs]));
     }
 
     const pushListOfMessages = (msgList, side) => {
@@ -248,33 +246,33 @@ const DebateRoom = () => {
         }
     }
 
-    const getMessagingHistory = async(advocatingUser, opponentUser) => {
+    const getMessagingHistory = async(advocatingUserInfo, opponentUserInfo) => {
         // Get messages of the user
         try {
-            const response = await api.get(`/debates/rooms/${String(roomId)}/users/${String(advocatingUser.id)}/msgs`);
+            const response = await api.get(`/debates/rooms/${String(roomId)}/users/${String(advocatingUserInfo.id)}/msgs`);
             if (response.data.length > 0){
                 console.log("My messages: ");
                 console.log(response.data);
-                pushListOfMessages(response.data, advocatingUser.side);
+                pushListOfMessages(response.data, advocatingUserInfo.side);
             }
         } catch (error) {
-            console.error(`Something went wrong fetching the messages of user ${String(advocatingUser.id)} in debateroom ${String(roomId)}: \n
+            console.error(`Something went wrong fetching the messages of user ${String(advocatingUserInfo.id)} in debateroom ${String(roomId)}: \n
             ${handleError(error)}`);
             console.error("Details:", error);
             alert("Something went wrong while fetching the opponents name! See the console for details.");
         }
 
         // Get messages of the opponent
-        if (opponentUser != null) {
+        if (opponentUserInfo != null) {
             try {
-                const response = await api.get(`/debates/rooms/${String(roomId)}/users/${String(opponentUser.id)}/msgs`);
+                const response = await api.get(`/debates/rooms/${String(roomId)}/users/${String(opponentUserInfo.id)}/msgs`);
                 if (response.data.length > 0){
                     console.log("Oponent user message: ");
                     console.log(response.data);
-                    pushListOfMessages(response.data, opponentUser.side);
+                    pushListOfMessages(response.data, opponentUserInfo.side);
                 }
             } catch (error) {
-                console.error(`Something went wrong fetching the messages of user ${String(opponentUser.id)} in debateroom ${String(roomId)}: \n
+                console.error(`Something went wrong fetching the messages of user ${String(opponentUserInfo.id)} in debateroom ${String(roomId)}: \n
             ${handleError(error)}`);
                 console.error("Details:", error);
                 alert("Something went wrong while fetching the opponents name! See the console for details.");
