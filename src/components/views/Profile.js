@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {Button} from 'components/ui/Button';
-import 'styles/views/Profile.scss';
-import BaseContainer from "components/ui/BaseContainer";
+import 'styles/ui/BaseContainer.scss';
+import 'styles/views/Login_Trial.css';
 import { Link } from 'react-router-dom';
 import Header from "./Header";
 
@@ -45,22 +45,26 @@ const Profile = props => {
     }
 
     return (
-        <BaseContainer>
+       <div>
             <Header height={"100"}/>
-            <div className="profile container">
-                <div className="profile form">
-                    <FormField label="Username"/>
+            <div id="card2" className="card2 card border-0 px-4 py-5">
+                <div className="row mb-4 px-3  d-flex justify-content-center">
+                    <div className="row px-3">
+                        <FormField label="Username:"/>
+                    </div>
                     <Button disabled={true}>{username}</Button>
-                    <FormField label="Name"/>
+                    <div className="row px-3">
+                        <FormField label="Name:"/>
+                    </div>
                     <Button disabled={true}>{name}</Button>
                 </div>
-                <div className="profile button-container">
+                <div className="row mb-3 px-3 d-flex justify-content-center">
                     <Link to ={`/edit/${userId}`}>
-                        <Button>Edit Profile</Button>
+                        <Button width="50%">Edit Profile</Button>
                     </Link>
                 </div>
             </div>
-        </BaseContainer>
+       </div>
     );
 }
 

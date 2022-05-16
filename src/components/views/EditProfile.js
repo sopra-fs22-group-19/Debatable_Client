@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {useHistory, useParams} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
-import 'styles/views/Profile.scss';
-import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import Header from "./Header";
+import 'styles/ui/BaseContainer.scss';
+import 'styles/views/Login_Trial.css';
 
 const FormField = props => {
     return (
@@ -48,14 +48,21 @@ const EditProfile = props => {
     return (
         <BaseContainer>
             <Header height={"100"}/>
-            <div className="profile container">
-                <div className="profile form">
-                    <FormField label="Username: " value={username} onChange={un => setUsername(un)}/>
-                    <FormField label="Name: " value={name} onChange={n => setName(n)}/>
-                    <FormField label="Password: " value={password} onChange={e => setPassword(e)}/>
-                    <div className="profile button-container">
-                        <Button width="100%" onClick={() => doUpdate()}>Save</Button>
+            <div id="card2" className="card2 card border-0 px-4 py-5">
+                <div className="row mb-4 px-3  d-flex justify-content-center">
+                    <div className="row px-3">
+                        <FormField label="Username: " value={username} onChange={un => setUsername(un)}/>
                     </div>
+                    <div className="row px-3">
+                        <FormField label="Name: " value={name} onChange={n => setName(n)}/>
+                    </div>
+                    <div className="row px-3">
+                        <FormField label="Password: " value={password} onChange={e => setPassword(e)}/>
+                    </div>
+                </div>
+
+                <div className="row mb-3 px-3 d-flex justify-content-center">
+                    <Button width="50%" onClick={() => doUpdate()}>Save</Button>
                 </div>
             </div>
         </BaseContainer>
