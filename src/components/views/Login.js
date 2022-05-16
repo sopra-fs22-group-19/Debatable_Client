@@ -66,7 +66,7 @@ const Login = props => {
               pathname: to_push,
               state: {
                   isInvitee: props.isInvitee,
-                  isGuest: props.isGuest
+                  isGuest: true
               }
           }
       );
