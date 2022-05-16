@@ -7,6 +7,7 @@ import 'styles/ui/BaseContainer.scss';
 import 'styles/logo.css';
 import PropTypes from "prop-types";
 import 'styles/views/Login_Trial.css';
+import axios from "axios";
 
 const FormField = props => {
   return (
@@ -52,9 +53,10 @@ const Login = props => {
   const joinAsGuest = async () => {
     try {
       // Create guest user
-      const response = await api.post("/users/guests");
-          localStorage.setItem("token", response.data.token);
-      localStorage.setItem("userId", response.data.userId);
+      const response = await api.post("/register/guests");
+        localStorage.setItem("username", response.data.username);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("userId", response.data.userId);
   }
   catch (error){
       console.error(`Something went wrong while creating guest user: \n${handleError(error)}`);
@@ -79,8 +81,19 @@ const Login = props => {
 
   const doLogin = async () => {
     try {
-      let to_get = "/login?username=" + String(username) + "&password=" + String(password);
-      const response = await api.get(to_get);
+        let to_get_v2 = "/login/v2";
+        const headers = {
+            'Content-Type': 'application/json',
+            auth: {
+                username: String(username),
+                password: String(password)
+            }
+        };
+
+
+      //let to_get = "/login?username=" + String(username) + "&password=" + String(password);
+      //const response = await api.get(to_get);
+        const response = await axios.post(to_get_v2, headers);
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Get the returned user and update a new object.
