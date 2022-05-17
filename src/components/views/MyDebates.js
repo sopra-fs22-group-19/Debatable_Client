@@ -4,7 +4,6 @@ import {api, handleError} from 'helpers/api';
 import {useHistory} from 'react-router-dom';
 import "styles/views/MyDebate.scss";
 import Header from "./Header";
-import React from "react";
 
 
 const DebateRoomList = (props) => {
