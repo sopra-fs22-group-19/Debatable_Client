@@ -14,16 +14,19 @@
 }
 
 .list-group {
-  list-style: none
+  list-style: none;
+  align-items: center;
 }
 
 .list-group-item{
   background-color: rgba(254, 254, 254, 0.66);
   border-radius: 100px;   margin: 5px;
+  
 }
 
 #list-group-button-topics{
   background-color: rgba(254, 254, 254, 0);
+  
 }
 #scrollable-div-topics{
   background-color: rgba(185, 204, 143, 0.15);
