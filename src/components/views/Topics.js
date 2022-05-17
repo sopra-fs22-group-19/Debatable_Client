@@ -44,7 +44,6 @@ const Topics = () => {
         async function fetchData() {
             try {
                 categories = localStorage.getItem('categories');
-                localStorage.setItem("actualUser", userId);
 
                 if(categories){
                     let query = "/debates/?categories=" + categories;
