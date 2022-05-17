@@ -10,6 +10,7 @@ import Profile from "../../views/Profile";
 import EditProfile from "../../views/EditProfile";
 import Homepage from "../../views/Homepage";
 import WsDebateRoom from "../../views/WsDebateRoom";
+import MyDebates from "../../views/MyDebates";
 
 const AppRouter = () => {
   return (
@@ -55,6 +56,11 @@ const AppRouter = () => {
         <Route exact path="/create_debate">
             <GameGuard>
               <CreateDebate/>
+            </GameGuard>
+        </Route>
+        <Route exact path="/my_debates">
+            <GameGuard>
+                <MyDebates/>
             </GameGuard>
         </Route>
       </Switch>

@@ -79,11 +79,11 @@ const Topics = () => {
     content = (
         <div >
             {debates.map(debate => (
-                <ul key={debate.debateId} className="list-group  list-group-horizontal-md">
+                <ul  key={debate.debateId} className="list-group  list-group-horizontal-md">
                     <li id={"list-group-button-topics"} className=" list-group-button">
                         <Button className="debate button-container" onClick={() => todebateRoom("FOR", debate.debateId)}>FOR</Button>
                     </li>
-                    <li className="list-group-item flex-fill">
+                    <li  id={"list-group-item-topics"} className="list-group-item flex-fill">
                         {debate.topic}
                     </li>
                     <li id={"list-group-button-topics"} className="list-group-button ">
