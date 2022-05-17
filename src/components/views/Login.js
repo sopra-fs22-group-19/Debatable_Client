@@ -48,6 +48,14 @@ const Login = props => {
   else {
     to_push = "/home"
   }
+  /*
+   <div className="row mb-4 px-3">
+                          <h6>
+                            Don't have an account? 
+                            
+                          </h6>
+                      </div>
+   */
 
   const joinAsGuest = async () => {
     try {
@@ -73,13 +81,8 @@ const Login = props => {
   }
 
   const Guest = () => (
-    <div 
-    className='login create-account'
-    onClick={() => joinAsGuest()}>
-      Join as a guest User
-    </div>
+  <a className="create-account" onClick={() => joinAsGuest()} >Join as a guest User</a>
   )
-
   const doLogin = async () => {
     try {
       let to_get = "/login?username=" + String(username) + "&password=" + String(password);
@@ -145,7 +148,7 @@ const Login = props => {
                               />
                       </div>
 
-                      <div className="row mb-3 px-3 d-flex justify-content-center">
+                      <div className="row mb-3 px-3 mt-3 d-flex justify-content-center">
                           <Button
                               disabled={!username || !password}
                               width="50%"
@@ -154,12 +157,13 @@ const Login = props => {
                               LOG IN
                           </Button>
                       </div>
-                      <div className="row mb-4 px-3">
-                          <h6>Don't have an account? 
-                            <a className="text-danger " onClick={() => toRegister()} >Register</a>
-                          </h6>
+                      <div className="row mb-1 px-3">
+                        <h6> Don't have an account?
+                          <a className="text-danger" onClick={() => toRegister()} >Register</a>
+                        </h6>
                       </div>
-                      <div className="row mb-4 px-3">
+
+                      <div className="row mb-1 px-3">
                           {props.isInvitee ? <Guest /> : null }
                       </div>
                   </div>

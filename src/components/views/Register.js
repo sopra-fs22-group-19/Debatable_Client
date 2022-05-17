@@ -120,7 +120,7 @@ const Register = props => {
               />
             </div>
 
-            <div className="row mb-3 px-3 d-flex justify-content-center">
+            <div className="row mb-3 mt-3 px-3 d-flex justify-content-center">
               <Button
                   disabled={!username || !password || !name}
                   width="50%"
