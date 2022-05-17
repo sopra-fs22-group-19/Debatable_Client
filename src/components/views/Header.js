@@ -61,6 +61,9 @@ return(
                     <a className="nav-link" href={baselink+"create_debate"}><i className="fa fa-fw fa-plus-square"></i> Create Debate</a>
                 </li>
                 <li className="nav-item">
+                    <a className="nav-link" href={baselink+"my_debates"}><i className="fa fa-fw fa-handshake-o"></i> My Debates</a>
+                </li>
+                <li className="nav-item">
                     <a className="nav-link" onClick={() => logout()}><i className="fa fa-fw fa-sign-out"></i> Logout</a>
                 </li>
             </ul>

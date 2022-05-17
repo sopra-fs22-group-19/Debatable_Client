@@ -251,8 +251,6 @@ const DebateRoom = () => {
         try {
             const response = await api.get(`/debates/rooms/${String(roomId)}/users/${String(advocatingUserInfo.id)}/msgs`);
             if (response.data.length > 0){
-                console.log("My messages: ");
-                console.log(response.data);
                 pushListOfMessages(response.data, advocatingUserInfo.side);
             }
         } catch (error) {
@@ -267,8 +265,6 @@ const DebateRoom = () => {
             try {
                 const response = await api.get(`/debates/rooms/${String(roomId)}/users/${String(opponentUserInfo.id)}/msgs`);
                 if (response.data.length > 0){
-                    console.log("Oponent user message: ");
-                    console.log(response.data);
                     pushListOfMessages(response.data, opponentUserInfo.side);
                 }
             } catch (error) {
@@ -472,11 +468,6 @@ const DebateRoom = () => {
         }
     }
 
-    console.log("for messages");
-    console.log(debateFORMsgs);
-
-    console.log("against messages");
-    console.log(debateAGAINSTMsgs);
 
     return (
         <div>
