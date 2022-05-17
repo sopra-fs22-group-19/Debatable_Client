@@ -9,7 +9,7 @@ import Header from "./Header";
 
 const Profile = props => {
 
-    const userId = localStorage.getItem("actualUser");
+    const userId = localStorage.getItem("userId");
 
     const [username, setUsername] = useState(null);
     const [name, setName] = useState(null);

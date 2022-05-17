@@ -26,6 +26,8 @@
 
 h6,h4,h5 {
     color: white;
+    justify-content: center;
+    display: flex;
 }
 
 #card2{
@@ -122,6 +124,13 @@ a {
     color: #fff;
     background-color: #1A237E;
 }
+.create-account {
+    color:#757575;
+    text-align: center;
+    margin-top: 0.1em;
+    
+    cursor: pointer;
+  }
 
 @media screen and (max-width: 1000px) {
     .logo {
