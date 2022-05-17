@@ -52,7 +52,7 @@ return(
                     <a className="nav-link" href={baselink+"home"}><i className="fa fa-fw fa-home"></i> Home <span className="sr-only">(current)</span></a>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href={baselink+"profile"}><i className="fa fa-fw fa-user"></i>Profile</a>
+                    <a className="nav-link" href={baselink+"profile"}><i className="fa fa-fw fa-user"></i>{localStorage.username}</a>
                 </li>
                 <li className="nav-item">
                     <a className="nav-link"href={baselink+"topics"}><i className="fa fa-fw fa-list"></i>Topics</a>
