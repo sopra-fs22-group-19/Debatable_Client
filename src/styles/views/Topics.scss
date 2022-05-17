@@ -1,40 +1,31 @@
-@import 'styles/theme';
-
-/* The '&' is a shorthand for the containing element,
-  so for example a '&.user-list' inside .game will compile to
-  .game.user-list
-  for more information visit https://sass-lang.com/guide
- */
-
-.wrapper{
+@import 'styles/theme';  /* The '&' is a shorthand for the containing element,   so for example a '&.user-list' inside .game will compile to   .game.user-list   for more information visit https://sass-lang.com/guide  */
+#wrapper-topics{
   margin:6px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   align-content: center;
 }
+
 .availability{
   font-family: "Gill Sans", sans-serif;
   font-size: xx-large;
   color: rgba(4, 31, 1, 0.86);
 }
 
-.list-group
-{
+.list-group {
   list-style: none
 }
+
 .list-group-item{
   background-color: rgba(254, 254, 254, 0.66);
-  border-radius: 100px;
-  margin: 5px;
+  border-radius: 100px;   margin: 5px;
 }
-.list-group-button{
+
+#list-group-button-topics{
   background-color: rgba(254, 254, 254, 0);
-
 }
-
-
-.scrollable-div {
+#scrollable-div-topics{
   background-color: rgba(185, 204, 143, 0.15);
   height: 500px;
   overflow: auto;
@@ -52,14 +43,10 @@
           29.5px 47.1px 23.7px -36px rgba(0, 0, 0, 0.026),
           42.9px 68.5px 39px -36px rgba(0, 0, 0, 0.032),
           60.5px 96.7px 59.7px -36px rgba(0, 0, 0, 0.041),
-          82px 131px 80px -36px rgba(0, 0, 0, 0.07)
-;
+          82px 131px 80px -36px rgba(0, 0, 0, 0.07) ;
 }
+
 .debate {
-
-
-
-
   &.button-container {
     display: inline-block;
     justify-content: center;
@@ -67,7 +54,4 @@
     color: rgb(68, 73, 57);
     background: white;
   }
-
-  }
-
-
+}

@@ -59,7 +59,7 @@ export default function FilterComponent() {
                             return (
                                 <label key={index}>
                                     <input type="checkbox" checked={isSelected} onChange={() => handleSelect(framework)}/>
-                                    <span className="ml-2 text-base text-gray-500 font-heading">{framework}</span>
+                                    <span className="ms-lg-1 text-base text-gray-500 font-heading">{framework}</span>
                                 </label>
                             );
                         })}

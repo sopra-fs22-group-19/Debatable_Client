@@ -80,13 +80,13 @@ const Topics = () => {
         <div >
             {debates.map(debate => (
                 <ul key={debate.debateId} className="list-group  list-group-horizontal-md">
-                    <li className=" list-group-button">
+                    <li id={"list-group-button-topics"} className=" list-group-button">
                         <Button className="debate button-container" onClick={() => todebateRoom("FOR", debate.debateId)}>FOR</Button>
                     </li>
                     <li className="list-group-item flex-fill">
                         {debate.topic}
                     </li>
-                    <li className="list-group-button ">
+                    <li id={"list-group-button-topics"} className="list-group-button ">
                         <Button className="debate button-container" onClick={() => todebateRoom("AGAINST", debate.debateId)}>AGAINST</Button>
                     </li>
                 </ul>
@@ -97,14 +97,15 @@ const Topics = () => {
     return (
         <div>
             <Header height={"100"}/>
-            <div className="wrapper">
+            <div id={"wrapper-topics"}>
                 <h className={"availability"}>Available topics</h>
                 <FilterComponent/>
             </div>
-            <div className="scrollable-div">
+            <div id={"scrollable-div-topics"} className="scrollable-div">
                 {content}
             </div>
         </div>
     );
 }
+
 export default Topics;
