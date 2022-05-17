@@ -84,6 +84,7 @@ const DebateRoom = () => {
 
     const [roomState, setRoomState] = useState( '');
     const [hasDebateStarted, setHasDebateStarted] = useState( false);
+    const [hasDebateEnded, setHasDebateEnded] = useState( false);
 
     const [debateFORMsgs, setDebateFORMsgs] = useState([]);
     const [debateAGAINSTMsgs, setDebateAGAINSTMsgs] = useState([]);
@@ -344,7 +345,11 @@ const DebateRoom = () => {
                     }
                 }
             } else if (roomState === "ENDED"){
-                await getOutOfDebate();
+                if (hasDebateStarted){
+                    await getOutOfDebate();
+                } else{
+                    setHasDebateEnded(true);
+                }
             }
         } debateStateChange();
     }, [roomState]);
@@ -525,10 +530,10 @@ const DebateRoom = () => {
                             side={opponentUser.side}
                             username={ opponentUser.userName}
                             msgs={opponentUser.side === "FOR" ? debateFORMsgs: debateAGAINSTMsgs}
-                            displayMessageBox = {hasDebateStarted}
+                            displayMessageBox = {hasDebateStarted || hasDebateEnded}
                             withWriteBox = {false}
                             withInviteButton = {displayInviteButton && userState.isStartingSide}
-                            displayWaitingMessage = {userState.isInvitedSide && !hasDebateStarted}
+                            displayWaitingMessage = {userState.isInvitedSide && !hasDebateStarted &&!hasDebateEnded}
                             isDebateStarted ={hasDebateStarted}
                             inviteLink = {getLink() + location.pathname + '/invitee'}
                         />
