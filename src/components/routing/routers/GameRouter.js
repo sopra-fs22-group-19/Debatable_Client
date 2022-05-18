@@ -1,7 +1,5 @@
 import {Redirect, Route} from "react-router-dom";
-import Topics from "components/views/Topics";
 import PropTypes from 'prop-types';
-import Topics from "../../views/Topics";
 
 const GameRouter = props => {
   /**

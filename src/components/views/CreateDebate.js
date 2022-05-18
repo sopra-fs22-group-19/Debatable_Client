@@ -1,4 +1,3 @@
-import React from "react";
 import {useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import PropTypes from "prop-types";
@@ -31,7 +30,7 @@ FormField.propTypes = {
     onChange: PropTypes.func
   };
 
-const CreateDebate = props => {
+const CreateDebate = () => {
     const history = useHistory();
     const [description, setDescription] = useState(null);
     const [topic, setTopic] = useState(null);

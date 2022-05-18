@@ -23,7 +23,7 @@ FormField.propTypes = {
     onChange: PropTypes.func
 };
 
-const EditProfile = props => {
+const EditProfile = () => {
 
     const {userId} = useParams();
     const history = useHistory();
