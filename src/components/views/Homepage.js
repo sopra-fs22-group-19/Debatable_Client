@@ -1,85 +1,66 @@
-
-import {useEffect, useState} from 'react';
-import {api, handleError} from 'helpers/api';
-import {Button} from 'components/ui/Button';
+import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import BaseContainer from "components/ui/BaseContainer";
-import "styles/views/Homepage.scss";
-import { useLocation } from "react-router-dom";
-
-// BUG: when going back to homepage and then joing the same debate topic with same side, 
-// user should not create a new one but should go to the same one.
+import "styles/views/Homepage.css";
+import Header from "./Header";
 
 const Homepage = () => {
     const history = useHistory();
-    const location = useLocation();
-    const [debates, setDebates] = useState(null);
-    const userId = location.state.userId;
-
-    const logout = () => {
-        localStorage.removeItem("token");
-        history.push('/login');
-    }
-
-    const todebateRoom = async (side, debateId) => {
-        try {
-            const requestBody = JSON.stringify({userId, debateId, side});
-            const response = await api.post("/debates/rooms", requestBody);
-            const debateRoom = response.data
-
-            let push_to = '/debateroom/' + String(debateRoom.roomId)
-
-            history.push({
-                pathname: push_to,
-                state: {
-                    userId: userId,
-                    roomId: debateRoom.roomId}
-            });
-        }catch(error) {
-            alert(`Something went wrong while creating debate room: \n${handleError(error)}`);
-        } 
-    }
-
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await api.get("/debates/" + String(userId));
-                setDebates(response.data)
-            } catch (error) {
-                console.error(`Something went wrong while fetching the debate topics: \n${handleError(error)}`);
-                console.error("Details:", error);
-                alert("Something went wrong while fetching the debate topics! See the console for details.");
-            }
-        }
-        fetchData();
-    }, [userId]);
+    const username = localStorage.getItem("username");
 
     let content;
-
-    if (debates) {
     content = (
-        <div className="debate block">
-                {debates.map(debate => (
-                    <div className="debate debates">
-                        <span>
-                            <Button className="debate button-container"  onClick={() => todebateRoom("FOR", debate.debateId)}>FOR</Button>
-                                <div key={debate.debateId} className="debate dcontainer">
-                                    {debate.topic}
-                                </div>
-                            <Button className="debate button-container" onClick={() => todebateRoom("AGAINST", debate.debateId)}>AGAINST</Button>
-                        </span>
-                    </div>
-                    ))}
-        </div>
-    );
-   }
+        <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto" style={{"align-items": "center"}}>
+            <div id={"card-home"} className="card card0 border-0">
+                <div className="row d-flex" style={{"align-items": "center"}}>
+                    <div className="row px-3" style={{"margin-top": "10px", "margin-bottom": "10px"}}>
+                        <div className="animated welcome" style={{"color":"white"}}>
+                            <p style={{"font-style":"bold"}}>Welcome {username}</p>
+                            <p> to </p>
+                            <p style={{"font-style":"italic"}}> It's Debatable </p>
+                        </div>
 
+                        </div>
+                    <div className="row px-3" style={{"margin-top": "10px", "margin-bottom": "10px"}}>
+                        <div className="col"/>
+                        <div className="col-6"  >
+                            <div className="line" />
+                        </div>
+                        <div className="col"/>
+
+                    </div>
+                    <div className="row px-3" style={{"margin-top": "10px", "margin-bottom": "10px"}}>
+                        <div className="col"/>
+                        <div className="col-6"  >
+                            <h3 id={"description"} style={{"font-style":"bold"}}> The platform where you can discuss either
+                                about interesting existing topics or create your own topic and defend your side!
+                            </h3>
+                        </div>
+                        <div className="col"/>
+
+                    </div>
+                    <div className="row px-3" style={{"margin-top": "10px", "margin-bottom": "10px"}}>
+                        <div className="col"/>
+                        <div className="col  d-flex justify-content-center"  >
+                            <button
+                                onClick={() => {history.push('/topics')}}> Get Started</button>
+                        </div>
+                        <div className="col"/>
+
+                    </div>
+                    </div>
+            </div>
+        </div>
+
+
+    )
     return (
-        <BaseContainer className="base-container-hp">
-            {content}
-            <Button className="debate button-logout" onClick={() => logout()}>LOGOUT</Button>
-        </BaseContainer>
-    );  
+
+    <div>
+        <Header/>
+        {content}
+    </div>
+
+    );
 }
 
 export default Homepage;

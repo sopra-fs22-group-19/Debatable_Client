@@ -9,11 +9,11 @@
 */
 
 //$accentDark: #446874;
-$accent: #f4f8fa;
-$accentDark: #aebdc3;
+$accent: rgb(247, 248, 239);
+$accentDark: rgba(185, 204, 143, 0.87);
 //$textColor: white;
 $textColor: white;
-$background: rgb(38, 40, 50);
+$background: rgba(45, 45, 43, 0.75);
 
 /* some constants */
 
@@ -28,7 +28,7 @@ $fontDefault: "M PLUS Rounded 1c", sans-serif;
 $fontMono: "Roboto Mono", monospace;
 
 /* a standard drop shadow */
-$dropShadow: 0 0.25em 0.25em rgba(0, 0, 0, 0.25);
+$dropShadow: 0 0.25em 0.25em rgb(168, 173, 155);
 
 $borderRadius: 0.75em;
 

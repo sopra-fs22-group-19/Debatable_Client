@@ -1,13 +1,24 @@
 import Login from "components/views/Login";
-import {useParams} from "react-router-dom/cjs/react-router-dom.min";
+import {useParams, useHistory} from "react-router-dom/cjs/react-router-dom.min";
 
 const InviteeLanding = () => {
-    const {roomId} = useParams()
-    const {participant} = useParams()
+    const {roomId} = useParams();
+    const history = useHistory();
+
+    if (localStorage.getItem("token")) {
+        history.push(
+            {
+                pathname: `/debateroom/${roomId}`,
+                state: {
+                    isInvitee: true,
+                }
+            }
+        );
+    }
 
     let content = (<Login
+        isInvitee= {true}
         roomId= {roomId}
-        participant= {participant}
         />)
 
     return (

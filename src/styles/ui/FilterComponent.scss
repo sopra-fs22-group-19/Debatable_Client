@@ -1,0 +1,85 @@
+@import 'styles/theme';
+
+.filter_wrapper {
+  position: relative;
+  display: inline-block;
+}
+.filter_button {
+  border-radius: 5px;
+  padding: 8px 16px;
+  background-color: rgba(99, 213, 225, 0.85);
+  cursor: pointer;
+  font-weight: 500;
+  color: white;
+  font-size: 18px;
+  line-height: 1.5;
+}
+.filter_button:hover {
+  background-color: #1d5bad;
+}
+.filter_button:focus {
+  outline: 1px dashed;
+  outline: 1px auto -webkit-focus-ring-color;
+}
+
+
+
+.filter_dropdown {
+  box-shadow: 0 1px 3px 0 rgba(5, 5, 5, 0.44), 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+  padding: 0.25rem;
+  border-radius: 10px;
+  display: none;
+  width: 16rem;
+  z-index: 50;
+  left: 0;
+  max-height: calc(100vh - 152px);
+  position: absolute;
+  margin-top: 0.5rem;
+  background-color: white;
+}
+
+@media (min-width: 1007px){
+  .filter_dropdown {
+    box-shadow: 0 1px 3px 0 rgba(5, 5, 5, 0.44), 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+    position: absolute;
+    display: block;
+    background-color: white;
+  }
+}
+
+@media (min-width: 501px) and ( max-width:1006px){
+  .filter_dropdown {
+    box-shadow: 0 1px 3px 0 rgba(5, 5, 5, 0.44), 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+    position: relative;
+    display: block;
+    background-color: white;
+  }
+}
+
+@media (max-width: 500px) and ( min-width:375px) {
+  .filter_dropdown {
+    box-shadow: 0 1px 3px 0 rgba(5, 5, 5, 0.44), 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+    position: fixed;
+    display: block;
+    background-color: white;
+  }
+}
+.filter_dropdown_actions {
+  border-top-width: 1px;
+  border-top-color: #e4e7eb;
+  border-top-style: solid;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem 0.5rem 0.25rem 0.5rem;
+}
+
+.filter_dropdown_actions button {
+  border-radius: 0.125rem;
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(99, 213, 225, 0.85);
+  border-color: transparent;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}

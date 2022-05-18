@@ -1,0 +1,226 @@
+@import 'styles/theme';
+
+.create {
+
+    &.heading {
+
+        display: flex;
+        font-family: "Gill Sans", sans-serif;
+        font-size: xx-large;
+        color: rgba(4, 31, 1, 0.86);
+        justify-content: center;
+        padding-bottom: 15px;
+    }
+
+
+    &.button {
+        background: #63D5E1D8;
+        width: auto;
+        padding: 9px;
+        border-radius: $borderRadius;
+        margin: auto;
+        align-items: center;
+        font-family: sans-serif;
+        color: white;
+        display: flex;
+      }
+
+
+}
+/* The container must be positioned relative: */
+
+
+.select {
+    display: none; /*hide original SELECT element: */
+}
+
+.select-selected {
+    background-color: #b9cc8f;
+}
+.dropList
+{
+    border-radius: 15px;
+   font: inherit;
+    background-color: rgba(255, 255, 255, 0.84);
+    box-shadow:
+            2.2px 3.5px 1.8px -36px rgba(0, 0, 0, 0.014),
+            5.9px 9.5px 4.4px -36px rgba(0, 0, 0, 0.018),
+            11.5px 18.4px 8.3px -36px rgba(0, 0, 0, 0.021),
+            19.2px 30.7px 14.2px -36px rgba(0, 0, 0, 0.023),
+            29.5px 47.1px 23.7px -36px rgba(0, 0, 0, 0.026),
+            42.9px 68.5px 39px -36px rgba(0, 0, 0, 0.032),
+            60.5px 96.7px 59.7px -36px rgba(0, 0, 0, 0.041),
+            82px 131px 80px -36px rgba(0, 0, 0, 0.07);        justify-content: center;
+
+}
+
+/* Style the arrow inside the select element: */
+.select-selected:after {
+    position: absolute;
+    content: "";
+    top: 14px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-color: #fff transparent transparent transparent;
+}
+
+/* Point the arrow upwards when the select box is open (active): */
+.select-selected.select-arrow-active:after {
+    border-color: transparent transparent #fff transparent;
+    top: 7px;
+}
+
+#card-create{
+    box-shadow: none;
+}
+
+/* style the items (options), including the selected item: */
+.select-items div,.select-selected {
+    color: #ffffff;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+    cursor: pointer;
+}
+
+/* Style items (options): */
+.select-items {
+    position: absolute;
+    background-color: #b9cc8f;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+}
+
+/* Hide the items when the select box is closed: */
+.select-hide {
+    display: none;
+}
+
+.select-items div:hover, .same-as-selected {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.card0 {
+    box-shadow: 0px 4px 8px 0px #757575;
+    border-radius: 0px;
+    background-color: rgba(223, 229, 214, 0.01);
+    width: 60%;
+}
+
+.card2 {
+    margin: 0px 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+
+}
+
+.logo {
+    width: 100%;
+    height: 75%;
+}
+
+.image {
+    width: 360px;
+    height: 280px;
+}
+
+.border-line {
+    border-right: 1px solid #EEEEEE;
+}
+
+
+
+.text-sm {
+    font-size: 14px !important;
+}
+
+::placeholder {
+    color: #BDBDBD;
+    opacity: 1;
+    font-weight: 350
+}
+
+:-ms-input-placeholder {
+    color: #BDBDBD;
+    font-weight: 300
+}
+
+::-ms-input-placeholder {
+    color: #BDBDBD;
+    font-weight: 300
+}
+
+input, textarea {
+    padding: 10px 12px 10px 12px;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    margin-bottom: 5px;
+    margin-top: 2px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #2C3E50;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+input:focus, textarea:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid rgba(99, 213, 225, 0.85);
+    outline-width: 0;
+}
+
+button:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    outline-width: 0;
+}
+
+a {
+    color: inherit;
+    cursor: pointer;
+}
+
+.btn-blue {
+    background-color: #1A237E;
+    width: 150px;
+    color: #fff;
+    border-radius: 2px;
+}
+
+.btn-blue:hover {
+    background-color: #000;
+    cursor: pointer;
+}
+
+.bg-blue {
+    color: #fff;
+    background-color: #1A237E;
+}
+
+@media screen and (max-width: 991px) {
+    .logo {
+        margin-left: 0px;
+    }
+
+    .image {
+        width: 300px;
+        height: 220px;
+    }
+
+    .border-line {
+        border-right: none;
+    }
+
+    .card2 {
+        border-top: 1px solid #EEEEEE !important;
+        margin: 0px 15px;
+    }
+}

@@ -1,19 +1,122 @@
-@import 'styles/theme';
 
-.header {
-  &.container {
-    @include center;
+
+.card0 {
+  box-shadow: 0px 4px 8px 0px #757575;
+  border-radius: 0px;
+  background-color: rgba(255, 255, 255, 0.68);
+  width:100%;
+}
+
+.card2 {
+  margin: 0px 100px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+
+}
+
+.logo {
+  width: 100%;
+  height: 75%;
+}
+
+.image {
+  width: 360px;
+  height: 280px;
+}
+
+.border-line {
+  border-right: 1px solid #EEEEEE;
+}
+
+
+
+.text-sm {
+  font-size: 14px !important;
+}
+
+::placeholder {
+  color: #BDBDBD;
+  opacity: 1;
+  font-weight: 350
+}
+
+:-ms-input-placeholder {
+  color: #BDBDBD;
+  font-weight: 300
+}
+
+::-ms-input-placeholder {
+  color: #BDBDBD;
+  font-weight: 300
+}
+
+input, textarea {
+  padding: 10px 12px 10px 12px;
+  border: 1px solid lightgrey;
+  border-radius: 2px;
+  margin-bottom: 5px;
+  margin-top: 2px;
+  width: 100%;
+  box-sizing: border-box;
+  color: #2C3E50;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+input:focus, textarea:focus {
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  border: 1px solid rgba(99, 213, 225, 0.85);
+  outline-width: 0;
+}
+
+button:focus {
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  outline-width: 0;
+}
+
+a {
+  color: inherit;
+  cursor: pointer;
+}
+
+.btn-blue {
+  background-color: #1A237E;
+  width: 150px;
+  color: #fff;
+  border-radius: 2px;
+}
+
+.btn-blue:hover {
+  background-color: #000;
+  cursor: pointer;
+}
+
+.bg-blue {
+  color: #fff;
+  background-color: #1A237E;
+}
+
+@media screen and (max-width: 991px) {
+  .logo {
+    margin-left: 0px;
   }
 
-  &.title {
-    font-weight: bold;
-    color: $background;
-    text-align: center;
-    font-size: 3em;
-    font-family: sans-serif;
-    white-space: nowrap;
-    text-shadow: 1px 1px 0 grey, 1px 2px 0 grey, 1px 3px 0 grey, 1px 4px 0 grey,
-    1px 5px 0 grey, 1px 6px 0 grey, 1px 7px 0 grey, 1px 8px 0 grey,
-    5px 13px 15px black;
+  .image {
+    width: 300px;
+    height: 220px;
+  }
+
+  .border-line {
+    border-right: none;
+  }
+
+  .card2 {
+    border-top: 1px solid #EEEEEE !important;
+    margin: 0px 15px;
   }
 }
