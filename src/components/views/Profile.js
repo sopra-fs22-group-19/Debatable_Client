@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import Header from "./Header";
 
 
-const Profile = props => {
+const Profile = () => {
 
     const userId = localStorage.getItem("userId");
 

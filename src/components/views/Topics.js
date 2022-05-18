@@ -13,13 +13,6 @@ const Topics = () => {
     const userId = localStorage.getItem("userId");
     let categories = [];
 
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("userId");
-        localStorage.removeItem("categories");
-        history.push('/login');
-    }
-
     const todebateRoom = async (side, debateId) => {
         try {
             const requestBody = JSON.stringify({userId, debateId, side});
@@ -47,15 +40,15 @@ const Topics = () => {
 
                 if(categories){
                     let query = "/debates/?categories=" + categories;
-                    const response = await api.get(query);
+                    const filtered_response = await api.get(query);
 
-                    if (response.data.length === 0) {
+                    if (filtered_response.data.length === 0) {
                         alert("Debate topic for this filter not found. Try another filter!")
                         const response = await api.get("/debates/" + String(userId));
                         setDebates(response.data)
                     }
                     else {
-                        setDebates(response.data)
+                        setDebates(filtered_response.data)
                     }
                 }
 

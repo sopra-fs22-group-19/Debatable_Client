@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import {Button} from 'components/ui/Button';
 import "styles/ui/FilterComponent.scss";
-import Topics from "../views/Topics";
 
 
 export default function FilterComponent() {
