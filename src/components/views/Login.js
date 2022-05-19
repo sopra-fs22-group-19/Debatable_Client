@@ -85,8 +85,14 @@ const Login = props => {
   )
   const doLogin = async () => {
     try {
+
       let to_get = "/login?username=" + String(username) + "&password=" + String(password);
-      const response = await api.get(to_get);
+      let loginURL = "/login/v2"
+      const response = await api.get(loginURL,{
+        {auth:
+          "username":String(username),
+        "password":String(password)}
+      });
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Get the returned user and update a new object.
