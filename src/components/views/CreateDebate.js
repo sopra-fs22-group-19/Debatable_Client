@@ -40,10 +40,10 @@ const CreateDebate = () => {
     const filters = ["Science", "History", "Sports", "Health", "Art", "Entertainment", "Politics", "Culture", "Economics", "Education", "Other"]
 
     const create_new_debate = async () => {
-        let Username = localStorage.getItem("username");
-        let Password = localStorage.getItem("password");
 
       try {
+          let Username = localStorage.getItem("username");
+          let Password = localStorage.getItem("password");
         const requestBody = JSON.stringify({userId, topic, description, category});
 
         const post_topic = await api.post("/debates/topics", requestBody,{
