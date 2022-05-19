@@ -82,7 +82,8 @@ const Register = props => {
   }
 
   return (
-  <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto" style={{"background-color":"white", "height":"100vh"}}>
+  <div className="container-fluid" style={{"background-color":"white", "height":"100vh",
+    "padding-left":"0px", "padding-right":"0px"}}>
     <div id="card" className="card card0 border-0">
       <div className="row d-flex">
         <div className="col-lg-6  d-flex" >
