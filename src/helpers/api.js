@@ -7,10 +7,12 @@ export const api = axios.create({
 });
 
 
-export const loginApi = axios.create({
+export const authapi = axios.create({
   baseURL: getDomain(),
-  headers: { 'Content-Type': 'application/json' }
-});
+  headers: { 'Content-Type': 'application/json',auth: {
+      username: localStorage.getItem("username"),
+      password: localStorage.getItem("password")
+    }}});
 
 export const handleError = error => {
   const response = error.response;

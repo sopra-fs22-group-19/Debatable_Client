@@ -1,23 +1,42 @@
 import React, {useEffect, useState} from 'react';
-import {api, handleError} from 'helpers/api';
+import {api, handleError, profileApi} from 'helpers/api';
 import {Button} from 'components/ui/Button';
 import 'styles/views/Profile.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import { Link } from 'react-router-dom';
 import Header from "./Header";
+import {getDomain} from "../../helpers/getDomain";
+import axios from "axios";
 
 
 const Profile = props => {
 
     const userId = localStorage.getItem("actualUser");
+    const password = localStorage.getItem("password");
+    const getUn = localStorage.getItem("username");
 
     const [username, setUsername] = useState(null);
     const [name, setName] = useState(null);
 
     useEffect(() => {
+        console.log({getUn},{password});
 
         async function fetchData() {
             try {
+
+                let profileURL = getDomain()+`users/${userId}`;
+
+                const headers = {
+                    'Content-Type': 'application/json',
+                    auth: {
+                        username: {getUn},
+                        password: {password}
+                    }
+                };
+
+                //const response = await axios.get(profileURL, headers);
+                //const response = await profileApi.get(`/users/${userId}`);
+
                 const response = await api.get(`/users/${userId}`);
 
                 localStorage.setItem("editUser", userId)

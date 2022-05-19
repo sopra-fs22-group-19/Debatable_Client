@@ -8,6 +8,7 @@ import 'styles/logo.css';
 import PropTypes from "prop-types";
 import 'styles/views/Login_Trial.css';
 import axios from "axios";
+import {getDomain} from "../../helpers/getDomain";
 
 const FormField = props => {
   return (
@@ -81,7 +82,10 @@ const Login = props => {
 
   const doLogin = async () => {
     try {
-        let to_get_v2 = "/login/v2";
+
+
+
+        let to_get_v2 = getDomain()+"login/v2";
         const headers = {
             'Content-Type': 'application/json',
             auth: {
@@ -93,13 +97,14 @@ const Login = props => {
 
       //let to_get = "/login?username=" + String(username) + "&password=" + String(password);
       //const response = await api.get(to_get);
-        const response = await axios.post(to_get_v2, headers);
+        const response = await axios.get(to_get_v2, headers);
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
 
       // saving token in local storage
+        localStorage.setItem("password",String(password));
       localStorage.setItem("token", user.token);
       localStorage.setItem("userId", user.userId);
       localStorage.setItem("username", user.username);
