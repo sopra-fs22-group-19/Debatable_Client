@@ -40,14 +40,22 @@ const CreateDebate = () => {
     const filters = ["Science", "History", "Sports", "Health", "Art", "Entertainment", "Politics", "Culture", "Economics", "Education", "Other"]
 
     const create_new_debate = async () => {
+        let Username = localStorage.getItem("username");
+        let Password = localStorage.getItem("password");
+
       try {
         const requestBody = JSON.stringify({userId, topic, description, category});
-        const post_topic = await api.post("/debates/topics", requestBody);
+
+        const post_topic = await api.post("/debates/topics", requestBody,{
+            auth: {username: String(Username), password: Password}
+        });
         const debateId = post_topic.data.debateId;
 
         try {
           const body = JSON.stringify({userId, debateId, side});
-          const post_room = await api.post("/debates/rooms", body);
+          const post_room = await api.post("/debates/rooms", body,{
+              auth: {username: String(Username), password: Password}
+          });
           const debateRoom = post_room.data
 
           let push_to = '/debateroom/' + String(debateRoom.roomId)
