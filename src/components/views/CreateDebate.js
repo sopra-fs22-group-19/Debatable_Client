@@ -42,7 +42,7 @@ const CreateDebate = () => {
     const create_new_debate = async () => {
       try {
         const requestBody = JSON.stringify({userId, topic, description, category});
-        const post_topic = await api.post("/debates", requestBody);
+        const post_topic = await api.post("/debates/topics", requestBody);
         const debateId = post_topic.data.debateId;
 
         try {
