@@ -51,6 +51,7 @@ const Register = props => {
       localStorage.setItem("userId", user.userId);
       localStorage.setItem("token", user.token);
       localStorage.setItem("username", user.username);
+      localStorage.setItem("name", user.name);
 
       if (location.state.isInvitee)
       {
