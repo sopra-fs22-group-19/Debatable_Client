@@ -26,12 +26,13 @@ const Header = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
         localStorage.removeItem("username");
+        localStorage.removeItem("name");
         localStorage.removeItem("categories");
         history.push('/login');
     }
 return(
     <nav className="navbar navbar-expand-lg navbar-light bg-light py-lg-0">
-        <a className="navbar-brand mr-auto " href="#">
+        <a className="navbar-brand mr-auto " href={baselink}>
             <img src={require('../../images/logo2.png')}
 
                                                   border="0" width="300" height="100" alt=""/>
@@ -46,7 +47,7 @@ return(
                     <a className="nav-link" href={baselink+"home"}><i className="fa fa-fw fa-home"></i> Home <span className="sr-only">(current)</span></a>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href={baselink+"profile"}><i className="fa fa-fw fa-user"></i>{localStorage.username}</a>
+                    <a className="nav-link" href={baselink+"profile"}><i className="fa fa-fw fa-user"></i>{localStorage.name}</a>
                 </li>
                 <li className="nav-item">
                     <a className="nav-link"href={baselink+"topics"}><i className="fa fa-fw fa-list"></i>Topics</a>
