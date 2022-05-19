@@ -1,0 +1,64 @@
+@import 'styles/theme';
+#wrapper-topics{
+  margin:6px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  align-content: center;
+}
+.availability-topics{
+  font-family: "Gill Sans", sans-serif;
+  font-size: xx-large;
+  color: rgba(4, 31, 1, 0.86);
+}
+
+.list-group-topics
+{
+  list-style: none;
+  align-items: center;
+}
+#list-group-item-topics{
+  background-color: rgba(254, 254, 254, 0.66);
+  border-radius: 100px;
+  margin: 5px;
+  cursor: default;
+  pointer-events: none;
+}
+
+
+#list-group-button-topics{
+  background-color: rgba(254, 254, 254, 0);
+
+}
+
+
+#scrollable-div-topics{
+  background-color: rgba(185, 204, 143, 0.15);
+  height: 500px;
+  overflow: auto;
+  margin: auto;
+  width: 70%;
+  align-items: center;
+  text-align: justify;
+  padding: 20px;
+  border-radius: 30px;
+  box-shadow:
+          2.2px 3.5px 1.8px -36px rgba(0, 0, 0, 0.014),
+          5.9px 9.5px 4.4px -36px rgba(0, 0, 0, 0.018),
+          11.5px 18.4px 8.3px -36px rgba(0, 0, 0, 0.021),
+          19.2px 30.7px 14.2px -36px rgba(0, 0, 0, 0.023),
+          29.5px 47.1px 23.7px -36px rgba(0, 0, 0, 0.026),
+          42.9px 68.5px 39px -36px rgba(0, 0, 0, 0.032),
+          60.5px 96.7px 59.7px -36px rgba(0, 0, 0, 0.041),
+          82px 131px 80px -36px rgba(0, 0, 0, 0.07) ;
+}
+
+.debate {
+  &.button-container {
+    display: inline-block;
+    justify-content: center;
+    padding: 9px;
+    color: rgb(68, 73, 57);
+    background: white;
+  }
+}

@@ -1,0 +1,48 @@
+.main-header {
+    width: 100%;
+    background-color: black;
+    height: 200px;
+    justify-content: center;
+    position: center;
+    align-items: center;
+}
+
+
+
+.spinning {
+    mix-blend-mode: difference;
+    align-items: center;
+
+    justify-content: center;
+    position: center;
+    z-index: 2000;
+    height: 100px;
+    width: 100px;
+    top: 100px;
+    right: 10px;
+    -webkit-animation: spin 4s linear infinite;
+    -moz-animation: spin 4s linear infinite;
+    animation: spin 4s linear infinite;
+}
+
+
+
+
+@-moz-keyframes spin {
+    100% {
+        -moz-transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}

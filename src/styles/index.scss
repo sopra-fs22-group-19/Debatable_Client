@@ -4,14 +4,24 @@
 /**
 This file contains the general and shared style of your application.
  */
-body {
+html, body {
+
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  min-height: 100vh !important;
+  height: 100vh;
   font-family: $fontDefault;
-  background-image: linear-gradient(135deg, $accent 10%, $accentDark 100%);
+  background-color: #B9CC8FDD
 }
 
+#root
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
 input,
 textarea,
 select,

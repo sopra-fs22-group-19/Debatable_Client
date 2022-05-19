@@ -1,0 +1,102 @@
+/* The '&' is a shorthand for the containing element,
+  so for example a '&.user-list' inside .game will compile to
+  .game.user-list
+  for more information visit https://sass-lang.com/guide
+ */
+
+.wrapper{
+  margin:6px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  align-content: center;
+}
+.availability{
+  font-family: "Gill Sans", sans-serif;
+  font-size: xx-large;
+  color: rgba(4, 31, 1, 0.86);
+}
+
+.list-group
+{
+  list-style: none
+}
+.list-group-item{
+  background-color: rgba(254, 254, 254, 0.66);
+  border-radius: 100px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.list-group-item:hover{
+  transform: scale(1.01);
+  transition-duration: 0.2s;
+}
+
+.list-group-button{
+  background-color: rgba(254, 254, 254, 0.66);
+  border-radius: 100px;
+  margin: 5px;
+}
+
+.scrollable-div-title {
+  background-color: rgba(185, 204, 143, 0.15);
+  height: 80px;
+  overflow: auto;
+  margin: auto;
+  width: 70%;
+  align-items: center;
+  text-align: justify;
+  padding-top: 40px;
+  border-radius: 0px;
+  box-shadow:
+          2.2px 3.5px 1.8px -36px rgba(0, 0, 0, 0.014),
+          5.9px 9.5px 4.4px -36px rgba(0, 0, 0, 0.018),
+          11.5px 18.4px 8.3px -36px rgba(0, 0, 0, 0.021),
+          19.2px 30.7px 14.2px -36px rgba(0, 0, 0, 0.023),
+          29.5px 47.1px 23.7px -36px rgba(0, 0, 0, 0.026),
+          42.9px 68.5px 39px -36px rgba(0, 0, 0, 0.032),
+          60.5px 96.7px 59.7px -36px rgba(0, 0, 0, 0.041),
+          82px 131px 80px -36px rgba(0, 0, 0, 0.07)
+;
+}
+
+.scrollable-div {
+  background-color: rgba(185, 204, 143, 0.15);
+  height: 240px;
+  overflow-y: auto;
+  overflow-x: clip;
+  margin: auto;
+  width: 70%;
+  align-items: center;
+  text-align: justify;
+  padding-left: 20px;
+  padding-bottom: 10px;
+  border-radius: 20px;
+  box-shadow:
+          2.2px 3.5px 1.8px -36px rgba(0, 0, 0, 0.014),
+          5.9px 9.5px 4.4px -36px rgba(0, 0, 0, 0.018),
+          11.5px 18.4px 8.3px -36px rgba(0, 0, 0, 0.021),
+          19.2px 30.7px 14.2px -36px rgba(0, 0, 0, 0.023),
+          29.5px 47.1px 23.7px -36px rgba(0, 0, 0, 0.026),
+          42.9px 68.5px 39px -36px rgba(0, 0, 0, 0.032),
+          60.5px 96.7px 59.7px -36px rgba(0, 0, 0, 0.041),
+          82px 131px 80px -36px rgba(0, 0, 0, 0.07)
+;
+}
+.debate {
+
+
+
+
+  &.button-container {
+    display: inline-block;
+    justify-content: center;
+    padding: 9px;
+    color: rgb(68, 73, 57);
+    background: white;
+  }
+
+  }
+
+
