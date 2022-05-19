@@ -28,6 +28,7 @@ const EditProfile = () => {
     const {userId} = useParams();
     const history = useHistory();
 
+
     const [username, setUsername] = useState(null);
     const [name, setName] = useState(null);
     const [password, setPassword] = useState(null);
@@ -37,8 +38,16 @@ const EditProfile = () => {
 
     const doUpdate = async () => {
         try {
+
+            const response = await api.get(`/users/${userId}`);
+            let oldUsername = localStorage.getItem("username");
+            let oldPassword = localStorage.getItem("password");
+
             const requestBody = JSON.stringify({username, name, password});
-            await api.put(`/users/${userId}`, requestBody);
+
+            await api.put(`/users/${userId}`, requestBody,{
+                auth: {username: String(oldUsername), password: oldPassword}
+            });
             history.push(`/profile`);
         } catch (error) {
             alert(`Something went wrong during the process: \n${handleError(error)}`);
