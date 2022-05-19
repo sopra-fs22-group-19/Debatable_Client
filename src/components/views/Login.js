@@ -88,6 +88,7 @@ const Login = props => {
 
       //let to_get = "/login?username=" + String(username) + "&password=" + String(password);
       let loginURL = "/login/v2"
+
       const response = await api.get(loginURL,{
           auth: {username: String(username), password: String(password)}
       });
@@ -100,6 +101,7 @@ const Login = props => {
       localStorage.setItem("token", user.token);
       localStorage.setItem("userId", user.userId);
       localStorage.setItem("username", user.username);
+      localStorage.setItem("password", String(password));
 
       // Login successfully worked --> navigate to the route
       history.push(
