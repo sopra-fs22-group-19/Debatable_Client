@@ -60,7 +60,7 @@ const Login = props => {
   const joinAsGuest = async () => {
     try {
       // Create guest user
-      const response = await api.post("/users/guests");
+      const response = await api.post("/register/guests");
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("userId", response.data.userId);
   }
