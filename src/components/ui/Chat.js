@@ -15,7 +15,7 @@ const WriteBox = (props) => {
                     <div className="input-group">
                     <input id="debateRoom-input-text" type="text" className="form-control input-sm chat_input"
                            placeholder="Write your argument here..."onChange={e => { setCount(e.target.value.length); props.handleMessage(e) }}
-                           maxlength="2000"
+                           maxlength="120"
                            onKeyPress={(ev) => {
                                if (ev.key === "Enter") {
                                    ev.preventDefault();
@@ -31,10 +31,20 @@ const WriteBox = (props) => {
                                    aria-hidden="true"></i></button>
                             </span>
                     </div>
-
-            <p style={{"font-size":"12px", "margin-top":"0.4em"}}>
-                {count}/2000
-            </p>
+                    {count < 60 ?
+                        <p style={{"font-size":"12px", "margin-top":"0.4em"}}>
+                         {count}/120
+                        </p> 
+                        : null
+                    }
+                    {
+                    count > 60 && count <120 ? <p style={{"font-size":"12px", "margin-top":"0.4em", "color": "#EED202"}}> {count}/120 </p> : null
+                    }
+                    {count == 120 ?
+                    <p style={{"font-size":"12px", "margin-top":"0.4em", "color":
+                            "darkred"}}>
+                        {count}/120 </p> : null
+                    }
                 </div>
             : null}
     </div>

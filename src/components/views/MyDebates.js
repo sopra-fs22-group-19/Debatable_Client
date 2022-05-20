@@ -21,9 +21,9 @@ const DebateRoomList = (props) => {
                         <div>
                             {props.debateRoomList.map(debateRoom =>
                                 <ul key={debateRoom.roomId} className="list-group  list-group-horizontal-md">
-                                    <li className="list-group-item flex-fill"
+                                    <li className="list-group-item flex-fill" style={{"text-align": "center"}}
                                         onClick={() => props.toDebateRoom(debateRoom.roomId)}>
-                                        {debateRoom.debate.topic}
+                                        <p>{debateRoom.debate.topic}</p>
                                     </li>
                                 </ul>
                             )
@@ -162,7 +162,7 @@ const MyDebates = () => {
 
     return (
         <div>
-            <Header height={"100"}/>
+            <Header/>
             {atLeastOneDebate ?
                 <div> {listOfDebatesContent} </div>
                 : <div> {contentNoDebatesAvailable} </div>

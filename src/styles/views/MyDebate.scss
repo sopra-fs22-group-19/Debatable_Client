@@ -22,7 +22,7 @@
   list-style: none
 }
 .list-group-item{
-  background-color: rgba(254, 254, 254, 0.66);
+  background-color: rgba(254, 254, 254, 0.88);
   border-radius: 100px;
   margin: 5px;
   cursor: pointer;
@@ -41,7 +41,7 @@
 
 .scrollable-div-title {
   background-color: rgba(185, 204, 143, 0.15);
-  height: 80px;
+  height: 100%;
   overflow: auto;
   margin: auto;
   width: 70%;
@@ -62,16 +62,18 @@
 }
 
 .scrollable-div {
-  background-color: rgba(185, 204, 143, 0.15);
-  height: 240px;
+  background-color: rgba(247, 248, 239, 0.53);
+  height: 100%;
   overflow-y: auto;
   overflow-x: clip;
   margin: auto;
   width: 70%;
   align-items: center;
   text-align: justify;
+  padding-right: 20px;
   padding-left: 20px;
   padding-bottom: 10px;
+  padding-top: 10px;
   border-radius: 20px;
   box-shadow:
           2.2px 3.5px 1.8px -36px rgba(0, 0, 0, 0.014),

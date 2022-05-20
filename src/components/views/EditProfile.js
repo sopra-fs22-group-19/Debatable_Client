@@ -32,10 +32,16 @@ const EditProfile = () => {
     const [name, setName] = useState(null);
     const [password, setPassword] = useState(null);
 
-
-    console.log(userId)
-
     const doUpdate = async () => {
+        if (username !== null) {
+            localStorage.setItem("username", username)
+            console.log("saving username to localstorage")
+        }
+
+        if (name !== null) {
+            localStorage.setItem("name", name)
+            console.log("saving name to localstorage")
+        }
         try {
             const requestBody = JSON.stringify({username, name, password});
             await api.put(`/users/${userId}`, requestBody);
@@ -47,7 +53,7 @@ const EditProfile = () => {
 
     return (
         <BaseContainer>
-            <Header height={"100"}/>
+            <Header/>
             <div id="card2" className="card2 card border-0 px-4 py-5">
                 <div className="row mb-4 px-3  d-flex justify-content-center">
                     <div className="row px-3">
@@ -60,7 +66,6 @@ const EditProfile = () => {
                         <FormField label="Password: " value={password} onChange={e => setPassword(e)}/>
                     </div>
                 </div>
-
                 <div className="row mb-3 px-3 d-flex justify-content-center">
                     <Button width="50%" onClick={() => doUpdate()}>Save</Button>
                 </div>
