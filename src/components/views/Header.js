@@ -1,10 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Container, Navbar, Nav } from "react-bootstrap";
 import "styles/views/Header.scss";
 import { isProduction } from 'helpers/isProduction';
 import {useHistory} from "react-router-dom";
-import {Button} from "../ui/Button";
 
     /*<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     */
@@ -20,12 +18,11 @@ import {Button} from "../ui/Button";
 
  const getBaseLink = () => {
     const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/'
-    //const prodURL = "https://sopra-debatable-client-app.herokuapp.com/"
     const devURL = 'http://localhost:3000/'
     return isProduction() ? prodURL : devURL;
 }
 
-const Header = props => {
+const Header = () => {
     const history = useHistory();
     const baselink = getBaseLink();
     const logout = () => {

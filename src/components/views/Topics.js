@@ -88,7 +88,7 @@ const Topics = () => {
    }
     return (
         <div>
-            <Header height={"100"}/>
+            <Header/>
             <div id={"wrapper-topics"}>
                 <h className={"availability"}>Available topics</h>
                 <FilterComponent/>
