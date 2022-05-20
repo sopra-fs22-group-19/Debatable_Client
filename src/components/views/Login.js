@@ -48,14 +48,6 @@ const Login = props => {
   else {
     to_push = "/home"
   }
-  /*
-   <div className="row mb-4 px-3">
-                          <h6>
-                            Don't have an account? 
-                            
-                          </h6>
-                      </div>
-   */
 
   const joinAsGuest = async () => {
     try {

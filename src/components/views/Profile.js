@@ -39,29 +39,36 @@ const Profile = () => {
             <div>
                 <Header height={"100"}/>
                 <div className='container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto'></div>
-                <div id="card2" className="border-0 px-4 py-5  d-flex justify-content-center" style={{"background-color":"white", "width":"40%"}}>
-                    <div className="row mb-4 px-3 d-flex justify-content-center">
-                        <div className="row px-3 mb-2" style={{"color":"green", "font-size": "x-large" }}>
-                            Username: {username}
-                        </div>
+                    <div className="row d-flex" style={{"justify-content": "center"}}>
+        
+                            <div id="card3" className="border-0 px-4 py-5  d-flex justify-content-center" 
+                            style={{"background-color":"white", "width":"30%", "border-radius":"10%", "height":"auto"}}>
+                                 <div className="row mb-4 px-3 d-flex " style={{"background-color":"white", "width":"100%"}}>
+                                    <div className="row px-3 mb-2" style={{"color":"green", "font-size": "x-large" }}>
+                                        Username: {username}
+                                    </div>
 
-                        <div className="row px-3 mb-2" style={{"color":"green", "font-size": "x-large" }}>
-                            Name: {name}
-                        </div>
+                                    <div className="row px-3 mb-2" style={{"color":"green", "font-size": "x-large" }}>
+                                        Name: {name}
+                                    </div>
 
-                        <div className="row px-3 mb-5" style={{"color":"green", "font-size": "x-large" }}>
-                            Password: *****
-                        </div>
+                                    <div className="row px-3 mb-1" 
+                                    style={{"color":"green", "font-size": "x-large"}}>
+                                        Password: *****
+                                    </div>
 
-                        <div className="row px-3  d-flex justify-content-center">
-                            <Link to ={`/edit/${userId}`}>
-                                <Button width="40%">Edit Profile</Button>
-                            </Link>
-                        </div>
-
-                    </div>  
+                                </div>  
+                                
+                            </div>
+                         
+                        
+                     </div>
+                     <div className="row d-flex" style={{"justify-content": "center", "text-align" : "center"}}>
+                                        <Link to ={`/edit/${userId}`}>
+                                            <Button width="10%" style={{"margin-top":"0.5em"}} >Edit Profile</Button>
+                                        </Link>
+                                    </div>
                 </div>
-            </div>
        
     );
 }
