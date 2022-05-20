@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import {api, handleError} from 'helpers/api';
 import {Container, Navbar, Nav } from "react-bootstrap";
 import "styles/views/Header.scss";
 import { isProduction } from 'helpers/isProduction';
@@ -28,13 +29,25 @@ import {Button} from "../ui/Button";
 const Header = props => {
     const history = useHistory();
     const baselink = getBaseLink();
-    const logout = () => {
+    async function logout () {
+        let logoutUrl = "/logout"
+        try {
+            const response = await api.get(logoutUrl,{
+                auth: {username: String(localStorage.username), password: String(localStorage.password)}
+            });
+        }
+        catch (error) {
+            alert(`Something went wrong while logging out: \n${handleError(error)}`);
+        }
+
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
         localStorage.removeItem("username");
         localStorage.removeItem("categories");
+        localStorage.removeItem("password");
         history.push('/login');
     }
+
 return(
     <nav className="navbar navbar-expand-lg navbar-light bg-light py-lg-0">
         <a className="navbar-brand mr-auto " href="#">
