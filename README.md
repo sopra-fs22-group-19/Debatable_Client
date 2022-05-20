@@ -1,5 +1,5 @@
 # It's Debatable Client Repository
-
+![logo](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/images/logo2.png)
 ## Introduction
 It's debatable is an online debate platform where users can debate with their friends and family. They can have debate on existing debate topics or they can create their own debate topics. Users can also see their ongoing debates, ended debates, debates which are waiting to be started, etc.
 
