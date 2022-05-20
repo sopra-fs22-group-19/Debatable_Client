@@ -407,7 +407,7 @@ const DebateRoom = () => {
     }
     // Methods related to Websocket
     const connectToRoomWS =(userName, debateState) => {
-        let Sock = new SockJS('http://localhost:8080/ws-endpoint');
+        let Sock = new SockJS(getLink() + '/ws-endpoint');
         stompClient = over(Sock);
         stompClient.connect({}, () => onConnected(userName, debateState),  onError);
     }
