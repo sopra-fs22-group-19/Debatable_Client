@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {Button} from 'components/ui/Button';
-//import BaseContainer from "components/ui/BaseContainer";
 import 'styles/ui/BaseContainer.scss';
-//import 'styles/views/Login_Trial.css';
 import 'styles/views/Profile.scss';
 import { Link } from 'react-router-dom';
 import Header from "./Header";
@@ -23,7 +21,6 @@ const Profile = () => {
                 const response = await api.get(`/users/${userId}`);
 
                 localStorage.setItem("editUser", userId)
-                console.log(localStorage.getItem("editUser"))
 
                 setUsername(response.data["username"]);
                 setName(response.data["name"]);
