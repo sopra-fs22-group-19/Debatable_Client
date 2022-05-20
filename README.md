@@ -1,47 +1,44 @@
-# SoPra FS22 - Client Template
+# It's Debatable Client Repository
 
-## Getting started
+## Introduction
+It's debatable is an online debate platform where users can debate with their friends and family. They can have debate on existing debate topics or they can create their own debate topics. Users can also see their ongoing debates, ended debates, debates which are waiting to be started, etc.
 
-Read and go through these Tutorials. It will make your life easier!
+Once both participants join the debate room, participant 1 can start the debate. Each participant will get 30 seconds to defend their side. Debates arguments can be translated in 5 different laguages namely Chinese, English, German, Greek, Spanish. 
 
-- Read the React [Docs](https://reactjs.org/docs/getting-started.html)
-- Do this React [Getting Started](https://reactjs.org/tutorial/tutorial.html) Tutorial (it doesn’t assume any existing React knowledge)
-- Get an Understanding of [CSS](https://www.w3schools.com/Css/), [SCSS](https://sass-lang.com/documentation/syntax), and [HTML](https://www.w3schools.com/html/html_intro.asp)!
+If second participant joined as a guest user, they do not have any access to any feature of It's debatable except participanting on the debate they have invited to. However, they do have right to end the debate.
 
-Next, there are two other technologies that you should look at:
+## Technologies
+We used Javascript and Reach for frontend of It's debatable i.e. current git repository. We used Java in the backend of [It's debatable Server](https://github.com/sopra-fs22-group-19/Debatable_Server) repository. The other frameworks which we used in backend are Spring, Rest, Heroku (for deployment), SonarQube (code quality). We had weekly Scrums and the implementation period was divided into 2 sprints.
 
-* [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) offers declarative routing for React. It is a collection of navigational components that fit nicely with the application. 
-* [react-hooks](https://reactrouter.com/web/api/Hooks) let you access the router's state and perform navigation from inside your components.
-
-## Prerequisites and Installation
-For your local development environment, you will need Node.js. You can download it [here](https://nodejs.org). All other dependencies, including React, get installed with:
-
-```npm install```
-
-Run this command before you start your application for the first time. Next, you can start the app with:
-
-```npm run dev```
-
-Now you can open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-Notice that the page will reload if you make any edits. You will also see any lint errors in the console (use Google Chrome).
-
-### Testing
-Testing is optional, and you can run the tests with `npm run test`.
-This launches the test runner in an interactive watch mode. See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-> For macOS user running into a 'fsevents' error: https://github.com/jest-community/vscode-jest/issues/423
-
-### Build
-Finally, `npm run build` builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance: the build is minified, and the filenames include hashes.<br>
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-## Learn More
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## High-level Components
+## Launch & Deployment
+## Illustrations
 
 
-> Thanks to Lucas Pelloni and Kyrill Hux for working on the template.
->>>>>>> 577c7c19e99f349d15e2f2235ecf0489faaf346d
+
+
+## Roadmap
+Following are some features which would be nice additions:
+### Debate viewers
+It would be a nice addition to add viewers who can watch the debates.
+
+### Debate Winner
+Currently, there is no winner of the debates. Using the above feature and by upvoting and downvoting the arguments, debate winner can be decided.
+
+### Debate Moderator
+It would be nice if we can have a debate moderator who can try to keep the debating participants stick to the topic and can stop them from deviating.
+
+### Live video mode of debating
+In the current implementation, users type their arguments in the debate room. It would be nicer to have debates with people on live video mode.
+
+## Authors
+* [Orestis Oikonomou](https://github.com/oroikono)
+* [Rupal Saxena](https://github.com/rupalsaxena)
+* [Juan Bermeo](https://github.com/JdbermeoUZH)
+* [Pablo Bolaños](https://github.com/pabsbo)
+* [Chenfei Ma](https://github.com/chenfeimauzh)
+
+## Acknowledgement
+We would like to thank Prof. Dr. Thomas Fritz and his team of Software Praktikum (SoPra) - FS22 of University of Zurich for all the support. 
+
+## License
