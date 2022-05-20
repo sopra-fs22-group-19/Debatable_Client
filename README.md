@@ -8,7 +8,7 @@ Once both participants join the debate room, participant 1 can start the debate.
 If second participant joined as a guest user, they do not have any access to any feature of It's debatable except participanting on the debate they have invited to. However, they do have right to end the debate.
 
 ## Technologies
-We used Javascript and Reach for frontend of It's debatable i.e. current git repository. We used Java in the backend of [It's debatable Server](https://github.com/sopra-fs22-group-19/Debatable_Server) repository. The other frameworks which we used in backend are Spring, Rest, Heroku (for deployment), SonarQube (code quality). We had weekly Scrums and the implementation period was divided into 2 sprints.
+We used Javascript, HTML, CSS, SCSS and React for frontend of It's debatable i.e. current git repository. We used Java in the backend of [It's debatable Server](https://github.com/sopra-fs22-group-19/Debatable_Server) repository. The other frameworks which we used in backend are Spring, Rest, Heroku (for deployment), SonarCloud (code quality). We had weekly Scrums and the implementation period was divided into 2 sprints.
 
 ## High-level Components
 ## Launch & Deployment
@@ -42,3 +42,13 @@ In the current implementation, users type their arguments in the debate room. It
 We would like to thank Prof. Dr. Thomas Fritz and his team of Software Praktikum (SoPra) - FS22 of University of Zurich for all the support. 
 
 ## License
+MIT License
+
+Copyright (c) [year] [fullname]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
