@@ -1,8 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
+import {Container, Navbar, Nav } from "react-bootstrap";
 import "styles/views/Header.scss";
 import { isProduction } from 'helpers/isProduction';
 import {useHistory} from "react-router-dom";
+import {Button} from "../ui/Button";
+
+    /*<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    */
 
 /**
  * This is an example of a Functional and stateless component (View) in React. Functional components are not classes and thus don't handle internal state changes.
@@ -15,11 +20,12 @@ import {useHistory} from "react-router-dom";
 
  const getBaseLink = () => {
     const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com/'
+    //const prodURL = "https://sopra-debatable-client-app.herokuapp.com/"
     const devURL = 'http://localhost:3000/'
     return isProduction() ? prodURL : devURL;
 }
 
-const Header = () => {
+const Header = props => {
     const history = useHistory();
     const baselink = getBaseLink();
     const logout = () => {
@@ -72,4 +78,38 @@ Header.propTypes = {
   height: PropTypes.string
 };
 
+/**
+ * Don't forget to export your component!
+ */
 export default Header;
+
+/*
+<div className="navbar-box">
+
+    <div className="icons-col">
+
+        <a className={"logo"}>
+            <img src={require('../../images/logo2.png')}
+                 className="logo-icon"
+                 border="0"/>
+        </a>
+
+        <a className={"profile"} href={baselink+"profile"}>
+            <img src={require('../../images/profile-icon.png')}
+                 className="profile-icon"
+                 border="0"/></a>
+        <a className={"home"} href={baselink+"home"}>
+            <img src={require('../../images/home.png')}
+                 className="home-icon"
+                 border="0"/>
+        </a>
+    </div>
+    <div className="text-col">
+
+        <a className="create-debate" href={baselink+"create_debate"}>Create Debate</a>
+        <a className="logout" onClick={() => logout()}>
+            Logout
+        </a>
+    </div>
+</div>
+*/

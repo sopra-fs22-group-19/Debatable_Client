@@ -6,10 +6,7 @@ This file contains the general and shared style of your application.
  */
 html, body {
 
-  margin: 0;
-  padding: 0;
-  min-height: 100vh !important;
-  height: 100vh;
+  html, body { height: 100%;   width: 100%; margin: 0; padding: 0; }
   font-family: $fontDefault;
   background-color: #B9CC8FDD
 }
