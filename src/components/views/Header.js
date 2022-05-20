@@ -83,34 +83,3 @@ Header.propTypes = {
  * Don't forget to export your component!
  */
 export default Header;
-
-/*
-<div className="navbar-box">
-
-    <div className="icons-col">
-
-        <a className={"logo"}>
-            <img src={require('../../images/logo2.png')}
-                 className="logo-icon"
-                 border="0"/>
-        </a>
-
-        <a className={"profile"} href={baselink+"profile"}>
-            <img src={require('../../images/profile-icon.png')}
-                 className="profile-icon"
-                 border="0"/></a>
-        <a className={"home"} href={baselink+"home"}>
-            <img src={require('../../images/home.png')}
-                 className="home-icon"
-                 border="0"/>
-        </a>
-    </div>
-    <div className="text-col">
-
-        <a className="create-debate" href={baselink+"create_debate"}>Create Debate</a>
-        <a className="logout" onClick={() => logout()}>
-            Logout
-        </a>
-    </div>
-</div>
-*/

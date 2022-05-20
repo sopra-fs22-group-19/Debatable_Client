@@ -66,7 +66,6 @@ const EditProfile = () => {
                         <FormField label="Password: " value={password} onChange={e => setPassword(e)}/>
                     </div>
                 </div>
-
                 <div className="row mb-3 px-3 d-flex justify-content-center">
                     <Button width="50%" onClick={() => doUpdate()}>Save</Button>
                 </div>
