@@ -32,10 +32,16 @@ const EditProfile = () => {
     const [name, setName] = useState(null);
     const [password, setPassword] = useState(null);
 
-
-    console.log(userId)
-
     const doUpdate = async () => {
+        if (username !== null) {
+            localStorage.setItem("username", username)
+            console.log("saving username to localstorage")
+        }
+
+        if (name !== null) {
+            localStorage.setItem("name", name)
+            console.log("saving name to localstorage")
+        }
         try {
             const requestBody = JSON.stringify({username, name, password});
             await api.put(`/users/${userId}`, requestBody);
