@@ -12,9 +12,15 @@ import Timer from "../ui/Timer";
 
 var stompClient =null;
 
-const getLink = () => {
+const getLinkClient = () => {
     const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com'
     const devURL = 'http://localhost:3000'
+    return isProduction() ? prodURL : devURL;
+}
+
+const getLinkServer = () => {
+    const prodURL = 'https://sopra-fs22-group19-server.herokuapp.com'
+    const devURL = 'http://localhost:8080'
     return isProduction() ? prodURL : devURL;
 }
 
@@ -104,7 +110,8 @@ const DebateRoom = () => {
             'isInvitedSide': !isStartingSide,
         }));
 
-        setAdvocatingUser(prevAdvocatingUser => ({...prevAdvocatingUser,
+        setAdvocatingUser(prevAdvocatingUser => (
+            {...prevAdvocatingUser,
             'id': advocatingUserId,
             'userName': advocatingUserName,
             'side': advocatingUserSide
@@ -130,16 +137,16 @@ const DebateRoom = () => {
             if (parseInt(userId) === debateRoom.user1.userId) {
                 if (debateRoom.user2 === null){
                     setAllUserStates(
-                        true, debateRoom.user1.userId, debateRoom.user1.username, debateRoom.side1,
+                        true, debateRoom.user1.userId, debateRoom.user1.name, debateRoom.side1,
                         null, null);
-                    return {userName: debateRoom.user1.username, isInvitee: false,
+                    return {userName: debateRoom.user1.name, isInvitee: false,
                         advocatingUser: {id: debateRoom.user1.userId, side: debateRoom.side1},
                         opponentUser: null};
                 } else {
                     setAllUserStates(
-                        true, debateRoom.user1.userId, debateRoom.user1.username, debateRoom.side1,
-                        debateRoom.user2.username, debateRoom.user2.userId);
-                    return {userName: debateRoom.user1.username, isInvitee: false,
+                        true, debateRoom.user1.userId, debateRoom.user1.name, debateRoom.side1,
+                        debateRoom.user2.name, debateRoom.user2.userId);
+                    return {userName: debateRoom.user1.name, isInvitee: false,
                         advocatingUser: {id: debateRoom.user1.userId, side: debateRoom.side1},
                         opponentUser: {id: debateRoom.user2.userId, side: debateRoom.side2}};
                 }
@@ -156,10 +163,10 @@ const DebateRoom = () => {
             //  then add retrieve their information in the debate
             if (parseInt(userId) === debateRoom.user2.userId) {
                 setAllUserStates(
-                    false, debateRoom.user2.userId, debateRoom.user2.username, debateRoom.side2,
-                    debateRoom.user1.username, debateRoom.user1.userId);
+                    false, debateRoom.user2.userId, debateRoom.user2.name, debateRoom.side2,
+                    debateRoom.user1.name, debateRoom.user1.userId);
 
-                return {userName: debateRoom.user2.username, isInvitee: true,
+                return {userName: debateRoom.user2.name, isInvitee: true,
                     advocatingUser: {id: debateRoom.user2.userId, side: debateRoom.side2},
                     opponentUser: {id: debateRoom.user1.userId, side: debateRoom.side1}};
             }
@@ -168,8 +175,8 @@ const DebateRoom = () => {
         // If they are an Observer
         if (debateRoom.user1 && debateRoom.user2) {
             if (parseInt(userId) !== debateRoom.user1.userId && parseInt(userId) !== debateRoom.user2.userId) {
-                setAllUserStates(false, debateRoom.user2.userId, debateRoom.user2.username, debateRoom.side2,
-                    debateRoom.user1.username, debateRoom.user1.userId);
+                setAllUserStates(false, debateRoom.user2.userId, debateRoom.user2.name, debateRoom.side2,
+                    debateRoom.user1.name, debateRoom.user1.userId);
 
                 setUserState(prevUserState => ({
                     ...prevUserState,
@@ -205,20 +212,20 @@ const DebateRoom = () => {
             if (userState.isStartingSide && parseInt(userId) === response.data.user1.userId ){
                 setOpponentUser(prevOpponentUser => ({...prevOpponentUser,
                     'id': response.data.user2.userId,
-                    'userName': response.data.user2.username
+                    'userName': response.data.user2.name
                 }))
             } else if (userState.isInvitedSide && parseInt(userId) === response.data.user2.userId ){
                 setOpponentUser(prevOpponentUser => ({...prevOpponentUser,
                     'id': response.data.user1.userId,
-                    'userName': response.data.user1.username
+                    'userName': response.data.user1.name
                 }))
             } else{
                 setAdvocatingUser(prevUserState => ({...prevUserState,
-                    'userName': response.data.user1.username,
+                    'userName': response.data.user1.name,
                 }));
                 setOpponentUser(prevOpponentUser => ({...prevOpponentUser,
                     'id': response.data.user2.userId,
-                    'userName': response.data.user2.username
+                    'userName': response.data.user2.name
                 }))
             }
 
@@ -407,7 +414,7 @@ const DebateRoom = () => {
     }
     // Methods related to Websocket
     const connectToRoomWS =(userName, debateState) => {
-        let Sock = new SockJS('http://localhost:8080/ws-endpoint');
+        let Sock = new SockJS(getLinkServer() + '/ws-endpoint');
         stompClient = over(Sock);
         stompClient.connect({}, () => onConnected(userName, debateState),  onError);
     }
@@ -435,6 +442,9 @@ const DebateRoom = () => {
         }
 
         if (ws_response.debateState !== null){
+            if (ws_response.userId !== parseInt(userId) && ws_response.debateState === "ENDED"){
+                alert(`User: ${ws_response.userName} has ended the debate`);
+            }
             setRoomState( ws_response.debateState );
         }
     }
@@ -535,7 +545,7 @@ const DebateRoom = () => {
                             withInviteButton = {displayInviteButton && userState.isStartingSide}
                             displayWaitingMessage = {userState.isInvitedSide && !hasDebateStarted &&!hasDebateEnded}
                             isDebateStarted ={hasDebateStarted}
-                            inviteLink = {getLink() + location.pathname + '/invitee'}
+                            inviteLink = {getLinkClient() + location.pathname + '/invitee'}
                         />
                     </div>
                 </div>
