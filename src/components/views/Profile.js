@@ -34,7 +34,7 @@ const Profile = () => {
 
         fetchData();
     }, [userId]);
-
+    /*
     const FormField = props => {
         return (
             <div className="profile field">
@@ -42,7 +42,6 @@ const Profile = () => {
             </div>
         );
     }
-    /*
     <div id="card2" className="card2 card border-0 px-4 py-5">
                 <div className="row mb-4 px-3  d-flex justify-content-center">
                     <div className="row px-3">
