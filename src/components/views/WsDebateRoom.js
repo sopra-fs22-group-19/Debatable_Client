@@ -441,6 +441,9 @@ const DebateRoom = () => {
         }
 
         if (ws_response.debateState !== null){
+            if (ws_response.userId !== parseInt(userId) && ws_response.debateState === "ENDED"){
+                alert(`User: ${ws_response.userName} has ended the debate`);
+            }
             setRoomState( ws_response.debateState );
         }
     }
