@@ -34,34 +34,6 @@ const Profile = () => {
 
         fetchData();
     }, [userId]);
-    /*
-    const FormField = props => {
-        return (
-            <div className="profile field">
-                <label className="profile label">{props.label}</label>
-            </div>
-        );
-    }
-    <div id="card2" className="card2 card border-0 px-4 py-5">
-                <div className="row mb-4 px-3  d-flex justify-content-center">
-                    <div className="row px-3">
-                        <FormField label="Username:"/>
-                    </div>
-                    <Button disabled={true}>{username}</Button>
-                    <div className="row px-3">
-                        <FormField label="Name:"/>
-                    </div>
-                    <Button disabled={true}>{name}</Button>
-                </div>
-                <div className="row mb-3 px-3 d-flex justify-content-center">
-                    <Link to ={`/edit/${userId}`}>
-                        <Button width="50%">Edit Profile</Button>
-                    </Link>
-                </div>
-            </div>
-
-            <Button width="50%" onClick={() => doUpdate()}>Save</Button>
-    */
 
     return (
             <div>
