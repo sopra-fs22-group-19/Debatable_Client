@@ -30,16 +30,6 @@ const Header = props => {
     const history = useHistory();
     const baselink = getBaseLink();
     async function logout () {
-        let logoutUrl = "/logout"
-        try {
-            const response = await api.get(logoutUrl,{
-                auth: {username: String(localStorage.username), password: String(localStorage.password)}
-            });
-        }
-        catch (error) {
-            alert(`Something went wrong while logging out: \n${handleError(error)}`);
-        }
-
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
         localStorage.removeItem("username");
