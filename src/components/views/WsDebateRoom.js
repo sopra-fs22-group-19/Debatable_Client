@@ -12,9 +12,15 @@ import Timer from "../ui/Timer";
 
 var stompClient =null;
 
-const getLink = () => {
+const getLinkClient = () => {
     const prodURL = 'https://sopra-fs22-group19-client.herokuapp.com'
     const devURL = 'http://localhost:3000'
+    return isProduction() ? prodURL : devURL;
+}
+
+const getLinkServer = () => {
+    const prodURL = 'https://sopra-fs22-group19-server.herokuapp.com'
+    const devURL = 'http://localhost:8080'
     return isProduction() ? prodURL : devURL;
 }
 
@@ -407,7 +413,7 @@ const DebateRoom = () => {
     }
     // Methods related to Websocket
     const connectToRoomWS =(userName, debateState) => {
-        let Sock = new SockJS(getLink() + '/ws-endpoint');
+        let Sock = new SockJS(getLinkServer() + '/ws-endpoint');
         stompClient = over(Sock);
         stompClient.connect({}, () => onConnected(userName, debateState),  onError);
     }
@@ -535,7 +541,7 @@ const DebateRoom = () => {
                             withInviteButton = {displayInviteButton && userState.isStartingSide}
                             displayWaitingMessage = {userState.isInvitedSide && !hasDebateStarted &&!hasDebateEnded}
                             isDebateStarted ={hasDebateStarted}
-                            inviteLink = {getLink() + location.pathname + '/invitee'}
+                            inviteLink = {getLinkClient() + location.pathname + '/invitee'}
                         />
                     </div>
                 </div>
