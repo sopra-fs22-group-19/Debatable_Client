@@ -36,7 +36,15 @@ Once users join the debate from topics, they will be redirected to debate room. 
 
 ![debate_Started](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/images/started_debate.png)
 
-Both the participants can translate their or other participant's arguments in 5 different languages using translate button in the argument box. Both the participants can end the debate anytime using the end debate 
+Both the participants can translate their or other participant's arguments in 5 different languages using translate button in the argument box. Both the participants can end the debate anytime using the end debate button.
+
+![translation](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/images/translate_msg.png)
+
+Once debate is ended a logged in user will be directed to home page. Guest users will be redirected to login page.
+
+Users can also see awaited debates, ongoing debates, ended debates, and started debates on clicking to My Debates on navigation bar. 
+
+
 
 
 ## Roadmap
