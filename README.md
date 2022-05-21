@@ -44,7 +44,7 @@ Once debate is ended a logged in user will be directed to home page. Guest users
 
 Users can also see awaited debates, ongoing debates, ended debates, and started debates on clicking to My Debates on navigation bar. 
 
-
+![mydebates](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/images/mydebates.png)
 
 
 ## Roadmap
