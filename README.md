@@ -11,7 +11,43 @@ If second participant joined as a guest user, they do not have any access to any
 We used Javascript, HTML, CSS, SCSS and React for frontend of It's debatable i.e. current git repository. We used Java in the backend of [It's debatable Server](https://github.com/sopra-fs22-group-19/Debatable_Server) repository. The other frameworks which we used in backend are Spring, Rest, Heroku (for deployment), SonarCloud (code quality). We had weekly Scrums and the implementation period was divided into 2 sprints.
 
 ## High-level Components
+Following are the main components of It's Debatable Client repo:
+1. [CreateDebate.js](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/components/views/CreateDebate.js)
+
+This file is reponsible for Create Debate page. You can enter a new debate topic, add tag, choose side, and description of a debate. It has create debate button, which will then direct users to debate room.
+
+2. [MyDebates.js](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/components/views/MyDebates.js)
+
+This file is responsible for My Debates page. You can see awaited debates, started debates, ended debates, to be started debates. On clicking on any of the debate topics in each categories you will be redirected to debate room of that page where users can find the debates in the exact state they left.
+
+3. [Topics.js](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/components/views/Topics.js)
+
+This file is responsible for Topics of debates which are either defaulted or created by the users in the past. Users can join a new debate by clicking on the side of the debates they wanna choose. They will be redirected to Debate Room.
+
+4. [WsDebateRoom.js](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/components/views/WsDebateRoom.js)
+
+This file is responsible for Debate Rooms. We are using websockets for debate rooms. This is a most important file and uses [Chat.js](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/components/ui/Chat.js) to conduct chats between participants.
+
+
 ## Launch & Deployment
+
+To launch the client locally do the following, preinstall the following:
+
+Node.js [here](https://nodejs.org/en/)
+
+Other dependencies including React can be downloaded using:
+```
+npm install
+```
+After installing dependencies, just run the following to run the app locally:
+```
+npm run dev
+```
+Now you can open http://localhost:3000 to view it in the browser.
+
+You can deploy app in production by creating an app on Heroku and deploying this repo using Heroku.
+
+Current deployed version of the app is https://sopra-fs22-group19-client.herokuapp.com
 ## Illustrations
 Users can either login or register to the platform. They will see a home page. Users can join the debates using exiting debate topis as shown in the image below:
 
