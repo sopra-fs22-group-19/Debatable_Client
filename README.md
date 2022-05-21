@@ -13,7 +13,8 @@ We used Javascript, HTML, CSS, SCSS and React for frontend of It's debatable i.e
 ## High-level Components
 ## Launch & Deployment
 ## Illustrations
-
+Users can either login or register to the platform. They will see a home page. Users can join the debates using exiting debate topis as shown in the image below:
+![Topics](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/images/topics.png)
 
 
 
