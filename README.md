@@ -45,7 +45,7 @@ npm run dev
 ```
 Now you can open http://localhost:3000 to view it in the browser.
 
-You can deploy app in production by creating an app on Heroku and deploying this repo using Heroku.
+You can deploy app in production by creating an app on Heroku and deploying this repo using Heroku. Or else once can deploy on heroku using automatic deployment once code is pushed to master branch.
 
 Current deployed version of the app is https://sopra-fs22-group19-client.herokuapp.com
 ## Illustrations
