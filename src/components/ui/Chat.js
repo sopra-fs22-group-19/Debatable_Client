@@ -17,7 +17,7 @@ const WriteBox = (props) => {
             ((count < 60)?
                     (<p style={{"font-size":"12px", "margin-top":"0.4em"}}>
                 {count}/120
-            </p>) : (<p style={{"font-size":"12px", "margin-top":"0.4em", "color": "#EED202"}}>
+            </p>) : (<p style={{"font-size":"12px", "margin-top":"0.4em", "color": "rgba(238,210,2,0.98)"}}>
                 {count}/120 </p>)
             )
         :
