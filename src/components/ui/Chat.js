@@ -6,15 +6,36 @@ import "styles/ui/Chat.css";
 
 
 
+
+
 const WriteBox = (props) => {
     const [count, setCount] = React.useState(0);
+
+    let counter;
+    counter = (
+        (count !== 120)?
+            ((count < 60)?
+            <p style={{"font-size":"12px", "margin-top":"0.4em"}}>
+                {count}/120
+            </p> : <p style={{"font-size":"12px", "margin-top":"0.4em", "color": "#EED202"}}>
+                {count}/120 </p>
+            )
+        :
+            (<p style={{"font-size":"12px", "margin-top":"0.4em", "color":
+                    "darkred"}}>
+                {count}/120 </p> )
+)
+
     return(
     <div className=" row debateRoom writer-child">
         {props.canWrite ?
-                <div id={"wrapper"}>
-                    <div className="input-group">
+            <div id={"wrapper"}>
+                <div className="input-group">
                     <input id="debateRoom-input-text" type="text" className="form-control input-sm chat_input"
-                           placeholder="Write your argument here..."onChange={e => { setCount(e.target.value.length); props.handleMessage(e) }}
+                           placeholder="Write your argument here..." onChange={e => {
+                        setCount(e.target.value.length);
+                        props.handleMessage(e)
+                    }}
                            maxlength="120"
                            onKeyPress={(ev) => {
                                if (ev.key === "Enter") {
@@ -23,30 +44,19 @@ const WriteBox = (props) => {
                                    props.postMessage();
                                }
                            }}/>
-                    <span style={{"align-self":"center"}} className="input-group-btn">
+                    <span style={{"align-self": "center"}} className="input-group-btn">
                             <button className="btn btn-dark btn-sm" id="btn-chat"
-                                    onClick={()=>{props.postMessage();
-                                        setCount(0);}}>
+                                    onClick={() => {
+                                        props.postMessage();
+                                        setCount(0);
+                                    }}>
                                 <i className="fa fa-paper-plane fa-1x"
                                    aria-hidden="true"></i></button>
                             </span>
-                    </div>
-                    {(count < 60) ?
-                        <p style={{"font-size":"12px", "margin-top":"0.4em"}}>
-                         {count}/120
-                        </p> 
-                        : null
-                    }
-                    {
-                        (count > 60 && count <120) ? <p style={{"font-size":"12px", "margin-top":"0.4em", "color": "#EED202"}}> {count}/120 </p> : null
-                    }
-                    {(count == 120) ?
-                    <p style={{"font-size":"12px", "margin-top":"0.4em", "color":
-                            "darkred"}}>
-                        {count}/120 </p> : null
-                    }
                 </div>
-            : null}
+                {counter}
+            </div>:null
+        }
     </div>
     )
 };
