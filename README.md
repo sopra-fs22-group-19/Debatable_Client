@@ -15,6 +15,13 @@ We used Javascript, HTML, CSS, SCSS and React for frontend of It's debatable i.e
 ## Illustrations
 Users can either login or register to the platform. They will see a home page. Users can join the debates using exiting debate topis as shown in the image below:
 ![Topics](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/images/topics.png)
+Users can filter the debates by clicking the filter button above. They can then choose any filter. Debates will be filtered accordingly. 
+![Filter](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/images/filter.png)
+Users can also create a new debate topic using Create debate in the navigation bar.
+![create](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/images/create_debate.png)
+Once users join the debate from topics, they will be redirected to debate room. Where they will see a invite button to invite second participant for the debate. They need to send the link to second participant. Second participant can join the debate by either login, register, or join as a guest. If user joins as guest, they don't have access to anything other than participating on that particular debate. Once second participant join, first participant can start the debate. Once the debate started, it will be chance of first participant to write their argument in 30 seconds time period. Participants can either post their answers by clicking enter button in their keyboard or clicking send button. If participant could not post their argument in 30 seconds, argument will posted automatically after 30 seconds. 
+![debate_Started](https://github.com/sopra-fs22-group-19/Debatable_Client/blob/master/src/images/started_debate.png)
+
 
 
 
