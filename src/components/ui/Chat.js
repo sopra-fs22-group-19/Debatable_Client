@@ -13,21 +13,19 @@ const WriteBox = (props) => {
 
     let counter;
     counter = (
-        (count === 120)?
-            (<p style={{"font-size":"12px", "margin-top":"0.4em", "color":
-                    "darkred"}}>
-                {count}/120 </p> ):
-        <div>
-            {(count < 120 && count >= 60)?
-            (<p style={{"font-size":"12px", "margin-top":"0.4em", "color": "rgba(238,210,2,0.98)"}}>
-                {count}/120 </p>)
-                     : (<p style={{"font-size":"12px", "margin-top":"0.4em"}}>
-                {count}/120
-            </p>)}
-
-        </div>
-
-)
+        counter = (
+            (count !== 120)?
+                ((count < 60)?
+                        (<p style={{"font-size":"12px", "margin-top":"0.4em"}}>
+                            {count}/120
+                        </p>) :null
+                )
+                :
+                (<p style={{"font-size":"12px", "margin-top":"0.4em", "color":
+                        "darkred"}}>
+                    {count}/120 </p> )
+        )
+    )
 
     return(
     <div className=" row debateRoom writer-child">
