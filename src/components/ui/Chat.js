@@ -31,22 +31,19 @@ const WriteBox = (props) => {
                                    aria-hidden="true"></i></button>
                             </span>
                     </div>
-                    {count < 60?
+                    {count < 60 ?
                         <p style={{"font-size":"12px", "margin-top":"0.4em"}}>
                          {count}/120
-                      </p> : null
+                        </p> 
+                        : null
                     }
-                    {count > 60 && count <120 ?
-                        <p style={{"font-size":"12px", "margin-top":"0.4em", "color":
-                                "#EED202"}}>
-                            {count}/120
-                        </p> : null
+                    {
+                    count > 60 && count <120 ? <p style={{"font-size":"12px", "margin-top":"0.4em", "color": "#EED202"}}> {count}/120 </p> : null
                     }
                     {count == 120 ?
                     <p style={{"font-size":"12px", "margin-top":"0.4em", "color":
                             "darkred"}}>
-                        {count}/120
-                    </p> : null
+                        {count}/120 </p> : null
                     }
                 </div>
             : null}

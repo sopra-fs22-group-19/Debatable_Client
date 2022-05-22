@@ -166,7 +166,7 @@ const MyDebates = () => {
 
     return (
         <div>
-            <Header height={"100"}/>
+            <Header/>
             {atLeastOneDebate ?
                 <div> {listOfDebatesContent} </div>
                 : <div> {contentNoDebatesAvailable} </div>

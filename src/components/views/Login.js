@@ -48,14 +48,6 @@ const Login = props => {
   else {
     to_push = "/home"
   }
-  /*
-   <div className="row mb-4 px-3">
-                          <h6>
-                            Don't have an account? 
-                            
-                          </h6>
-                      </div>
-   */
 
   const joinAsGuest = async () => {
     try {
@@ -86,7 +78,7 @@ const Login = props => {
   const doLogin = async () => {
     try {
 
-      //let to_get = "/login?username=" + String(username) + "&password=" + String(password);
+
       let loginURL = "/login/v2"
 
       const response = await api.get(loginURL,{
@@ -101,6 +93,7 @@ const Login = props => {
       localStorage.setItem("token", user.token);
       localStorage.setItem("userId", user.userId);
       localStorage.setItem("username", user.username);
+      localStorage.setItem("name", user.name);
       localStorage.setItem("password", String(password));
 
       // Login successfully worked --> navigate to the route

@@ -52,6 +52,7 @@ const Register = props => {
       localStorage.setItem("token", user.token);
       localStorage.setItem("username", user.username);
       localStorage.setItem("password", String(password));
+      localStorage.setItem("name", user.name);
 
       if (location.state.isInvitee)
       {
