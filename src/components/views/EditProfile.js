@@ -51,9 +51,7 @@ const EditProfile = () => {
 
             const requestBody = JSON.stringify({username, name, password});
 
-            await api.put(`/users/${userId}`, requestBody,{
-                auth: {username: String(oldUsername), password: oldPassword}
-            });
+            await api.put(`/users/${userId}`, requestBody);
             history.push(`/profile`);
         } catch (error) {
             alert(`Something went wrong during the process: \n${handleError(error)}`);
