@@ -21,9 +21,9 @@ const DebateRoomList = (props) => {
                         <div>
                             {props.debateRoomList.map(debateRoom =>
                                 <ul key={debateRoom.roomId} className="list-group  list-group-horizontal-md">
-                                    <li className="list-group-item flex-fill"
+                                    <li className="list-group-item flex-fill" style={{"text-align": "center"}}
                                         onClick={() => props.toDebateRoom(debateRoom.roomId)}>
-                                        {debateRoom.debate.topic}
+                                        <p>{debateRoom.debate.topic}</p>
                                     </li>
                                 </ul>
                             )
@@ -62,7 +62,11 @@ const MyDebates = () => {
     const getDebateRooms = async (debateState) => {
         try {
             // Get
-            const response = await api.get(`/debates/${userId}/rooms?state=${debateState}`);
+            let Username = localStorage.getItem("username");
+            let Password = localStorage.getItem("password");
+            const response = await api.get(`/debates/${userId}/rooms?state=${debateState}`,{
+                auth: {username: String(Username), password: Password}
+            });
             return response.data;
         } catch (error) {
             console.error(`Something went wrong while fetching the debate rooms for user ${userId} with state ${debateState}: \n
@@ -162,7 +166,7 @@ const MyDebates = () => {
 
     return (
         <div>
-            <Header height={"100"}/>
+            <Header/>
             {atLeastOneDebate ?
                 <div> {listOfDebatesContent} </div>
                 : <div> {contentNoDebatesAvailable} </div>

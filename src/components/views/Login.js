@@ -48,19 +48,11 @@ const Login = props => {
   else {
     to_push = "/home"
   }
-  /*
-   <div className="row mb-4 px-3">
-                          <h6>
-                            Don't have an account? 
-                            
-                          </h6>
-                      </div>
-   */
 
   const joinAsGuest = async () => {
     try {
       // Create guest user
-      const response = await api.post("/users/guests");
+      const response = await api.post("/register/guests");
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("userId", response.data.userId);
   }
@@ -85,8 +77,13 @@ const Login = props => {
   )
   const doLogin = async () => {
     try {
-      let to_get = "/login?username=" + String(username) + "&password=" + String(password);
-      const response = await api.get(to_get);
+
+
+      let loginURL = "/login/v2"
+
+      const response = await api.get(loginURL,{
+          auth: {username: String(username), password: String(password)}
+      });
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Get the returned user and update a new object.
@@ -96,6 +93,8 @@ const Login = props => {
       localStorage.setItem("token", user.token);
       localStorage.setItem("userId", user.userId);
       localStorage.setItem("username", user.username);
+      localStorage.setItem("name", user.name);
+      localStorage.setItem("password", String(password));
 
       // Login successfully worked --> navigate to the route
       history.push(

@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import User from 'models/User';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useLocation} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import 'styles/views/Login_Trial.css';
 import PropTypes from "prop-types";
-import { useLocation } from "react-router-dom";
 
 const FormField = props => {
   return (
@@ -43,7 +42,7 @@ const Register = props => {
   const doRegister = async () => {
     try {
       const requestBody = JSON.stringify({username, name, password});
-      const response = await api.post('/users', requestBody);
+      const response = await api.post('/register', requestBody);
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
@@ -51,6 +50,8 @@ const Register = props => {
       localStorage.setItem("userId", user.userId);
       localStorage.setItem("token", user.token);
       localStorage.setItem("username", user.username);
+      localStorage.setItem("password", String(password));
+      localStorage.setItem("name", user.name);
 
       if (location.state.isInvitee)
       {
@@ -82,7 +83,8 @@ const Register = props => {
   }
 
   return (
-  <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto" style={{"background-color":"white", "height":"100vh"}}>
+  <div className="container-fluid" style={{"background-color":"white", "height":"100vh",
+    "padding-left":"0px", "padding-right":"0px"}}>
     <div id="card" className="card card0 border-0">
       <div className="row d-flex">
         <div className="col-lg-6  d-flex" >

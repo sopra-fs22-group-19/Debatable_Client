@@ -16,7 +16,11 @@ const Topics = () => {
     const todebateRoom = async (side, debateId) => {
         try {
             const requestBody = JSON.stringify({userId, debateId, side});
-            const response = await api.post("/debates/rooms", requestBody);
+            let Username = localStorage.getItem("username");
+            let Password = localStorage.getItem("password");
+            const response = await api.post("/debates/rooms", requestBody,{
+                auth: {username: String(Username), password: Password}
+            });
             const debateRoom = response.data
 
             let push_to = '/debateroom/' + String(debateRoom.roomId)
@@ -88,7 +92,7 @@ const Topics = () => {
    }
     return (
         <div>
-            <Header height={"100"}/>
+            <Header/>
             <div id={"wrapper-topics"}>
                 <h className={"availability"}>Available topics</h>
                 <FilterComponent/>
