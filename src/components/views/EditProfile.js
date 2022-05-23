@@ -45,10 +45,6 @@ const EditProfile = () => {
         }
         try {
 
-            const response = await api.get(`/users/${userId}`);
-            let oldUsername = localStorage.getItem("username");
-            let oldPassword = localStorage.getItem("password");
-
             const requestBody = JSON.stringify({username, name, password});
 
             await api.put(`/users/${userId}`, requestBody);
