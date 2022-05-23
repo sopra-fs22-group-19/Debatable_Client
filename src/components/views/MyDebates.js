@@ -62,7 +62,11 @@ const MyDebates = () => {
     const getDebateRooms = async (debateState) => {
         try {
             // Get
-            const response = await api.get(`/debates/${userId}/rooms?state=${debateState}`);
+            let Username = localStorage.getItem("username");
+            let Password = localStorage.getItem("password");
+            const response = await api.get(`/debates/${userId}/rooms?state=${debateState}`,{
+                auth: {username: String(Username), password: Password}
+            });
             return response.data;
         } catch (error) {
             console.error(`Something went wrong while fetching the debate rooms for user ${userId} with state ${debateState}: \n

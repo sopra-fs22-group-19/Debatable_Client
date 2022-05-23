@@ -28,6 +28,7 @@ const EditProfile = () => {
     const {userId} = useParams();
     const history = useHistory();
 
+
     const [username, setUsername] = useState(null);
     const [name, setName] = useState(null);
     const [password, setPassword] = useState(null);
@@ -43,7 +44,9 @@ const EditProfile = () => {
             console.log("saving name to localstorage")
         }
         try {
+
             const requestBody = JSON.stringify({username, name, password});
+
             await api.put(`/users/${userId}`, requestBody);
             history.push(`/profile`);
         } catch (error) {
