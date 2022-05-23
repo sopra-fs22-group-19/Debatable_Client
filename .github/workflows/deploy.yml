@@ -41,6 +41,6 @@ jobs:
       
     # deploy code
     - run: heroku git:remote -a $HEROKU_APP_NAME 
-    - run: git push heroku HEAD:refs/heads/master
+    - run: git push heroku master
 
 
