@@ -31,6 +31,7 @@ const Header = () => {
         localStorage.removeItem("username");
         localStorage.removeItem("name");
         localStorage.removeItem("categories");
+        localStorage.removeItem("password");
         history.push('/login');
     }
 return(
