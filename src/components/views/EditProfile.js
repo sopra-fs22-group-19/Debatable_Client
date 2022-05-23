@@ -39,6 +39,8 @@ const EditProfile = () => {
             console.log("saving username to localstorage")
         }
 
+
+
         if (name !== null) {
             localStorage.setItem("name", name)
             console.log("saving name to localstorage")
