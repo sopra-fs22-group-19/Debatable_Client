@@ -75,22 +75,32 @@ const CreateDebate = () => {
       }
     }
 
-    const changeSelectOptionHandler = (event) => {
-        console.log(event.target.value);
+    const changeSelectOptionHandler_Side = (event) => {
         if(event.target.value === "For")
         {
-            setSide("FOR")
+            setSide("FOR");
         }
         else if (event.target.value === "Against")
         {
-            setSide("AGAINST")
+            setSide("AGAINST");
         }
-       if(event.target.value!=="For"&&event.target.value!=="Against")
+        else
         {
-            setCategory(event.target.value)
-            console.log(category)
+            console.log("inside else");
+            setSide(null);
         }
-    };
+    }
+
+    const changeSelectOptionHandler_tags = (event) => {
+        if(event.target.value !== "Choose tag ...")
+        {
+            setCategory(event.target.value);
+        }
+        else
+        {
+            setCategory(null);
+        }
+    }
 
     let content;
 
@@ -114,7 +124,7 @@ const CreateDebate = () => {
                                     </h6>
 
                                 </label>
-                                <select className={"dropList"} onChange={changeSelectOptionHandler}>
+                                <select className={"dropList"} onChange={changeSelectOptionHandler_Side}>
                                     <option>Choose Side ...</option>
                                     <option>For</option>
                                     <option>Against</option>
@@ -144,7 +154,7 @@ const CreateDebate = () => {
                                     </h6>
 
                                 </label>
-                                <select className={"dropList"} onChange={changeSelectOptionHandler}>
+                                <select className={"dropList"} onChange={changeSelectOptionHandler_tags}>
                                     <option>Choose tag ...</option>
                                     {filters.map(filter => (
                                         <option>
@@ -162,7 +172,7 @@ const CreateDebate = () => {
                             <Button
                                 className="create button"
                                 value="Create Debate"
-                                disabled={!topic || !description || !category}
+                                disabled={!topic || !description || !category || !side}
                                 onClick={() => {
                                     create_new_debate()
                                 }}
