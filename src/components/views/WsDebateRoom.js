@@ -176,8 +176,8 @@ const DebateRoom = () => {
         // If they are an Observer
         if (debateRoom.user1 && debateRoom.user2) {
             if (parseInt(userId) !== debateRoom.user1.userId && parseInt(userId) !== debateRoom.user2.userId) {
-                setAllUserStates(false, debateRoom.user2.userId, debateRoom.user2.name, debateRoom.side2,
-                    debateRoom.user1.name, debateRoom.user1.userId);
+                setAllUserStates(false, debateRoom.user1.userId, debateRoom.user1.name, debateRoom.side1,
+                    debateRoom.user2.name, debateRoom.user2.userId);
 
                 setUserState(prevUserState => ({
                     ...prevUserState,
