@@ -59,13 +59,14 @@ const DebateRoom = () => {
     const location = useLocation();
     const history = useHistory();
     const userId = localStorage.getItem('userId');
+    const name = localStorage.getItem('name');
     let {roomId} = useParams();
     roomId = parseInt(roomId);
 
     const [userState, setUserState] = useState({
         isStartingSide: false,
         isInvitedSide: false,
-        isGuest: location.state.isGuest,
+        isGuest: location.state.isGuest || String(name) === "Guest",
         isObserver: false,
         canWrite: false
     });
@@ -303,7 +304,9 @@ const DebateRoom = () => {
 
                 let userInfo = await defineUserStartingState(debateRoom);
 
-                connectToRoomWS(userInfo.userName, debateRoom.debateStatus);
+                if (debateRoom.debateStatus !== "ENDED") {
+                    connectToRoomWS(userInfo.userName, debateRoom.debateStatus);
+                }
                 setRoomState(() => debateRoom.debateStatus);
                 await getMessagingHistory(userInfo.advocatingUser, userInfo.opponentUser);
 
@@ -406,6 +409,9 @@ const DebateRoom = () => {
         if (userState.isGuest) {
             localStorage.removeItem("token");
             localStorage.removeItem("userId");
+            localStorage.removeItem("username");
+            localStorage.removeItem("name");
+            localStorage.removeItem("password");
             history.push("/login");
         }
         else {

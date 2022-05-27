@@ -55,6 +55,9 @@ const Login = props => {
       const response = await api.post("/register/guests");
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("userId", response.data.userId);
+      localStorage.setItem("username", response.data.username);
+      localStorage.setItem("name", response.data.name);
+      localStorage.setItem("password", String(response.data.password));
   }
   catch (error){
       console.error(`Something went wrong while creating guest user: \n${handleError(error)}`);
