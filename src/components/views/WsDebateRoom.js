@@ -492,7 +492,7 @@ const DebateRoom = () => {
 
     return (
         <div>
-            {location.state.isGuest === true? null : <Header height={"100"}/>}
+            {userState.isGuest === true? null : <Header height={"100"}/>}
             <div className="container">
                 <div class="row d-flex justify-content-center">
                 <div className="debateRoom topic-container">
