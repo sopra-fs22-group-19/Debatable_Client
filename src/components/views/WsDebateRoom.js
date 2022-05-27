@@ -183,12 +183,10 @@ const DebateRoom = () => {
                     ...prevUserState,
                     'isObserver': true
                 }));
-
-            }
-            return {userName: `Observer: ${String(userId)}`, isInvitee: true,
+                return {userName: `Observer: ${String(userId)}`, isInvitee: true,
                 advocatingUser: {id: debateRoom.user1.userId, side: debateRoom.side1},
                 opponentUser: {id: debateRoom.user2.userId, side: debateRoom.side2}};
-
+            }
         }
 
     }
